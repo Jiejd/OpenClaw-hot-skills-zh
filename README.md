@@ -466,6 +466,78 @@ npm run dev
 
 [查看详细文档](./skills/frontend-design-zh/SKILL.md) | [设计哲学](./skills/frontend-design-zh/references/design-philosophy.md) | [移动端模式](./skills/frontend-design-zh/references/mobile-patterns.md)
 
+---
+
+### 10. github-zh - GitHub CLI 交互工具
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Github](https://clawhub.ai)
+
+**功能**：
+- 🔧 **GitHub CLI 集成**：使用 `gh` 命令行工具与 GitHub 交互
+- 📋 **Issue 管理**：创建、查看和管理 GitHub issues
+- 🔀 **PR 工作流**：处理拉取请求的完整生命周期
+- 🚀 **CI/CD 监控**：检查持续集成状态，查看构建日志
+- 🌐 **API 访问**：通过 `gh api` 访问 GitHub REST API 的任何端点
+
+**核心命令**：
+- `gh pr checks` - 检查 PR 的 CI 状态
+- `gh run list` - 列出最近的 workflow 运行
+- `gh run view` - 查看运行记录和失败步骤
+- `gh api` - 高级 API 查询
+- `gh issue` - Issue 管理命令
+- `gh pr` - Pull Request 管理命令
+
+**安装**：
+```bash
+# 1. 安装 GitHub CLI
+# macOS
+brew install gh
+
+# Linux (参考: https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+# Windows
+winget install GitHub.cli
+
+# 2. 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/github-zh ./
+rm -rf temp-repo
+
+# 3. 认证 GitHub CLI
+gh auth login
+```
+
+**快速开始**：
+```bash
+# 列出 issues
+gh issue list --repo owner/repo --json number,title
+
+# 查看运行失败的 workflow
+gh run view <run-id> --repo owner/repo --log-failed
+
+# 创建 PR
+gh pr create --repo owner/repo --title "标题" --body "描述"
+
+# API 查询
+gh api repos/owner/repo/pulls/55 --jq '.title, .state'
+```
+
+**使用场景**：
+- "检查这个 PR 的 CI 状态"
+- "查看最近的构建失败"
+- "列出仓库的所有 issues"
+- "创建新的 pull request"
+- "获取 PR 的详细信息"
+
+**提示**：
+- 使用 `--json` 和 `--jq` 进行灵活的数据提取
+- 始终指定 `--repo owner/repo` 当不在 git 目录中时
+- 使用 `--help` 查看任何命令的详细帮助
+
+[查看详细文档](./skills/github-zh/SKILL.md)
+
 ## 🚀 快速开始
 
 ### 前置要求
