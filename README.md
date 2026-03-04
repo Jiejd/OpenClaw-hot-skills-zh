@@ -884,6 +884,105 @@ clawhub update --all --no-input
 
 [查看详细文档](./skills/auto-updater-zh/SKILL.md)
 
+---
+
+### 16. api-gateway-zh - API 网关
+
+**版本**: v1.0.58
+**状态**: ✅ 已发布
+**来源**: [ClawHub - API Gateway](https://clawhub.ai)
+**提供商**: [Maton](https://maton.ai)
+
+**功能**：
+- 🌐 **100+ API 连接**：支持 Google Workspace、Microsoft 365、GitHub、Notion、Slack、Airtable、HubSpot 等主流服务
+- 🔐 **托管 OAuth**：无需管理 OAuth 流程，Maton 自动处理认证和令牌刷新
+- 🔄 **透传代理**：直接调用原生 API 端点，保持完整的 API 功能
+- 🛡️ **安全隔离**：MATON_API_KEY 仅用于身份验证，每个服务需单独授权
+- 📊 **统一接口**：通过网关统一访问所有第三方 API
+
+**核心能力**：
+- 连接 100+ 主流第三方服务
+- 托管 OAuth 2.0 认证流程
+- 自动处理令牌刷新和过期
+- 支持原生 API 端点调用
+- 细粒度的权限控制
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/api-gateway-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 1. 获取 Maton API Key
+# 访问 https://maton.ai 注册账号并获取 API 密钥
+
+# 2. 设置环境变量
+export MATON_API_KEY="your-maton-api-key"
+
+# 3. 连接服务
+# 访问 Maton 控制台授权你需要的服务（如 Gmail、Slack、GitHub 等）
+
+# 4. 调用 API（示例：发送 Slack 消息）
+python <<'EOF'
+import urllib.request, os, json
+data = json.dumps({'channel': 'C0123456', 'text': 'Hello from gateway!'}).encode()
+req = urllib.request.Request('https://gateway.maton.ai/slack/api/chat.postMessage', data=data, method='POST')
+req.add_header('Authorization', f'Bearer {os.environ["MATON_API_KEY"]}')
+req.add_header('Content-Type', 'application/json')
+print(json.dumps(json.load(urllib.request.urlopen(req)), indent=2))
+EOF
+```
+
+**支持的服务（部分列表）**：
+- **协作工具**: Slack, Discord, Microsoft Teams
+- **项目管理**: Notion, Asana, Trello, Jira
+- **开发工具**: GitHub, GitLab, Bitbucket
+- **办公套件**: Google Workspace, Microsoft 365
+- **CRM**: Salesforce, HubSpot, Zendesk
+- **数据库**: Airtable, Supabase
+- **存储**: Google Drive, Dropbox, OneDrive
+
+**使用场景**：
+- "发送 Slack 消息"
+- "创建 GitHub issue"
+- "读取 Google Sheets 数据"
+- "更新 Notion 页面"
+- "发送 Gmail 邮件"
+
+**API 调用格式**：
+```
+https://gateway.maton.ai/{app}/{native-api-path}
+```
+
+例如：
+- Slack: `https://gateway.maton.ai/slack/api/chat.postMessage`
+- Gmail: `https://gateway.maton.ai/google-mail/gmail/v1/users/me/messages`
+- GitHub: `https://gateway.maton.ai/github/repos/owner/repo/issues`
+
+**安全说明**：
+- MATON_API_KEY 仅用于 Maton 身份验证
+- 每个服务需要单独的 OAuth 授权
+- 访问仅限于用户已授权的服务
+- 完整的审计日志和访问控制
+
+**获取 API Key**：
+1. 访问 [Maton 官网](https://maton.ai) 注册账号
+2. 在控制台获取 API 密钥
+3. 在 Maton 平台连接你需要的第三方服务
+4. 每个服务都需要通过 OAuth 授权流程
+
+**注意事项**：
+- 需要先在 Maton 平台授权服务才能使用
+- API 调用遵循各服务的速率限制
+- 支持 GET、POST、PUT、DELETE 等 HTTP 方法
+- 请求和响应格式遵循各服务的原生 API 规范
+
+[查看详细文档](./skills/api-gateway-zh/SKILL.md) | [Maton 官网](https://maton.ai)
+
 ## 🚀 快速开始
 
 ### 前置要求
