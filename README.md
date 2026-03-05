@@ -1068,6 +1068,100 @@ whisper foreign.mp3 --task translate
 
 [查看详细文档](./skills/openai-whisper-zh/SKILL.md)
 
+---
+
+### 18. nano-banana-pro-zh - 图像生成与编辑
+
+**版本**: v1.0.1
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Nano Banana Pro](https://clawhub.ai)
+
+**功能**：
+- 🎨 **图像生成**：使用 Gemini 3 Pro Image API 生成高质量图像
+- ✏️ **图像编辑**：支持对现有图像进行编辑和修改
+- 📐 **多分辨率**：支持 1K/2K/4K 三种分辨率选项
+- 🔄 **迭代工作流**：草稿 → 迭代 → 最终版本的高效流程
+- 🎯 **提示词模板**：提供高成功率的提示词模板
+
+**核心能力**：
+- 文生图（Text-to-Image）
+- 图生图（Image-to-Image）
+- 多种分辨率选择
+- 快速迭代反馈循环
+- 精准的提示词处理
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/nano-banana-pro-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 生成新图像（1K 草稿）
+uv run ~/.codex/skills/nano-banana-pro-zh/scripts/generate_image.py \
+  --prompt "宁静的日式花园，樱花飘落" \
+  --filename "2025-11-23-14-23-05-japanese-garden.png" \
+  --resolution 1K
+
+# 生成高分辨率最终版本
+uv run ~/.codex/skills/nano-banana-pro-zh/scripts/generate_image.py \
+  --prompt "宁静的日式花园，樱花飘落" \
+  --filename "2025-11-23-14-23-05-japanese-garden-final.png" \
+  --resolution 4K
+
+# 编辑现有图像
+uv run ~/.codex/skills/nano-banana-pro-zh/scripts/generate_image.py \
+  --prompt "让天空更具戏剧性，添加暴风云" \
+  --filename "2025-11-23-14-25-30-dramatic-sky.png" \
+  --input-image "original-photo.jpg" \
+  --resolution 2K
+```
+
+**分辨率选项**：
+- **1K**（默认）- 约 1024px，快速迭代
+- **2K** - 约 2048px，中等质量
+- **4K** - 约 4096px，高质量最终版
+
+**使用场景**：
+- "生成一张日式花园的图片"
+- "把这个图片的天空改成暴风雨"
+- "创建一个 4K 分辨率的机器人图像"
+- "编辑照片，添加彩虹"
+
+**工作流建议**：
+1. **草稿阶段**（1K）：快速生成，迭代提示词
+2. **调整阶段**：微调细节，确定方向
+3. **最终阶段**（4K）：生成高质量最终版本
+
+**提示词模板**：
+- 生成："创建图像：<主体>。风格：<风格>。构图：<镜头>。光线：<光线>。背景：<背景>。"
+- 编辑："仅更改：<单个更改>。完全保持：主体、构图、姿势、光线。"
+
+**API 密钥配置**：
+```bash
+# 方式 1：环境变量
+export GEMINI_API_KEY="your-api-key"
+
+# 方式 2：命令行参数
+--api-key "your-api-key"
+```
+
+**获取 API Key**：
+1. 访问 [Google AI Studio](https://aistudio.google.com/)
+2. 创建 API 密钥
+3. 启用 Gemini API 访问
+
+**注意事项**：
+- 建议先用 1K 分辨率迭代，确定提示词后再生成 4K
+- 文件名格式建议：`yyyy-mm-dd-hh-mm-ss-描述.png`
+- 编辑时确保输入图像路径正确
+- API 有速率限制，建议添加错误处理
+
+[查看详细文档](./skills/nano-banana-pro-zh/SKILL.md)
+
 ## 🚀 快速开始
 
 ### 前置要求
