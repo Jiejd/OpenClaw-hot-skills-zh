@@ -1356,6 +1356,91 @@ node ~/.openclaw/skills/brave-web-search-zh/index.js brave-search --query "OpenC
 
 [查看详细文档](./skills/brave-web-search-zh/SKILL.md)
 
+---
+
+### 21. desktop-control-zh - 桌面自动化控制
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Desktop Control](https://clawhub.ai)
+
+**功能**：
+- 🖱️ **像素级精确鼠标控制**：绝对定位、相对移动、平滑路径、拖放操作
+- ⌨️ **闪电般的键盘输入**：文本输入、快捷键、特殊按键、组合键
+- 📸 **屏幕操作**：全屏/区域截图、图像识别、颜色检测、多显示器支持
+- 🪟 **窗口管理**：窗口列表、激活窗口、窗口信息、最小化/最大化控制
+- 📋 **剪贴板操作**：复制、粘贴、剪贴板内容管理
+- 🛡️ **安全特性**：故障保护、暂停控制、批准模式、边界检查、操作日志
+
+**核心能力**：
+- 像素级精确的鼠标移动和点击
+- 拟人化的键盘输入（可配置 WPM）
+- 基于图像识别的元素定位（OpenCV）
+- 完整的窗口生命周期管理
+- 紧急停止和故障保护机制
+
+**安装**：
+```bash
+# 1. 安装依赖
+pip install pyautogui pillow opencv-python pygetwindow
+
+# 2. 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/desktop-control-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```python
+from skills.desktop_control import DesktopController
+
+# 初始化控制器
+dc = DesktopController(failsafe=True)
+
+# 鼠标操作
+dc.move_mouse(500, 300)
+dc.click()
+dc.click(100, 200, button="right")
+
+# 键盘操作
+dc.type_text("Hello from OpenClaw!", wpm=80)
+dc.hotkey("ctrl", "c")
+
+# 屏幕操作
+screenshot = dc.screenshot()
+position = dc.get_mouse_position()
+```
+
+**使用场景**：
+- "自动填写表单"
+- "在屏幕上找到按钮并点击"
+- "批量操作窗口"
+- "截图并分析"
+- "拖放文件到指定位置"
+
+**安全特性**：
+- **故障保护**：将鼠标移到屏幕角落中止自动化
+- **暂停控制**：紧急停止机制
+- **批准模式**：操作前需要确认
+- **边界检查**：防止超出屏幕的操作
+- **完整日志**：追踪所有自动化操作
+
+**注意事项**：
+- 屏幕坐标从左上角 (0, 0) 开始
+- 多显示器可能提供负坐标
+- Windows DPI 缩放可能影响坐标精度
+- 故障保护角落：(0,0)、(width-1, 0)、(0, height-1)、(width-1, height-1)
+- 某些应用可能阻止模拟输入
+
+**依赖包**：
+- PyAutoGUI - 核心自动化引擎
+- Pillow - 图像处理
+- OpenCV - 图像识别
+- PyGetWindow - 窗口管理
+
+[查看详细文档](./skills/desktop-control-zh/SKILL.md) | [快速参考](./skills/desktop-control-zh/QUICK_REFERENCE.md) | [AI 代理指南](./skills/desktop-control-zh/AI_AGENT_GUIDE.md)
+
 ## 🚀 快速开始
 
 ### 前置要求
