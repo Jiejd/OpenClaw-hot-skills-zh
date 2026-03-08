@@ -1942,6 +1942,99 @@ curl -s "https://raw.githubusercontent.com/OWNER/REPO/main/skills/SKILL_NAME/SKI
 
 [查看详细文档](./skills/skill-vetter-zh/SKILL.md)
 
+---
+
+### 30. automation-workflows-zh - 自动化工作流程
+
+**版本**: v0.1.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Automation Workflows](https://clawhub.ai)
+**作者**: Jatin Khatri (@JK-0001)
+**Stars**: 122 ⭐
+
+**功能**：
+- 🎯 **自动化机会识别**：审计任务并找到最高价值的自动化机会
+- 🛠️ **工具选择指导**：Zapier、Make、n8n 对比和选择建议
+- 📋 **工作流程设计**：完整的模板和最佳实践
+- 🧪 **测试和部署**：详细的测试清单和监控策略
+- 💰 **ROI 计算**：投资回报分析和优化方法
+
+**核心内容**：
+- **自动化审计**：1小时审计流程，识别适合自动化的任务
+- **工具对比**：Zapier（简单）、Make（可视化）、n8n（开发者友好）
+- **工作流程模板**：7个高级案例（客户入职、内容分发、健康监控等）
+- **测试清单**：确保工作流程稳定可靠
+- **监控维护**：长期管理和优化策略
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/automation-workflows-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 1. 进行自动化审计（1小时）
+# 跟踪一周内做的每项任务
+# 记录时间、频率、是否重复
+# 计算时间成本：时间成本 = (每项任务的分钟数 × 每月频率) / 60
+
+# 2. 选择工具
+# 预算 < $20/月 → Zapier 免费版或 n8n 自托管
+# 需要可视化工作流程 → Make
+# 简单的 2 步工作流程 → Zapier
+# 复杂工作流程 → Make 或 n8n
+
+# 3. 设计并实施工作流程
+# 遵循技能中的模板和最佳实践
+```
+
+**容易实现的目标**：
+- [ ] 表单提交的邮件通知
+- [ ] 自动将表单响应保存到电子表格
+- [ ] 提前安排社交帖子
+- [ ] 从付款确认中自动创建发票
+- [ ] 在工具之间同步数据（CRM ↔ 邮件工具 ↔ 电子表格）
+
+**高级案例**：
+1. **客户入职流程**：表单提交 → 欢迎邮件 → CRM 创建 → 任务生成
+2. **内容分发**：草稿完成 → 多平台发布 → 社交媒体推广
+3. **健康监控**：数据采集 → 检查阈值 → 发送警报 → 记录日志
+
+**使用场景**：
+- "如何自动化我的工作？"
+- "哪些任务应该自动化？"
+- "Zapier 和 Make 哪个更好？"
+- "如何设计自动化工作流程？"
+- "帮我节省时间并规模化运营"
+
+**ROI 计算**：
+```
+节省的时间（小时/月）= Σ (任务时间 × 频率)
+工具成本 = $20-50/月
+节省的价值 = 节省时间 × 你的时薪
+ROI = (节省的价值 - 工具成本) / 工具成本 × 100%
+```
+
+**最佳实践**：
+- 从简单的 2-3 步工作流程开始
+- 每周预留 2-3 小时优化和监控
+- 为关键工作流程设置备份计划
+- 每月审查自动化效果并优化
+
+**触发词**：
+- "automate"
+- "automation"
+- "workflow automation"
+- "save time"
+- "reduce manual work"
+- "automate my business"
+- "no-code automation"
+
+[查看详细文档](./skills/automation-workflows-zh/SKILL.md)
+
 ## 🚀 快速开始
 
 ### 前置要求
