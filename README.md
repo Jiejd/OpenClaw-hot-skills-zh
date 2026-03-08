@@ -1855,6 +1855,93 @@ rm -rf temp-repo
 
 [查看详细文档](./skills/stock-analysis-zh/SKILL.md)
 
+---
+
+### 29. skill-vetter-zh - 技能审查器
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Skill Vetter](https://clawhub.ai)
+
+**功能**：
+- 🔒 **安全优先审查**：在安装任何技能前进行全面安全检查
+- 🔍 **来源验证**：检查技能来源、作者可信度和下载量
+- ⚠️ **危险信号检测**：识别潜在的安全威胁和可疑模式
+- 📊 **权限范围评估**：评估技能所需的文件、网络和命令权限
+- 🎯 **风险分类**：将技能风险分为低、中、高、极高四个等级
+
+**审查协议**：
+1. **来源检查**：验证来源、作者、下载量、更新时间
+2. **代码审查**：检查危险信号（curl/wget、外部请求、凭据请求等）
+3. **权限评估**：评估文件访问、网络请求、命令执行权限
+4. **风险分类**：根据审查结果进行风险等级划分
+
+**危险信号检测**：
+- 🚨 curl/wget 到未知 URL
+- 🚨 向外部服务器发送数据
+- 🚨 请求凭据/令牌/API 密钥
+- 🚨 读取 ~/.ssh、~/.aws、~/.config
+- 🚨 访问 MEMORY.md、USER.md 等敏感文件
+- 🚨 base64 解码、eval()、exec() 操作
+- 🚨 修改系统文件、安装未列出的软件包
+
+**风险等级**：
+- 🟢 **低风险**：笔记、天气、格式化工具 → 基本审查即可安装
+- 🟡 **中风险**：文件操作、浏览器、API 调用 → 需要完整代码审查
+- 🔴 **高风险**：凭据操作、交易系统 → 需要人工批准
+- ⛔ **极高风险**：安全配置、root 访问 → 不要安装
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/skill-vetter-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 对于 GitHub 托管的技能
+# 1. 检查仓库统计信息
+curl -s "https://api.github.com/repos/OWNER/REPO" | jq '{stars: .stargazers_count, forks: .forks_count, updated: .updated_at}'
+
+# 2. 列出技能文件
+curl -s "https://api.github.com/repos/OWNER/REPO/contents/skills/SKILL_NAME" | jq '.[].name'
+
+# 3. 获取并审查 SKILL.md
+curl -s "https://raw.githubusercontent.com/OWNER/REPO/main/skills/SKILL_NAME/SKILL.md"
+```
+
+**使用场景**：
+- 在从 ClawHub 安装技能之前
+- 在运行来自 GitHub 的技能之前
+- 在评估其他智能体分享的技能时
+- 在被要求安装未知代码的任何情况下
+
+**输出格式**：
+审查完成后生成详细报告，包括：
+- 技能基本信息（名称、来源、版本）
+- 下载量和更新时间
+- 发现的危险信号
+- 所需权限列表
+- 风险等级评估
+- 最终结论（安全/谨慎/拒绝）
+
+**信任层级**：
+1. 官方 OpenClaw 技能 → 较低审查力度
+2. 高星标仓库（1000+）→ 中等审查力度
+3. 知名作者 → 中等审查力度
+4. 新/未知来源 → 最高审查力度
+5. 请求凭据的技能 → 始终需要人工批准
+
+**注意事项**：
+- 没有任何技能值得以牺牲安全为代价
+- 如有疑问，不要安装
+- 对于高风险决策，询问您的人类
+- 记录审查过程以供将来参考
+
+[查看详细文档](./skills/skill-vetter-zh/SKILL.md)
+
 ## 🚀 快速开始
 
 ### 前置要求
