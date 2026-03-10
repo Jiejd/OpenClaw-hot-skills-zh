@@ -2411,6 +2411,106 @@ export YOUTUBE_API_KEY="你的-api-密钥"
 
 [查看详细文档](./skills/youtube-zh/SKILL.md)
 
+---
+
+### 36. elite-longterm-memory-zh - 精英长期记忆系统
+
+**版本**: v1.2.3
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Elite Long-term Memory](https://clawhub.ai)
+
+**功能**：
+- 🧠 **终极记忆系统**：整合 6 种经过验证的记忆方法
+- 💾 **WAL 协议**：预写日志在压缩中存活
+- 🔍 **LanceDB 向量搜索**：相关记忆的语义召回
+- 📊 **Git-Notes 知识图谱**：结构化决策，支持分支感知
+- 📝 **基于文件的归档**：人类可读的 MEMORY.md + 每日日志
+- ☁️ **云备份**：可选的 SuperMemory 同步
+- 🤖 **Mem0 自动提取**：自动事实提取，减少 80% token
+
+**核心架构**：
+- **第 1 层**：SESSION-STATE.md（热内存）— 活跃任务上下文，在压缩中存活
+- **第 2 层**：LanceDB 向量（温存储）— 语义搜索，自动召回
+- **第 3 层**：Git-Notes（冷存储）— 结构化决策，永久保存
+- **第 4 层**：MEMORY.md + daily/（归档）— 人类可读，精选内容
+- **第 5 层**：SuperMemory（云端）— 跨设备同步（可选）
+
+**安装**：
+```bash
+# 1. 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/elite-longterm-memory-zh ./
+rm -rf temp-repo
+
+# 2. 安装可选依赖（Mem0 自动提取）
+npm install mem0ai
+```
+
+**快速开始**：
+```bash
+# 1. 设置 OpenAI API 密钥（用于向量搜索）
+export OPENAI_API_KEY="your-openai-key"
+
+# 2. 在工作区初始化
+npx elite-longterm-memory init
+
+# 3. 检查状态
+npx elite-longterm-memory status
+
+# 4. 创建今日日志
+npx elite-longterm-memory today
+```
+
+**使用场景**：
+- Agent 需要记住用户偏好和决策
+- 跨会话保持上下文
+- 避免重复犯同样错误
+- 构建知识图谱
+- 项目状态跟踪
+
+**WAL 协议（关键）**：
+```
+用户：这个项目我们用 Tailwind
+
+Agent（内部）：
+1. 写入 SESSION-STATE.md → "决策：使用 Tailwind"
+2. 然后响应 → "明白了 — 就用 Tailwind..."
+```
+在响应之前写入状态，确保在崩溃/压缩时不会丢失上下文。
+
+**配置要求**：
+- **必需**：OPENAI_API_KEY（用于向量搜索）
+- **可选**：MEM0_API_KEY（自动事实提取）
+- **可选**：SUPERMEMORY_API_KEY（云备份）
+
+**兼容平台**：
+- Claude AI
+- GPT / ChatGPT
+- Cursor IDE
+- OpenClaw / Moltbot
+- LangChain
+- GitHub Copilot
+
+**常见问题解决**：
+| 问题 | 解决方案 |
+|-----|---------|
+| 忘记一切 | 启用 memory_search + 添加 OpenAI 密钥 |
+| 重犯错误 | 写入 memory/lessons.md |
+| 子 Agent 隔离 | 在任务提示中传递上下文 |
+| 事实未捕获 | 使用 Mem0 自动提取 |
+
+**技术细节**：
+- 支持 MCP (Model Context Protocol)
+- LanceDB 向量数据库
+- Git-Notes 知识图谱
+- 完整的中文文档
+- 支持 Mem0 自动事实提取
+
+[查看详细文档](./skills/elite-longterm-memory-zh/SKILL.md) | [GitHub](https://github.com/NextFrontierBuilds/elite-longterm-memory)
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求
