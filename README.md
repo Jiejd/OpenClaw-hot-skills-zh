@@ -3028,6 +3028,74 @@ rm -rf temp-repo
 
 ---
 
+### 44. proactive-self-improving-agent-zh - 主动自我改进智能体
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Proactive Self-Improving Agent](https://clawhub.ai)
+
+**功能**：
+- 🧠 **自动捕获经验**：识别错误、纠正和最佳实践，结构化记录
+- 🔄 **安全进化机制**：经验反复出现时自动晋升为长期能力，有护栏防止漂移
+- 📝 **多层记录系统**：LEARNINGS.md、ERRORS.md、FEATURE_REQUESTS.md 分层管理
+- 📊 **操作日志追踪**：CHANGELOG.md 记录所有学习操作，支持脚本读取
+- 🔒 **安全护栏**：ADL 协议防止漂移，VFM 协议确保价值优先
+
+**触发条件（7种场景）**：
+- 命令/操作失败 → 记录到 ERRORS.md
+- 用户纠正（"不对"/"应该是"）→ 记录到 LEARNINGS.md
+- 用户需要不存在的能力 → 记录到 FEATURE_REQUESTS.md
+- 外部 API/工具出错 → 记录到 ERRORS.md
+- 发现知识过时/错误 → 记录到 LEARNINGS.md
+- 发现更好做法 → 记录到 LEARNINGS.md
+- 任务完成时回顾 → 有新经验则记录到 LEARNINGS.md
+
+**核心机制**：
+- **去重法则**：触发 ≠ 必须写入，无新经验则跳过
+- **晋升路径**：经验 ≥3 次重复 → 晋升到 AGENTS.md/TOOLS.md/SOUL.md
+- **技能提取**：足够通用的经验可提取为独立 skill
+- **VFM 打分**：检索复用性 3x + 错误预防 3x + 分析质量 2x + 效率提升 2x
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/proactive-self-improving-agent-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 初始化学习存储
+mkdir -p .learnings
+touch .learnings/LEARNINGS.md
+touch .learnings/ERRORS.md
+touch .learnings/FEATURE_REQUESTS.md
+touch .learnings/CHANGELOG.md
+```
+
+**使用场景**：
+- 命令报错时 → 自动记录到 ERRORS.md
+- 用户说"不对/应该是…"时 → 记录纠正到 LEARNINGS.md
+- 发现更好做法时 → 记录最佳实践
+- 任务完成后 → 回顾过程，有经验则记录
+- 同一问题出现 ≥3 次 → 自动晋升为永久规则
+
+**适用对象**：
+- 🤖 AI Agent 开发者
+- 📈 需要持续改进的智能系统
+- 🎯 追求自我进化的 Agent
+- 💼 复杂项目的自动化管理
+
+**技术要求**：
+- 无需额外依赖
+- 无需凭据
+- 可选 git 支持（用于经验追踪）
+
+[查看详细文档](./skills/proactive-self-improving-agent-zh/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
