@@ -3096,6 +3096,159 @@ touch .learnings/CHANGELOG.md
 
 ---
 
+### 45. mcporter-zh - MCP 服务器管理工具
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [GitHub - mcporter](https://github.com/steipete/mcporter)
+
+**功能**：
+- 🔍 **零配置发现**：自动发现系统中已配置的 MCP 服务器（Cursor、Claude、Codex 等）
+- 🛠️ **工具调用**：直接从命令行调用任何 MCP 工具
+- 🔐 **OAuth 认证**：内置 OAuth 缓存，支持托管 MCP 服务认证
+- 📝 **代码生成**：生成 TypeScript 类型定义和 CLI 工具
+- 🔧 **配置管理**：管理和编辑 MCP 服务器配置
+
+**核心能力**：
+- 列出所有已配置的 MCP 服务器
+- 调用 MCP 工具（支持冒号语法和函数调用语法）
+- 支持 HTTP、SSE 和 stdio 传输
+- 自动检测需要 OAuth 的托管服务
+- 生成强类型的 TypeScript 客户端
+
+**安装**：
+```bash
+# 使用 npm
+npm install -g mcporter
+
+# 或使用 npx 直接运行
+npx mcporter list
+
+# 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/mcporter-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 列出所有已配置的服务器
+npx mcporter list
+
+# 列出特定服务器的详细信息
+npx mcporter list linear --schema
+
+# 调用工具
+npx mcporter call linear.create_comment issueId:ENG-123 body:'评论内容'
+
+# 对需要 OAuth 的服务器进行认证
+npx mcporter auth https://mcp.linear.app/mcp
+
+# 生成 TypeScript 类型定义
+npx mcporter emit-ts linear --output ./types
+```
+
+**使用场景**：
+- "列出我系统中配置的 MCP 服务器"
+- "调用 Linear 的创建评论工具"
+- "为 MCP 服务器生成 TypeScript 客户端"
+- "管理 MCP 服务器配置"
+- "连接到临时的 MCP 端点"
+
+**支持的配置来源**：
+- `~/.mcporter/mcporter.json`（主目录配置）
+- `config/mcporter.json`（项目配置）
+- Cursor、Claude Code/Desktop、Codex、Windsurf、OpenCode、VS Code 的配置
+
+**调用语法**：
+```bash
+# 冒号分隔的标志（shell 友好）
+npx mcporter call linear.create_comment issueId:ENG-123 body:'看起来不错！'
+
+# 函数调用风格（匹配 `mcporter list` 的签名）
+npx mcporter call 'linear.create_comment(issueId: "ENG-123", body: "看起来不错！")'
+```
+
+**注意事项**：
+- 支持环境变量占位符 `${API_KEY}`
+- 使用 `--json` 获取结构化输出
+- 使用 `--verbose` 查看详细配置信息
+- 使用 `--persist` 将临时服务器保存到配置
+
+[查看详细文档](./skills/mcporter-zh/SKILL.md)
+
+---
+
+### 46. gongwen-zh - 中国公文格式化
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: 依据 GB/T 9704-2012《党政机关公文格式》
+
+**功能**：
+- 📄 **标准格式**：按照中国党政机关公文格式标准进行格式化
+- 🎨 **字体规范**：规范正文字体、标题层级、页面设置
+- ✍️ **落款格式**：标准化的落款单位和日期格式
+- 📎 **附件处理**：附件标注和格式规范
+- 🔢 **数字规范**：阿拉伯数字的统一处理
+
+**核心规范**：
+- **页面设置**：上3.7cm、下3.2cm、左2.8cm、右2.6cm
+- **正文字体**：仿宋_GB2312，首行缩进2字符，行间距29磅
+- **标题层级**：一级黑体3号、二级楷体_GB2312、三级仿宋_GB2312
+- **页码格式**：—1—（数字前后加横线），单页靠右，双页靠左
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/gongwen-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# Agent 会自动识别公文格式化需求
+# 示例交互：
+用户：帮我格式化这份通知
+
+Agent 会：
+1. 应用标准页面设置
+2. 规范标题层级和字体
+3. 调整段落格式和行间距
+4. 添加标准的落款格式
+5. 处理附件标注
+```
+
+**使用场景**：
+- "格式化这份通知"
+- "将这份文档改为公文格式"
+- "检查这份公文的格式是否规范"
+- "生成标准的公文模板"
+- "将 Markdown 转换为公文格式"
+
+**支持的公文类型**：
+- 通知、通报、决定、意见
+- 方案、报告、请示、函
+
+**标题层级格式**：
+| 层级 | 格式 | 字体 | 示例 |
+|------|------|------|------|
+| 一级标题 | 一、二、三、四 | **黑体 3号** | 一、总体要求 |
+| 二级标题 | （一）（二）（三） | **楷体_GB2312** | （一）指导思想 |
+| 三级标题 | 1. 2. 3. | **仿宋_GB2312** | 1. 完善工作机制 |
+
+**注意事项**：
+- 全文字体风格保持统一，不可混用
+- 标题层级一般不超过三级
+- 公文中的数字一般使用阿拉伯数字
+- 标点符号使用中文全角标点
+
+[查看详细文档](./skills/gongwen-zh/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
