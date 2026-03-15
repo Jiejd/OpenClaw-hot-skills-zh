@@ -3489,6 +3489,96 @@ python ~/.openclaw/skills/model-usage-zh/scripts/model_usage.py --provider claud
 
 ---
 
+### 51. playwright-mcp-zh - Playwright MCP 浏览器自动化
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [NPM - @playwright/mcp](https://www.npmjs.com/package/@playwright/mcp)
+
+**功能**：
+- 🎭 **浏览器自动化**：通过 Playwright MCP 服务器实现完整的浏览器自动化工作流
+- 🌐 **多浏览器支持**：支持 Chrome、Firefox 和 WebKit 浏览器
+- 🖱️ **页面交互**：导航网站、点击元素、填写表单、提取数据
+- 📸 **截图功能**：支持页面截图和视频录制
+- 🔧 **灵活配置**：支持无头模式、视口设置、超时控制等多种配置选项
+
+**核心工具**：
+- `browser_navigate` - 导航到 URL
+- `browser_click` - 点击元素
+- `browser_type` - 输入文本
+- `browser_select_option` - 选择下拉选项
+- `browser_get_text` - 提取文本内容
+- `browser_evaluate` - 执行 JavaScript
+- `browser_snapshot` - 获取无障碍页面快照
+- `browser_close` - 关闭浏览器上下文
+- `browser_choose_file` - 上传文件
+- `browser_press` - 按下键盘按键
+
+**安装**：
+```bash
+# 安装 Playwright MCP
+npm install -g @playwright/mcp
+
+# 安装浏览器
+npx playwright install chromium
+
+# 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/playwright-mcp-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 启动 MCP 服务器
+npx @playwright/mcp
+
+# 无头模式
+npx @playwright/mcp --headless
+
+# 指定浏览器和视口
+npx @playwright/mcp --browser firefox --viewport-size 1280x720
+```
+
+**使用场景**：
+- "自动化测试网站功能"
+- "批量填写表单"
+- "提取网页数据"
+- "网站截图和监控"
+- "自动化浏览器工作流"
+
+**安全特性**：
+- 默认限制文件系统访问范围为工作区根目录
+- 主机验证防止导航到不受信任的域名
+- 默认启用沙箱模式
+- 默认阻止 Service Workers
+
+**配置选项**：
+- `--headless` - 无头模式
+- `--browser` - 选择浏览器（chromy/firefox/webkit）
+- `--viewport-size` - 设置视口大小
+- `--timeout-action` - 操作超时（毫秒）
+- `--timeout-navigation` - 导航超时（毫秒）
+- `--output-dir` - 输出目录
+- `--save-trace` - 保存追踪记录
+- `--save-video` - 保存视频
+
+**注意事项**：
+- 首次使用需要安装浏览器（约 300MB）
+- 建议使用无头模式以提高性能
+- 需要确保有足够的系统资源运行浏览器
+- 复杂页面可能需要调整超时设置
+
+**链接**：
+- [Playwright 文档](https://playwright.dev)
+- [MCP 协议](https://modelcontextprotocol.io)
+- [NPM 包](https://www.npmjs.com/package/@playwright/mcp)
+
+[查看详细文档](./skills/playwright-mcp-zh/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
