@@ -3319,6 +3319,72 @@ export BAIDU_API_KEY="your-baidu-api-key"
 
 ---
 
+### 48. slack-zh - Slack 操作工具
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Slack](https://clawhub.ai)
+
+**功能**：
+- 💬 **消息管理**：发送、编辑、删除 Slack 消息
+- 📌 **置顶管理**：置顶/取消置顶重要消息
+- ✅ **表情回复**：为消息添加表情反应
+- 👥 **成员信息**：获取 Slack 成员详细信息
+- 🎨 **自定义表情**：列出工作区的自定义表情列表
+
+**核心能力**：
+- 通过 `slack` 工具与 Slack API 交互
+- 支持频道和私信消息操作
+- 完整的消息 CRUD 操作
+- 置顶消息管理
+- 成员信息查询
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/slack-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 配置 Slack bot token（在 OpenClaw 配置中）
+# 使用 Clawdbot 配置的 bot token
+
+# 发送消息
+slack action="sendMessage" to="channel:C123" content="来自 Clawdbot 的问候"
+
+# 回复消息
+slack action="react" channelId="C123" messageId="1712023032.1234" emoji="✅"
+
+# 置顶消息
+slack action="pinMessage" channelId="C123" messageId="1712023032.1234"
+```
+
+**使用场景**：
+- "发送 Slack 消息到 #general 频道"
+- "为这条消息添加 ✅ 表情"
+- "置顶这条重要公告"
+- "获取成员信息"
+- "列出置顶的消息"
+
+**操作组**：
+- `reactions` - 回复消息 + 列出回复
+- `messages` - 读取/发送/编辑/删除消息
+- `pins` - 置顶/取消置顶/列出置顶
+- `memberInfo` - 成员信息
+- `emojiList` - 自定义表情列表
+
+**注意事项**：
+- 需要配置 Slack bot token
+- 消息时间戳格式：`1712023032.1234`
+- 支持频道（`channel:<id>`）和用户（`user:<id>`）目标
+
+[查看详细文档](./skills/slack-zh/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
