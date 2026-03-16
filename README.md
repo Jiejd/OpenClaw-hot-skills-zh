@@ -3579,6 +3579,93 @@ npx @playwright/mcp --browser firefox --viewport-size 1280x720
 
 ---
 
+### 52. ui-ux-pro-max-zh - UI/UX 设计智能指南
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [ClawHub - Antigravity Kit](https://clawhub.ai)
+
+**功能**：
+- 🎨 **50+ 设计风格**：玻璃拟态、粘土拟态、极简主义、野兽派、新拟态等
+- 🎨 **161 种配色方案**：按产品类型智能推荐配色
+- 📝 **57 种字体搭配**：Google Fonts 字体组合与导入代码
+- 📱 **10 大技术栈支持**：React、Next.js、Vue、Svelte、SwiftUI、React Native、Flutter、Tailwind、shadcn/ui、HTML/CSS
+- 📊 **25 种图表类型**：数据可视化图表选择指南
+- 📋 **99 条 UX 准则**：无障碍、交互、性能、布局等最佳实践
+
+**核心能力**：
+- BM25 + 正则混合搜索引擎
+- 产品类型智能推荐（SaaS、电商、作品集等）
+- 设计系统生成（颜色令牌、排版、间距）
+- 技术栈特定指南
+- UX 审查检查清单
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/ui-ux-pro-max-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 搜索 UI 风格
+python3 src/ui-ux-pro-max/scripts/search.py "玻璃拟态" --domain style
+
+# 搜索配色方案
+python3 src/ui-ux-pro-max/scripts/search.py "SaaS" --domain color
+
+# 搜索字体搭配
+python3 src/ui-ux-pro-max/scripts/search.py "现代" --domain typography
+
+# 搜索 UX 准则
+python3 src/ui-ux-pro-max/scripts/search.py "无障碍" --domain ux
+
+# 指定技术栈
+python3 src/ui-ux-pro-max/scripts/search.py "按钮" --stack react
+```
+
+**使用场景**：
+- "设计一个 SaaS 落地页"
+- "推荐玻璃拟态风格的配色方案"
+- "审查这个组件的无障碍性"
+- "为仪表盘选择合适的图表类型"
+- "生成设计系统"
+
+**支持的产品类型**：
+- 网站、落地页、仪表盘、管理后台
+- 电商、SaaS、作品集、博客
+- 移动应用（iOS/Android）
+
+**支持的设计风格**：
+- 玻璃拟态（Glassmorphism）
+- 粘土拟态（Claymorphism）
+- 极简主义（Minimalism）
+- 野兽派（Brutalism）
+- 新拟态（Neomorphism）
+- Bento Grid、暗色模式、响应式设计等
+
+**UX 规则类别**（按优先级）：
+1. 无障碍性（关键）
+2. 触控与交互（关键）
+3. 性能（高）
+4. 风格选择（高）
+5. 布局与响应式（高）
+6. 排版与颜色（中）
+7. 动画（中）
+8. 表单与反馈（中）
+9. 导航模式（高）
+10. 图表与数据（低）
+
+**技术要求**：
+- Python 3.x（无外部依赖）
+- 支持 Claude Code、Cursor、Windsurf 等 AI 编程助手
+
+[查看详细文档](./skills/ui-ux-pro-max-zh/README.md)
+
+---
+
 
 ## 🚀 快速开始
 
