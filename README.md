@@ -3489,7 +3489,7 @@ python ~/.openclaw/skills/model-usage-zh/scripts/model_usage.py --provider claud
 
 ---
 
-### 51. playwright-mcp-zh - Playwright MCP 浏览器自动化
+### 51. playwright-mcp-zh - Playwright 浏览器自动化
 
 **版本**: v1.0.0
 **状态**: ✅ 已发布
@@ -3544,125 +3544,20 @@ npx @playwright/mcp --browser firefox --viewport-size 1280x720
 **使用场景**：
 - "自动化测试网站功能"
 - "批量填写表单"
-- "提取网页数据"
-- "网站截图和监控"
-- "自动化浏览器工作流"
-
-**安全特性**：
-- 默认限制文件系统访问范围为工作区根目录
-- 主机验证防止导航到不受信任的域名
-- 默认启用沙箱模式
-- 默认阻止 Service Workers
+- "从网页提取数据"
+- "截取网页截图"
+- "执行浏览器自动化脚本"
 
 **配置选项**：
-- `--headless` - 无头模式
-- `--browser` - 选择浏览器（chromy/firefox/webkit）
+- `--headless` - 无头模式运行
+- `--browser` - 指定浏览器（chromium/firefox/webkit）
 - `--viewport-size` - 设置视口大小
-- `--timeout-action` - 操作超时（毫秒）
-- `--timeout-navigation` - 导航超时（毫秒）
-- `--output-dir` - 输出目录
-- `--save-trace` - 保存追踪记录
-- `--save-video` - 保存视频
-
-**注意事项**：
-- 首次使用需要安装浏览器（约 300MB）
-- 建议使用无头模式以提高性能
-- 需要确保有足够的系统资源运行浏览器
-- 复杂页面可能需要调整超时设置
-
-**链接**：
-- [Playwright 文档](https://playwright.dev)
-- [MCP 协议](https://modelcontextprotocol.io)
-- [NPM 包](https://www.npmjs.com/package/@playwright/mcp)
+- `--timeout-action` - 操作超时时间（毫秒）
+- `--timeout-navigation` - 导航超时时间（毫秒）
+- `--allowed-hosts` - 允许访问的域名列表
+- `--ignore-https-errors` - 忽略 HTTPS 错误
 
 [查看详细文档](./skills/playwright-mcp-zh/SKILL.md)
-
----
-
-### 52. ui-ux-pro-max-zh - UI/UX 设计智能指南
-
-**版本**: v1.0.0
-**状态**: ✅ 已发布
-**来源**: [ClawHub - Antigravity Kit](https://clawhub.ai)
-
-**功能**：
-- 🎨 **50+ 设计风格**：玻璃拟态、粘土拟态、极简主义、野兽派、新拟态等
-- 🎨 **161 种配色方案**：按产品类型智能推荐配色
-- 📝 **57 种字体搭配**：Google Fonts 字体组合与导入代码
-- 📱 **10 大技术栈支持**：React、Next.js、Vue、Svelte、SwiftUI、React Native、Flutter、Tailwind、shadcn/ui、HTML/CSS
-- 📊 **25 种图表类型**：数据可视化图表选择指南
-- 📋 **99 条 UX 准则**：无障碍、交互、性能、布局等最佳实践
-
-**核心能力**：
-- BM25 + 正则混合搜索引擎
-- 产品类型智能推荐（SaaS、电商、作品集等）
-- 设计系统生成（颜色令牌、排版、间距）
-- 技术栈特定指南
-- UX 审查检查清单
-
-**安装**：
-```bash
-cd ~/.openclaw/skills/
-git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
-cp -r temp-repo/skills/ui-ux-pro-max-zh ./
-rm -rf temp-repo
-```
-
-**快速开始**：
-```bash
-# 搜索 UI 风格
-python3 src/ui-ux-pro-max/scripts/search.py "玻璃拟态" --domain style
-
-# 搜索配色方案
-python3 src/ui-ux-pro-max/scripts/search.py "SaaS" --domain color
-
-# 搜索字体搭配
-python3 src/ui-ux-pro-max/scripts/search.py "现代" --domain typography
-
-# 搜索 UX 准则
-python3 src/ui-ux-pro-max/scripts/search.py "无障碍" --domain ux
-
-# 指定技术栈
-python3 src/ui-ux-pro-max/scripts/search.py "按钮" --stack react
-```
-
-**使用场景**：
-- "设计一个 SaaS 落地页"
-- "推荐玻璃拟态风格的配色方案"
-- "审查这个组件的无障碍性"
-- "为仪表盘选择合适的图表类型"
-- "生成设计系统"
-
-**支持的产品类型**：
-- 网站、落地页、仪表盘、管理后台
-- 电商、SaaS、作品集、博客
-- 移动应用（iOS/Android）
-
-**支持的设计风格**：
-- 玻璃拟态（Glassmorphism）
-- 粘土拟态（Claymorphism）
-- 极简主义（Minimalism）
-- 野兽派（Brutalism）
-- 新拟态（Neomorphism）
-- Bento Grid、暗色模式、响应式设计等
-
-**UX 规则类别**（按优先级）：
-1. 无障碍性（关键）
-2. 触控与交互（关键）
-3. 性能（高）
-4. 风格选择（高）
-5. 布局与响应式（高）
-6. 排版与颜色（中）
-7. 动画（中）
-8. 表单与反馈（中）
-9. 导航模式（高）
-10. 图表与数据（低）
-
-**技术要求**：
-- Python 3.x（无外部依赖）
-- 支持 Claude Code、Cursor、Windsurf 等 AI 编程助手
-
-[查看详细文档](./skills/ui-ux-pro-max-zh/README.md)
 
 ---
 
