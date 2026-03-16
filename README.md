@@ -3561,6 +3561,118 @@ npx @playwright/mcp --browser firefox --viewport-size 1280x720
 
 ---
 
+### 52. ui-ux-pro-max-zh - UI/UX 设计智能指南
+
+**版本**: v2.0
+**状态**: ✅ 已发布
+**来源**: [GitHub - ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+
+**功能**：
+- 🎨 **设计系统生成**：AI 驱动的设计系统生成器，根据项目需求自动生成完整的设计系统
+- 🎯 **161 种配色方案**：基于产品类型和风格的配色推荐
+- ✍️ **57 种字体搭配**：Google Fonts 字体组合推荐
+- 📱 **多技术栈支持**：覆盖 10 大技术栈（React、Next.js、Vue、Svelte、SwiftUI、React Native、Flutter、Tailwind、shadcn/ui、HTML/CSS）
+- 🎭 **50+ UI 风格**：玻璃拟态、粘土拟态、极简主义、野兽派等多种设计风格
+- 📊 **25 种图表类型**：数据可视化图表推荐和最佳实践
+- ✅ **161 条 UX 准则**：基于优先级的设计规则和无障碍指南
+- 🔍 **智能搜索引擎**：BM25 + 正则混合搜索，支持域名自动检测
+
+**核心功能模块**：
+- **产品类型推荐**：SaaS、电商、作品集、博客等
+- **UI 风格库**：玻璃拟态、极简主义、野兽派等 + AI 提示词和 CSS 关键字
+- **字体系统**：Google Fonts 字体搭配和导入代码
+- **配色系统**：按产品类型的配色方案
+- **落地页结构**：页面结构和 CTA 策略
+- **图表推荐**：图表类型和库推荐
+- **UX 最佳实践**：设计规则和反模式
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/ui-ux-pro-max-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 搜索设计资源
+python3 src/ui-ux-pro-max/scripts/search.py "SaaS 仪表盘" --domain product
+
+# 搜索 UI 风格
+python3 src/ui-ux-pro-max/scripts/search.py "玻璃拟态" --domain style
+
+# 搜索字体搭配
+python3 src/ui-ux-pro-max/scripts/search.py "现代简约" --domain typography
+
+# 搜索配色方案
+python3 src/ui-ux-pro-max/scripts/search.py "科技感" --domain color
+
+# 指定技术栈搜索
+python3 src/ui-ux-pro-max/scripts/search.py "按钮组件" --stack react
+```
+
+**使用场景**：
+- "设计一个新的落地页"
+- "创建响应式导航栏"
+- "优化表单的用户体验"
+- "选择合适的配色方案"
+- "实现无障碍设计"
+- "重构 UI 组件库"
+- "构建设计系统"
+
+**支持的操作**：
+- 规划、构建、创建、设计
+- 实现、审查、修复、改进
+- 优化、增强、重构
+- 检查 UI/UX 代码
+
+**项目类型支持**：
+- 网站、落地页、仪表盘
+- 管理后台、电商、SaaS
+- 作品集、博客、移动应用
+
+**设计风格涵盖**：
+- 玻璃拟态、粘土拟态、极简主义
+- 野兽派、新拟态、Bento Grid
+- 暗色模式、响应式设计
+- 拟物化、扁平化设计
+
+**设计主题**：
+- 颜色系统、无障碍设计
+- 动画、布局、排版
+- 字体搭配、间距
+- 交互状态、阴影、渐变
+
+**优先级规则类别**：
+1. 无障碍性（关键）
+2. 触控与交互（关键）
+3. 性能（高）
+4. 风格选择（高）
+5. 布局与响应式（高）
+6. 排版与颜色（中）
+7. 动画（中）
+8. 表单与反馈（中）
+9. 导航模式（高）
+10. 图表与数据（低）
+
+**集成能力**：
+- shadcn/ui MCP 组件搜索和示例
+- 多平台 AI 编码助手支持（Claude Code、Windsurf、Cursor 等）
+- CLI 安装工具（uipro-cli）
+
+**前置要求**：
+- Python 3.x（无需外部依赖）
+
+**链接**：
+- [项目官网](https://uupm.cc)
+- [GitHub 仓库](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+- [NPM CLI](https://www.npmjs.com/package/uipro-cli)
+
+[查看详细文档](./skills/ui-ux-pro-max-zh/README.md) | [技能文档](./skills/ui-ux-pro-max-zh/.claude/skills/ui-ux-pro-max/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
