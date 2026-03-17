@@ -3732,6 +3732,45 @@ touch ~/self-improving/index.md
 
 ---
 
+### 54. admapix-zh - 广告创意素材搜索助手
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+
+**功能**：
+- 🎯 **竞品广告搜索**：通过 AdMapix API 搜索竞品广告素材
+- 📹 **广告视频素材**：获取广告视频、图片等创意素材
+- 🌐 **多语言支持**：自动检测用户语言并以相同语言回复
+- 🔍 **多维度筛选**：支持按品牌、关键词、平台等多维度搜索
+- 📊 **结构化输出**：返回标题、链接、预览等结构化数据
+
+**核心能力**：
+- 通过 AdMapix API（api.admapix.com）搜索广告素材
+- 支持中英文关键词输入
+- 提供广告创意灵感和竞品分析
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/admapix-zh ./
+rm -rf temp-repo
+```
+
+**使用场景**：
+- "帮我搜索 Nike 的广告视频"
+- "找一些美妆品牌的创意素材"
+- "搜索竞品广告"
+- "找素材"
+
+**注意事项**：
+- 需要设置 `ADMAPIX_API_KEY` 环境变量
+- API 有调用频率限制，请合理使用
+
+[查看详细文档](./skills/admapix-zh/SKILL.md)
+
+---
+
 
 ## 🚀 快速开始
 
