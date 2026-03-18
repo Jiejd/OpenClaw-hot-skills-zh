@@ -1,0 +1,15 @@
+{
+  "name": "video-frames-zh",
+  "version": "1.0.0",
+  "description": "使用 ffmpeg 从视频中提取帧或短片段。",
+  "author": "OpenClaw Team",
+  "license": "MIT",
+  "created": "2026-02-23T11:46:00.716452",
+  "type": "system-skill",
+  "files": [
+    "SKILL.md",
+    "scripts/frame.sh"
+  ],
+  "file_count": 2,
+  "source": "OpenClaw Official"
+}

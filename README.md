@@ -3907,6 +3907,45 @@ rm -rf temp-repo
 
 ---
 
+### 57. video-frames-zh - 视频帧提取工具
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: ClawHub
+
+**功能**：
+- 🎞️ **视频帧提取**：使用 ffmpeg 从视频中提取单帧画面
+- ⏱️ **时间点定位**：通过指定时间点精确提取画面
+- 🔢 **帧索引提取**：通过帧序号提取指定帧
+- 📐 **多格式输出**：支持 JPG（快速分享）和 PNG（高清画面）格式
+- 🖼️ **缩略图生成**：快速生成视频预览缩略图
+
+**核心脚本**：
+- `scripts/frame.sh` - 帧提取脚本，支持 `--time`、`--index`、`--out` 参数
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/video-frames-zh ./
+rm -rf temp-repo
+```
+
+**使用场景**：
+- "提取这个视频的第一帧"
+- "看看视频第 10 秒的画面"
+- "给我生成一个视频缩略图"
+- "截取视频第 5 帧的画面"
+
+**注意事项**：
+- 需要安装 ffmpeg（`brew install ffmpeg`）
+- 脚本支持 `--time HH:MM:SS` 和 `--index N` 两种定位方式
+- 使用 `.jpg` 格式便于快速分享；使用 `.png` 格式可获得更清晰的画面
+
+[查看详细文档](./skills/video-frames-zh/SKILL.md)
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求
