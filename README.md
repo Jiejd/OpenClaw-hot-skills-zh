@@ -3946,6 +3946,66 @@ rm -rf temp-repo
 
 ---
 
+### 58. xiaohongshu-mcp-zh - 小红书内容运营自动化
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+**来源**: [GitHub - xpzouying/xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp)（8.4k+ ⭐）
+
+**功能**：
+- 📝 **内容发布**：发布图文、视频笔记到小红书
+- 🔍 **笔记搜索**：搜索笔记内容和热门趋势
+- 📊 **详情分析**：获取笔记详情、评论和互动数据
+- 👤 **用户管理**：查看用户资料和内容动态
+- 📰 **信息流**：获取个性化推荐信息流
+
+**核心命令**：
+```bash
+# 检查登录状态
+python scripts/xhs_client.py status
+
+# 搜索笔记
+python scripts/xhs_client.py search "咖啡"
+
+# 获取笔记详情
+python scripts/xhs_client.py detail "note_id" "xsec_token"
+
+# 获取推荐信息流
+python scripts/xhs_client.py feeds
+
+# 发布笔记（图片URL用逗号分隔）
+python scripts/xhs_client.py publish "标题" "内容" "url1,url2"
+```
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/xiaohongshu-mcp-zh ./
+rm -rf temp-repo
+```
+
+**前置要求**：
+1. 从 [GitHub Releases](https://github.com/xpzouying/xiaohongshu-mcp/releases) 下载对应平台的二进制文件
+2. 运行登录工具，使用小红书 App 扫码登录
+3. 启动 MCP 服务器：`./xiaohongshu-mcp-darwin-arm64`（服务器默认运行在 `http://localhost:18060`）
+
+**使用场景**：
+- "搜一下咖啡相关的热门笔记"
+- "查看这个笔记的评论"
+- "帮我发布一篇图文笔记"
+- "分析小红书上户外电源的市场趋势"
+
+**注意事项**：
+- 需要本地运行 `xiaohongshu-mcp` 服务器
+- 登录后请勿在其他浏览器登录同账号，否则会话失效
+- 服务器默认运行在 `http://localhost:18060`
+- 支持无头模式和可见浏览器模式
+
+[查看详细文档](./skills/xiaohongshu-mcp-zh/SKILL.md) | [GitHub 源码](https://github.com/xpzouying/xiaohongshu-mcp)
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求
