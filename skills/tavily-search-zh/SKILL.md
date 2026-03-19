@@ -39,7 +39,7 @@ python3 ~/.openclaw/skills/tavily-search-zh/scripts/search.py "你的搜索查�
   "skills": {
     "entries": {
       "web-search": {
-        "apiKey": "你的_Tavily_API_密钥"
+        "apiKey": "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"
       }
     }
   }
@@ -76,5 +76,5 @@ python3 ~/.openclaw/skills/tavily-search-zh/scripts/search.py "今天的科技�
 
 - 使用 Tavily Search API 进行搜索
 - 支持中文搜索查询
-- 默认返回 5 条结果
+- 默认返回 8 条结果
 - 搜索深度：基础模式（basic）

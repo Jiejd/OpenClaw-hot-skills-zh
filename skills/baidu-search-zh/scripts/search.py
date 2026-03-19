@@ -32,19 +32,19 @@ def baidu_search(api_key, requestBody: dict):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("用法: python baidu_search.py <JSON参数>")
+        print("用法: python baidu_search.py <JSON>")
         sys.exit(1)
 
     query = sys.argv[1]
     parse_data = {}
     try:
         parse_data = json.loads(query)
-        print(f"成功解析请求参数: {parse_data}")
+        print(f"请求体解析成功: {parse_data}")
     except json.JSONDecodeError as e:
         print(f"JSON 解析错误: {e}")
 
     if "query" not in parse_data:
-        print("错误: 请求参数中必须包含 query 字段。")
+        print("错误: 请求体中必须包含 query 字段。")
         sys.exit(1)
     count = 10
     search_filter = {}
@@ -73,14 +73,14 @@ if __name__ == "__main__":
             end_date = parse_data["freshness"].split("to")[1]
             search_filter = {"range": {"page_time": {"gte": start_date, "lt": end_date}}}
         else:
-            print(f"错误: freshness 参数 ({parse_data['freshness']}) 必须是 pd、pw、pm、py 或符合格式 {pattern}。")
+            print(f"错误: freshness ({parse_data['freshness']}) 必须是 pd、pw、pm、py 或匹配格式 {pattern}。")
             sys.exit(1)
 
-    # 通过环境变量传递敏感信息
+    # 出于安全考虑，通过环境变量传递密钥
     api_key = os.getenv("BAIDU_API_KEY")
 
     if not api_key:
-        print("错误: 请在环境变量中设置 BAIDU_API_KEY。")
+        print("错误: BAIDU_API_KEY 环境变量未设置。")
         sys.exit(1)
 
     request_body = {

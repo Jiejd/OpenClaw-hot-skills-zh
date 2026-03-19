@@ -8,6 +8,17 @@ metadata: { "openclaw": { "emoji": "🔍︎",  "requires": { "bins": ["python3"]
 
 通过百度 AI 搜索 API 进行网页搜索。
 
+## 前置条件
+
+### API 密钥配置
+本技能需要配置 **BAIDU_API_KEY** 环境变量。
+
+如果您还没有 API 密钥，请访问：
+**https://console.bce.baidu.com/ai-search/qianfan/ais/console/apiKey**
+
+详细的配置步骤请参阅：
+[references/apikey-fetch.md](references/apikey-fetch.md)
+
 ## 使用方法
 
 ```bash
