@@ -4107,6 +4107,113 @@ rm -rf temp-repo
 
 ---
 
+### 61. moltguard-zh - MoltGuard 安全防护插件
+
+**版本**: v6.0.2
+**状态**: ✅ 已发布
+**来源**: [GitHub - openguardrails/moltguard](https://github.com/openguardrails/moltguard)
+
+**功能**：
+- 🛡️ **提示词净化**：本地检测并清除提示词中的敏感数据（邮箱、密钥、银行卡号等）
+- 🔍 **注入检测**：通过 MoltGuard API 检测隐藏在长内容中的提示注入攻击
+- 🔒 **敏感数据保护**：自动识别和替换高熵字符串、API 密钥、凭据等
+- 🔄 **数据还原**：API 响应中自动还原被替换的敏感数据
+- 📊 **分析记录**：本地存储分析结果和日志
+
+**核心能力**：
+- 网关模式：自动净化发送给 LLM 的内容
+- Agent 模式：通过 API 进行深度注入检测
+- 支持多种 LLM 提供商（OpenAI、Anthropic、Gemini）
+- 内存存储分析结果，支持后续查询
+
+**安装**：
+```bash
+# 1. 安装插件
+npm install @openguardrails/moltguard
+
+# 2. 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/moltguard-zh ./
+rm -rf temp-repo
+```
+
+**使用场景**：
+- 防止用户发送的邮件、网页等内容中隐藏的提示注入
+- 保护 API 密钥和其他敏感数据不被发送到 LLM
+- 对接 OpenClaw 网关实现自动安全防护
+
+**注意事项**：
+- 需要从 MoltGuard 获取 API 密钥
+- 分析功能会向 `api.moltguard.com` 发送经过净化的内容
+- 安装前建议审核源码，确保安全性
+
+[查看详细文档](./skills/moltguard-zh/clawhub-skill/SKILL.md) | [GitHub](https://github.com/openguardrails/moltguard)
+
+---
+
+### 62. news-summary-zh - 新闻摘要
+
+**版本**: v1.0.0
+**状态**: ✅ 已发布
+
+**功能**：
+- 📰 **RSS 新闻获取**：从 BBC、路透社、NPR、半岛电视台等权威新闻源获取新闻
+- 🌍 **多源整合**：整合西方和全球南方视角，平衡报道
+- 📝 **智能摘要**：按地区或主题分类，生成简洁的 5-8 条重点新闻
+- 🎙️ **语音播报**：支持通过 OpenAI TTS 生成语音摘要
+- 📊 **分类展示**：国际、财经、科技等分类展示
+
+**支持的新闻源**：
+- **BBC**：世界新闻、头条、财经、科技
+- **路透社**：全球视角
+- **NPR**：美国视角
+- **半岛电视台**：全球南方视角
+
+**安装**：
+```bash
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/news-summary-zh ./
+rm -rf temp-repo
+```
+
+**快速开始**：
+```bash
+# 获取 BBC 世界新闻
+curl -s "https://feeds.bbci.co.uk/news/world/rss.xml"
+
+# 解析 RSS 标题和描述
+curl -s "https://feeds.bbci.co.uk/news/world/rss.xml" | \
+grep -E "<title>|<description>" | \
+sed 's/<[^>]*>//g' | head -30
+```
+
+**使用场景**：
+- "今天有什么新闻？"
+- "帮我做个每日新闻简报"
+- "最近有什么重大事件？"
+- "用语音播报今天的新闻"
+
+**输出格式**：
+```
+📰 新闻摘要 [日期]
+
+🌍 国际
+- [头条 1]
+- [头条 2]
+
+💼 财经
+- [头条 1]
+
+💻 科技
+- [头条 1]
+```
+
+[查看详细文档](./skills/news-summary-zh/SKILL.md)
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求
