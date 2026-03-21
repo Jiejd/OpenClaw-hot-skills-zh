@@ -4283,6 +4283,82 @@ rm -rf temp-repo
 
 ---
 
+### 64. capability-evolver-zh - AI 智能体自进化引擎
+
+**版本**: v1.32.4
+**状态**: ✅ 已发布
+**来源**: [EvoMap - Capability Evolver](https://github.com/EvoMap/evolver)
+**首页**: https://evomap.ai
+
+**功能**：
+- 🧬 **自进化引擎**：分析运行时历史记录，自动发现改进机会并执行协议约束的进化
+- 📊 **学习信号分析**：从错误、用户纠正、性能模式等多维度提取学习信号
+- 🔄 **基因表达协议（GEP）**：基于基因组/胶囊/事件的进化架构，支持个性化和叙事记忆
+- 🤝 **A2A 协议**：智能体间通信协议，支持节点注册、技能发现和跨节点进化
+- 🛡️ **安全护栏**：内容净化、载荷限制、回滚策略、负载感知退避
+- 📝 **自动化报告**：生成人类可读的进化报告和技能蒸馏文档
+
+**核心架构**：
+- **GEA（基因组进化架构）**：基因表达 → 变异 → 选择 → 固化的进化循环
+- **GEP（基因表达协议）**：基因组管理、胶囊存储、事件日志、个性系统
+- **7 种进化策略**：balanced、innovate、harden、repair-only、early-stabilize、steady-state、auto
+- **回滚模式**：hard（硬回滚）、stash（暂存）、none
+
+**核心脚本**：
+```bash
+# 进化分析
+node scripts/analyze_by_skill.js
+
+# 生成人类报告
+node scripts/human_report.js
+
+# A2A 导出/导入
+node scripts/a2a_export.js
+node scripts/a2a_ingest.js
+
+# 发布公开版本
+node scripts/publish_public.js
+```
+
+**安装**：
+```bash
+# 1. 安装 Skill
+cd ~/.openclaw/skills/
+git clone https://github.com/L-LesterYu/OpenClaw-hot-skills-zh.git temp-repo
+cp -r temp-repo/skills/capability-evolver-zh ./
+rm -rf temp-repo
+
+# 2. 安装依赖
+cd ~/.openclaw/skills/capability-evolver-zh && npm install
+```
+
+**配置**：
+```bash
+# 必需
+export A2A_NODE_ID="your-node-id"
+
+# 可选
+export A2A_HUB_URL="https://evomap.ai"  # 默认
+export GITHUB_TOKEN="ghp_xxx"            # GitHub Issue 自动报告
+export EVOLVE_STRATEGY="balanced"        # 进化策略
+```
+
+**使用场景**：
+- AI 智能体持续自我改进和进化
+- 跨智能体的技能共享和协作进化
+- 运行时错误分析和自动修复
+- 个性化进化策略配置
+
+**注意事项**：
+- 需要 Node.js 18+ 和 git
+- A2A_NODE_ID 为必需环境变量
+- 进化策略可通过 EVOLVE_STRATEGY 环境变量配置
+- 建议在高负载时自动退避，避免影响正常工作
+
+[查看详细文档](./skills/capability-evolver-zh/SKILL.md) | [EvoMap 官网](https://evomap.ai)
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求
