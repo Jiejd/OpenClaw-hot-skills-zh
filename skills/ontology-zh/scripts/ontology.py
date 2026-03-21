@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-本体图谱操作：创建、查询、关联、验证。
+本体图操作：创建、查询、关联、验证。
 
 用法：
-    python ontology.py create --type Person --props '{"name":"张三"}'
+    python ontology.py create --type Person --props '{"name":"Alice"}'
     python ontology.py get --id p_001
     python ontology.py query --type Task --where '{"status":"open"}'
     python ontology.py relate --from proj_001 --rel has_task --to task_001
@@ -28,11 +28,11 @@ def resolve_safe_path(
     *,
     root: Path | None = None,
     must_exist: bool = False,
-    label: str = "路径",
+    label: str = "path",
 ) -> Path:
-    """在根目录范围内解析用户路径，拒绝超出范围的访问。"""
+    """在根目录内解析用户路径，拒绝根目录外的路径遍历。"""
     if not user_path or not user_path.strip():
-        raise SystemExit(f"无效的{label}：路径为空")
+        raise SystemExit(f"无效的 {label}：路径为空")
 
     safe_root = (root or Path.cwd()).resolve()
     candidate = Path(user_path).expanduser()
@@ -42,17 +42,17 @@ def resolve_safe_path(
     try:
         resolved = candidate.resolve(strict=False)
     except OSError as exc:
-        raise SystemExit(f"无效的{label}：{exc}") from exc
+        raise SystemExit(f"无效的 {label}：{exc}") from exc
 
     try:
         resolved.relative_to(safe_root)
     except ValueError:
         raise SystemExit(
-            f"无效的{label}：必须在工作区根目录 '{safe_root}' 范围内"
+            f"无效的 {label}：必须在工作区根目录 '{safe_root}' 内"
         )
 
     if must_exist and not resolved.exists():
-        raise SystemExit(f"无效的{label}：文件未找到 '{resolved}'")
+        raise SystemExit(f"无效的 {label}：未找到文件 '{resolved}'")
 
     return resolved
 
@@ -65,7 +65,7 @@ def generate_id(type_name: str) -> str:
 
 
 def load_graph(path: str) -> tuple[dict, list]:
-    """从图谱文件加载实体和关系。"""
+    """从图文件中加载实体和关系。"""
     entities = {}
     relations = []
     
@@ -109,7 +109,7 @@ def load_graph(path: str) -> tuple[dict, list]:
 
 
 def append_op(path: str, record: dict):
-    """将操作追加到图谱文件。"""
+    """将操作追加到图文件。"""
     graph_path = Path(path)
     graph_path.parent.mkdir(parents=True, exist_ok=True)
     
@@ -137,13 +137,13 @@ def create_entity(type_name: str, properties: dict, graph_path: str, entity_id: 
 
 
 def get_entity(entity_id: str, graph_path: str) -> dict | None:
-    """按 ID 获取实体。"""
+    """根据 ID 获取实体。"""
     entities, _ = load_graph(graph_path)
     return entities.get(entity_id)
 
 
 def query_entities(type_name: str, where: dict, graph_path: str) -> list:
-    """按类型和属性查询实体。"""
+    """根据类型和属性查询实体。"""
     entities, _ = load_graph(graph_path)
     results = []
     
@@ -164,7 +164,7 @@ def query_entities(type_name: str, where: dict, graph_path: str) -> list:
 
 
 def list_entities(type_name: str, graph_path: str) -> list:
-    """列出某类型的所有实体。"""
+    """列出指定类型的所有实体。"""
     entities, _ = load_graph(graph_path)
     if type_name:
         return [e for e in entities.values() if e["type"] == type_name]
@@ -248,11 +248,11 @@ def get_related(entity_id: str, rel_type: str, graph_path: str, direction: str =
 
 
 def validate_graph(graph_path: str, schema_path: str) -> list:
-    """根据模式约束验证图谱。"""
+    """根据 schema 约束验证图。"""
     entities, relations = load_graph(graph_path)
     errors = []
     
-    # 加载模式（如果存在）
+    # 如果存在 schema 则加载
     schema = load_schema(schema_path)
     
     type_schemas = schema.get("types", {})
@@ -267,13 +267,13 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
         required = type_schema.get("required", [])
         for prop in required:
             if prop not in entity["properties"]:
-                errors.append(f"{entity_id}: 缺少必填属性 '{prop}'")
+                errors.append(f"{entity_id}：缺少必填属性 '{prop}'")
         
         # 检查禁止属性
         forbidden = type_schema.get("forbidden_properties", [])
         for prop in forbidden:
             if prop in entity["properties"]:
-                errors.append(f"{entity_id}: 包含禁止属性 '{prop}'")
+                errors.append(f"{entity_id}：包含禁止属性 '{prop}'")
         
         # 检查枚举值
         for prop, allowed in type_schema.items():
@@ -281,9 +281,9 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
                 field = prop.replace("_enum", "")
                 value = entity["properties"].get(field)
                 if value and value not in allowed:
-                    errors.append(f"{entity_id}: '{field}' 必须为 {allowed} 之一，当前值为 '{value}'")
+                    errors.append(f"{entity_id}：'{field}' 必须是 {allowed} 之一，实际为 '{value}'")
     
-    # 关系约束（类型 + 基数 + 无环）
+    # 关系约束（类型 + 基数 + 无环性）
     rel_index = {}
     for rel in relations:
         rel_index.setdefault(rel["rel"], []).append(rel)
@@ -300,15 +300,15 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
             from_entity = entities.get(rel["from"])
             to_entity = entities.get(rel["to"])
             if not from_entity or not to_entity:
-                errors.append(f"{rel_type}: 关系引用了不存在的实体 ({rel['from']} -> {rel['to']})")
+                errors.append(f"{rel_type}：关系引用了不存在的实体 ({rel['from']} -> {rel['to']})")
                 continue
             if from_types and from_entity["type"] not in from_types:
                 errors.append(
-                    f"{rel_type}: 起始实体 {rel['from']} 的类型 {from_entity['type']} 不在 {from_types} 中"
+                    f"{rel_type}：来源实体 {rel['from']} 类型 {from_entity['type']} 不在 {from_types} 中"
                 )
             if to_types and to_entity["type"] not in to_types:
                 errors.append(
-                    f"{rel_type}: 目标实体 {rel['to']} 的类型 {to_entity['type']} 不在 {to_types} 中"
+                    f"{rel_type}：目标实体 {rel['to']} 类型 {to_entity['type']} 不在 {to_types} 中"
                 )
         
         # 基数检查
@@ -322,11 +322,11 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
             if cardinality in ("one_to_one", "many_to_one"):
                 for from_id, count in from_counts.items():
                     if count > 1:
-                        errors.append(f"{rel_type}: 起始实体 {from_id} 违反了基数约束 {cardinality}")
+                        errors.append(f"{rel_type}：来源实体 {from_id} 违反基数约束 {cardinality}")
             if cardinality in ("one_to_one", "one_to_many"):
                 for to_id, count in to_counts.items():
                     if count > 1:
-                        errors.append(f"{rel_type}: 目标实体 {to_id} 违反了基数约束 {cardinality}")
+                        errors.append(f"{rel_type}：目标实体 {to_id} 违反基数约束 {cardinality}")
         
         # 无环检查
         if acyclic:
@@ -351,7 +351,7 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
             for node in graph:
                 if not visited.get(node, False):
                     if dfs(node, set()):
-                        errors.append(f"{rel_type}: 检测到循环依赖")
+                        errors.append(f"{rel_type}：检测到循环依赖")
                         break
     
     # 全局约束（有限执行）
@@ -370,18 +370,18 @@ def validate_graph(graph_path: str, schema_path: str) -> list:
                         start_dt = datetime.fromisoformat(start)
                         end_dt = datetime.fromisoformat(end)
                         if end_dt < start_dt:
-                            errors.append(f"{entity_id}: 结束时间必须不早于开始时间")
+                            errors.append(f"{entity_id}：结束时间必须大于等于开始时间")
                     except ValueError:
-                        errors.append(f"{entity_id}: 开始/结束时间格式无效")
+                        errors.append(f"{entity_id}：start/end 的日期时间格式无效")
         if relation and rule == "acyclic":
-            # 已在上方通过关系模式执行
+            # 已通过关系 schema 在上方执行
             continue
     
     return errors
 
 
 def load_schema(schema_path: str) -> dict:
-    """从 YAML 加载模式（如果存在）。"""
+    """如果 schema 文件存在，从 YAML 加载。"""
     schema = {}
     schema_file = Path(schema_path)
     if schema_file.exists():
@@ -392,7 +392,7 @@ def load_schema(schema_path: str) -> dict:
 
 
 def write_schema(schema_path: str, schema: dict) -> None:
-    """将模式写入 YAML 文件。"""
+    """将 schema 写入 YAML 文件。"""
     schema_file = Path(schema_path)
     schema_file.parent.mkdir(parents=True, exist_ok=True)
     import yaml
@@ -401,7 +401,7 @@ def write_schema(schema_path: str, schema: dict) -> None:
 
 
 def merge_schema(base: dict, incoming: dict) -> dict:
-    """将新模式合并到基础模式中，列表进行追加，字典进行深度合并。"""
+    """将传入的 schema 合并到基础 schema 中，追加列表并深度合并字典。"""
     for key, value in (incoming or {}).items():
         if key in base and isinstance(base[key], dict) and isinstance(value, dict):
             base[key] = merge_schema(base[key], value)
@@ -413,7 +413,7 @@ def merge_schema(base: dict, incoming: dict) -> dict:
 
 
 def append_schema(schema_path: str, incoming: dict) -> dict:
-    """将模式片段追加/合并到现有模式中。"""
+    """将 schema 片段追加/合并到现有 schema 中。"""
     base = load_schema(schema_path)
     merged = merge_schema(base, incoming)
     write_schema(schema_path, merged)
@@ -421,18 +421,18 @@ def append_schema(schema_path: str, incoming: dict) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="本体图谱操作工具")
+    parser = argparse.ArgumentParser(description="本体图操作")
     subparsers = parser.add_subparsers(dest="command", required=True)
     
     # 创建
     create_p = subparsers.add_parser("create", help="创建实体")
     create_p.add_argument("--type", "-t", required=True, help="实体类型")
     create_p.add_argument("--props", "-p", default="{}", help="属性 JSON")
-    create_p.add_argument("--id", help="实体 ID（不提供则自动生成）")
+    create_p.add_argument("--id", help="实体 ID（未提供时自动生成）")
     create_p.add_argument("--graph", "-g", default=DEFAULT_GRAPH_PATH)
     
     # 获取
-    get_p = subparsers.add_parser("get", help="按 ID 获取实体")
+    get_p = subparsers.add_parser("get", help="根据 ID 获取实体")
     get_p.add_argument("--id", required=True, help="实体 ID")
     get_p.add_argument("--graph", "-g", default=DEFAULT_GRAPH_PATH)
     
@@ -460,7 +460,7 @@ def main():
     
     # 关联
     relate_p = subparsers.add_parser("relate", help="创建关系")
-    relate_p.add_argument("--from", dest="from_id", required=True, help="起始实体 ID")
+    relate_p.add_argument("--from", dest="from_id", required=True, help="来源实体 ID")
     relate_p.add_argument("--rel", "-r", required=True, help="关系类型")
     relate_p.add_argument("--to", dest="to_id", required=True, help="目标实体 ID")
     relate_p.add_argument("--props", "-p", default="{}", help="关系属性 JSON")
@@ -474,31 +474,31 @@ def main():
     related_p.add_argument("--graph", "-g", default=DEFAULT_GRAPH_PATH)
     
     # 验证
-    validate_p = subparsers.add_parser("validate", help="验证图谱")
+    validate_p = subparsers.add_parser("validate", help="验证图")
     validate_p.add_argument("--graph", "-g", default=DEFAULT_GRAPH_PATH)
     validate_p.add_argument("--schema", "-s", default=DEFAULT_SCHEMA_PATH)
 
-    # 模式追加
-    schema_p = subparsers.add_parser("schema-append", help="追加/合并模式片段")
+    # Schema 追加
+    schema_p = subparsers.add_parser("schema-append", help="追加/合并 schema 片段")
     schema_p.add_argument("--schema", "-s", default=DEFAULT_SCHEMA_PATH)
-    schema_p.add_argument("--data", "-d", help="模式片段 JSON")
-    schema_p.add_argument("--file", "-f", help="模式片段文件（YAML 或 JSON）")
+    schema_p.add_argument("--data", "-d", help="Schema 片段（JSON 格式）")
+    schema_p.add_argument("--file", "-f", help="Schema 片段文件（YAML 或 JSON）")
     
     args = parser.parse_args()
     workspace_root = Path.cwd().resolve()
 
     if hasattr(args, "graph"):
         args.graph = str(
-            resolve_safe_path(args.graph, root=workspace_root, label="图谱路径")
+            resolve_safe_path(args.graph, root=workspace_root, label="graph 路径")
         )
     if hasattr(args, "schema"):
         args.schema = str(
-            resolve_safe_path(args.schema, root=workspace_root, label="模式路径")
+            resolve_safe_path(args.schema, root=workspace_root, label="schema 路径")
         )
     if hasattr(args, "file") and args.file:
         args.file = str(
             resolve_safe_path(
-                args.file, root=workspace_root, must_exist=True, label="模式文件"
+                args.file, root=workspace_root, must_exist=True, label="schema 文件"
             )
         )
     
@@ -553,7 +553,7 @@ def main():
             for err in errors:
                 print(f"  - {err}")
         else:
-            print("图谱验证通过。")
+            print("图结构验证通过。")
     
     elif args.command == "schema-append":
         if not args.data and not args.file:

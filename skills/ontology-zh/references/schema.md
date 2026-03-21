@@ -1,10 +1,10 @@
-# 本体模式参考
+# 本体 Schema 参考
 
-本体图谱的完整类型定义和约束模式。
+本体图的完整类型定义和约束模式。
 
 ## 核心类型
 
-### 智能体与人物
+### 智能体与人员
 
 ```yaml
 Person:
@@ -183,8 +183,8 @@ Action:
 Policy:
   required: [scope, rule]
   properties:
-    scope: string  # 此策略适用的范围
-    rule: string   # 自然语言或代码形式的约束条件
+    scope: string  # 此策略的适用范围
+    rule: string   # 以自然语言或代码表示的约束条件
     enforcement: enum(block, warn, log)
     enabled: boolean
 ```
@@ -294,29 +294,29 @@ located_at:
 
 ```yaml
 constraints:
-  # 凭证绝不能直接存储密钥
+  # 凭证不得直接存储密钥
   - type: Credential
     rule: "forbidden_properties: [password, secret, token]"
     message: "凭证必须使用 secret_ref 引用外部密钥存储"
 
-  # 任务必须遵循有效的状态转换
+  # 任务必须有有效的状态转换
   - type: Task
     rule: "status transitions: open -> in_progress -> (done|blocked) -> done"
     enforcement: warn
 
-  # 事件的结束时间必须不早于开始时间
+  # 事件的结束时间必须大于等于开始时间
   - type: Event
     rule: "if end exists: end >= start"
     message: "事件结束时间必须晚于开始时间"
 
-  # 任务不应孤立（应属于某个项目或拥有明确负责人）
+  # 任务不应孤立（应属于某个项目或有明确的负责人）
   - type: Task
     rule: "has_relation(part_of, Project) OR has_property(owner)"
     enforcement: warn
-    message: "任务应属于某个项目或拥有明确负责人"
+    message: "任务应属于某个项目或有明确的负责人"
 
   # 防止循环依赖
   - relation: blocks
     rule: "acyclic"
-    message: "不允许循环任务依赖"
+    message: "不允许任务间存在循环依赖"
 ```
