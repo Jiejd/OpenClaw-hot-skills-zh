@@ -79,7 +79,7 @@
 | [trello-zh](skills/trello-zh/SKILL.md) | 通过 REST API 管理 Trello 看板、列表和卡片 | 💰📦 |
 | [caldav-calendar-zh](skills/caldav-calendar-zh/SKILL.md) | 使用 vdirsyncer + khal 同步 CalDAV 日历（iCloud/Google 等） | 📦 |
 | [obsidian-zh](skills/obsidian-zh/SKILL.md) | 管理 Obsidian 笔记库，自动化笔记工作流和任务追踪 | 📦 |
-| [weather-zh](skills/weather-zh/SKILL.md) | 获取当前天气和天气预报 | ✅ |
+| [weather-zh](skills/weather-zh/SKILL.md) | 通过 wttr.in + Open-Meteo 免费查询天气——紧凑/完整预报、中文输出、JSON API 程序化调用，仅需 curl | ✅ |
 | [minara-zh](skills/minara-zh/SKILL.md) | 加密货币交易 CLI——兑换、永续合约、支付，支持 EVM + Solana | 💰📦 |
 
 ### 🎨 设计与内容创作
