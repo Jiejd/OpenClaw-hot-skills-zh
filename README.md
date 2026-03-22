@@ -127,7 +127,7 @@
 | [excel-xlsx-zh](skills/excel-xlsx-zh/SKILL.md) | 创建、检查和编辑 Excel 工作簿，支持公式、日期、格式化和模板保留 | 📦 |
 | [markdown-converter-zh](skills/markdown-converter-zh/SKILL.md) | PDF/Word/PPT/Excel/HTML 等转 Markdown，支持 OCR 和音频转录 | 📦 |
 | [video-frames-zh](skills/video-frames-zh/SKILL.md) | 使用 ffmpeg 从视频中提取帧或短片段 | 📦 |
-| [openai-whisper-zh](skills/openai-whisper-zh/SKILL.md) | 本地语音转文字，无需 API Key | 📦 |
+| [openai-whisper-zh](skills/openai-whisper-zh/SKILL.md) | 本地运行 OpenAI Whisper 模型进行语音转录与翻译，支持多音频格式、多模型尺寸选择，数据不出本地 | 📦 |
 | [humanizer-zh](skills/humanizer-zh/SKILL.md) | 检测并移除 AI 写作痕迹，基于 Wikipedia 指南修复 24 种 AI 文本模式（过度夸大、促销语言、模糊归因等），让文本更自然 | ✅ |
 
 ### 📊 数据分析
