@@ -26,7 +26,7 @@
 | 技能 | 推荐理由 |
 |------|---------|
 | [multi-search-engine-zh](skills/multi-search-engine-zh/SKILL.md) | **17 个搜索引擎一键切换**，国内外全覆盖，无需 API Key，搜索能力最强 |
-| [find-skills-zh](skills/find-skills-zh/SKILL.md) | 不知道装什么技能？让它帮你找，是探索技能生态的入口 |
+| [find-skills-zh](skills/find-skills-zh/SKILL.md) | 技能生态探索入口——关键词搜索 skills.sh 技能库，发现并安装所需能力 |
 | [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | Tavily API 网页搜索，免费 API Key，精准返回少量结果与 AI 摘要，Brave 的零成本替代方案 |
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | **让 Agent 越用越聪明**——自动捕获经验、纠正错误、积累知识 |
 | [frontend-design-zh](skills/frontend-design-zh/SKILL.md) | 纯文本描述即可生成生产级 React 网站，设计师的最强辅助 |
@@ -107,7 +107,7 @@
 | [desktop-control-zh](skills/desktop-control-zh/SKILL.md) | 基于 PyAutoGUI 的桌面自动化——像素级鼠标/键盘控制、屏幕截图与图像识别、窗口管理、剪贴板操作，内置故障保护机制 | 📦 |
 | [skill-creator-zh](skills/skill-creator-zh/SKILL.md) | AgentSkills 全生命周期工具——创建、编辑、验证、打包，内置初始化脚本和规范检查器 | ✅ |
 | [clawhub-zh](skills/clawhub-zh/SKILL.md) | ClawHub CLI——搜索、安装、更新和发布技能 | 📦 |
-| [find-skills-zh](skills/find-skills-zh/SKILL.md) | 发现和安装智能体技能的导航助手 | ✅ |
+| [find-skills-zh](skills/find-skills-zh/SKILL.md) | 通过 `npx skills` CLI 搜索 skills.sh 开放技能库，按关键词发现并安装智能体扩展能力 | 📦 |
 | [n8n-workflow-automation-zh](skills/n8n-workflow-automation-zh/SKILL.md) | 设计健壮的 n8n 工作流 JSON，含重试、日志和审核队列 | ✅ |
 | [automation-workflows-zh](skills/automation-workflows-zh/SKILL.md) | 自动化工作流设计——识别重复任务、选择工具、构建流程 | ✅ |
 | [clawddocs-zh](skills/clawddocs-zh/SKILL.md) | Clawdbot 文档专家——决策树导航、搜索和配置 | ✅ |
