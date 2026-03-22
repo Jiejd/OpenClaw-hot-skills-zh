@@ -125,7 +125,7 @@
 | [word-docx-zh](skills/word-docx-zh/SKILL.md) | OOXML 感知的 Word 文档精准编辑——样式/编号/修订/批注/域/节完整支持，往返编辑格式不漂移 | ✅ |
 | [gongwen-zh](skills/gongwen-zh/SKILL.md) | 按党政机关公文格式标准自动排版 | ✅ |
 | [nano-pdf-zh](skills/nano-pdf-zh/SKILL.md) | 通过 nano-pdf CLI 用自然语言指令编辑 PDF 特定页面，支持标题修改、内容更正等精准操作 | 📦 |
-| [excel-xlsx-zh](skills/excel-xlsx-zh/SKILL.md) | 创建、检查和编辑 Excel 工作簿，支持公式、日期、格式化和模板保留 | 📦 |
+| [excel-xlsx-zh](skills/excel-xlsx-zh/SKILL.md) | OOXML 感知的 Excel 工作簿精准编辑——公式/日期/数据类型完整保留，往返编辑格式不漂移，pandas+openpyxl 双引擎按场景自动选择 | 📦 |
 | [markdown-converter-zh](skills/markdown-converter-zh/SKILL.md) | 基于 markitdown 将 15+ 种文档格式转为 Markdown，支持图片 OCR、音频转录、YouTube 字幕提取及 ZIP 解包 | 📦 |
 | [video-frames-zh](skills/video-frames-zh/SKILL.md) | 基于 ffmpeg 提取视频帧——支持指定时间点截取单帧画面，JPG/PNG 双格式输出，用于视频预览与截图 | 📦 |
 | [openai-whisper-zh](skills/openai-whisper-zh/SKILL.md) | 本地运行 OpenAI Whisper 模型进行语音转录与翻译，支持多音频格式、多模型尺寸选择，数据不出本地 | 📦 |
