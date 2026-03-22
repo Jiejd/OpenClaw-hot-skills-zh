@@ -94,7 +94,7 @@
 | [content-ideas-generator-zh](skills/content-ideas-generator-zh/SKILL.md) | 从新闻通讯/笔记/脚本等素材中提炼反直觉洞察，生成 5 个高互动社交媒体帖子大纲——包含悖论框架、转变弧线、异议预判与语言技巧应用，仅输出大纲不写全文 | ✅ |
 | [marketing-mode-zh](skills/marketing-mode-zh/SKILL.md) | 营销战略知识库——以专家人"Mark"提供 140+ 实战营销方法，覆盖 SEO、付费广告、社交媒体、邮件营销、PR、产品驱动增长等 23 个子领域，含 5 阶段发布框架与转化优化体系 | 📦 |
 | [marketing-skills-zh](skills/marketing-skills-zh/SKILL.md) | 23 个营销模块实战参考库——覆盖 CRO、SEO、文案、付费广告、邮件序列、定价策略等全链路，提供即用检查清单与框架模板 | ✅ |
-| [admapix-zh](skills/admapix-zh/SKILL.md) | 广告创意素材搜索，查找竞品广告视频和创意素材 | 💰 |
+| [admapix-zh](skills/admapix-zh/SKILL.md) | 竞品广告素材搜索引擎——按关键词/类型/地区/时间筛选，支持视频、图片与试玩广告，结果以 H5 可视化页面展示 | 💰📦 |
 | [xiaohongshu-mcp-zh](skills/xiaohongshu-mcp-zh/SKILL.md) | 小红书内容运营自动化——发布、搜索、趋势分析 | 📦 |
 
 ### 🛠️ 开发工具
