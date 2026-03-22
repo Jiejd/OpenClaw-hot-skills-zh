@@ -115,7 +115,7 @@
 | [byterover-zh](skills/byterover-zh/SKILL.md) | 为 AI 编码助手管理项目知识的上下文工程平台——自动整理模式、决策与经验，Docker 隔离运行，团队间上下文自动同步 | 💰📦 |
 | [qmd-zh](skills/qmd-zh/SKILL.md) | 本地搜索/索引 CLI（BM25 + 向量搜索 + 重排序），附带 MCP 模式 | 📦 |
 | [qa-engineer-zh](skills/qa-engineer-zh/SKILL.md) | 软件测试与质量保证——发现 bug、执行测试、生成报告 | ✅ |
-| [model-usage-zh](skills/model-usage-zh/SKILL.md) | 汇总 Codex/Claude 的按模型使用情况和成本数据 | 📦 |
+| [model-usage-zh](skills/model-usage-zh/SKILL.md) | 通过 CodexBar CLI 从本地成本日志汇总 Codex/Claude 按模型使用量与成本，支持当前模型快照或全量明细，文本/JSON 双输出 | 📦 |
 | [api-gateway-zh](skills/api-gateway-zh/SKILL.md) | 通过 Maton.ai 代理统一访问 100+ 第三方 API（Slack、HubSpot、Google Workspace、Notion、Stripe 等），托管 OAuth 自动注入令牌，支持原生端点透传与多连接管理 | 💰 |
 
 ### 📄 文档与文件处理
