@@ -7,7 +7,7 @@
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 ClawHub 平台上优质技能（Skills）的中文版本，共收录 **68 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 ClawHub 平台上优质技能（Skills）的中文版本，共收录 **69 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
@@ -51,6 +51,7 @@
 | [news-summary-zh](skills/news-summary-zh/SKILL.md) | 新闻摘要聚合，快速了解最新资讯 | ✅ |
 | [youtube-zh](skills/youtube-zh/SKILL.md) | YouTube 视频/频道搜索、详情获取和字幕提取 | 💰📦 |
 | [youtube-watcher-zh](skills/youtube-watcher-zh/SKILL.md) | 通过 yt-dlp 提取 YouTube 视频字幕，支持视频摘要、问答和内容提取，仅适用于有字幕的视频 | 📦 |
+| [web-search-plus-zh](skills/web-search-plus-zh/SKILL.md) | 智能自动路由的统一搜索——连接 7 个搜索提供商（Serper/Tavily/Querit/Exa/Perplexity/You.com/SearXNG），通过多信号分析自动选择最佳引擎，附带置信度评分 | 💰📦 |
 
 ### 🧠 Agent 增强
 
