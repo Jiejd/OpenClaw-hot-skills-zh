@@ -73,7 +73,7 @@
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [gog-zh](skills/gog-zh/SKILL.md) | Google Workspace CLI——Gmail、日历、云盘、联系人、表格和文档 | 📦 |
+| [gog-zh](skills/gog-zh/SKILL.md) | Google Workspace 统一 CLI 工具，覆盖 Gmail 收发、日历事件查询、云盘搜索、联系人管理、表格读写与文档导出，需 OAuth 认证 | 📦 |
 | [notion-skill-zh](skills/notion-skill-zh/SKILL.md) | 通过官方 Notion API 读写页面、管理数据库、追加内容块，支持多配置文件和架构变更 | 💰📦 |
 | [slack-zh](skills/slack-zh/SKILL.md) | 控制 Slack 频道消息发送、置顶等操作 | ✅ |
 | [trello-zh](skills/trello-zh/SKILL.md) | 通过 REST API 管理 Trello 看板、列表和卡片 | 💰📦 |
