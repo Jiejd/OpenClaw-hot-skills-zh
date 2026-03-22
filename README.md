@@ -100,7 +100,7 @@
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [github-zh](skills/github-zh/SKILL.md) | 使用 `gh` CLI 操作 GitHub Issues、PR、CI 运行 | 📦 |
+| [github-zh](skills/github-zh/SKILL.md) | 通过 `gh` CLI 管理 GitHub 全流程——Issues、PR 生命周期、CI/CD 监控与重跑、仓库操作，支持 `gh api` 高级查询与 JSON 结构化输出 | 📦 |
 | [mcporter-zh](skills/mcporter-zh/SKILL.md) | MCP 服务器管理——列出、配置、认证和调用 MCP 工具 | 📦 |
 | [playwright-mcp-zh](skills/playwright-mcp-zh/SKILL.md) | 通过 Playwright MCP 实现浏览器自动化 | 📦 |
 | [Agent-Browser-zh](skills/Agent-Browser-zh/SKILL.md) | AI 专用无头浏览器自动化 CLI——基于无障碍树确定性引用驱动导航、点击、填充，Rust+Node.js 架构，支持会话管理与 JSON 结构化输出 | 📦 |
