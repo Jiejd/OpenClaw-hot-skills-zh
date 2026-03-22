@@ -47,7 +47,7 @@
 | [baidu-search-zh](skills/baidu-search-zh/SKILL.md) | 百度 AI 搜索引擎，适合中文内容查询 | 💰📦 |
 | [brave-search-zh](skills/brave-search-zh/SKILL.md) | Brave Search API 轻量搜索 CLI——网页搜索 + 可选页面内容提取（Markdown），无需浏览器 | 💰📦 |
 | [brave-web-search-zh](skills/brave-web-search-zh/SKILL.md) | Brave Search API 双模式搜索：排序网页结果 + AI 摘要答案，支持时间筛选 | 💰📦 |
-| [answer-overflow-zh](skills/answer-overflow-zh/SKILL.md) | 搜索已索引的 Discord 社区讨论，查找编程问题解决方案 | ✅ |
+| [answer-overflow-zh](skills/answer-overflow-zh/SKILL.md) | 搜索已索引的 Discord 社区讨论，获取编程问题、库问题和社区问答的解决方案，支持 MCP 服务器搜索与线程内容 Markdown 抓取 | ✅ |
 | [news-summary-zh](skills/news-summary-zh/SKILL.md) | 新闻摘要聚合，快速了解最新资讯 | ✅ |
 | [youtube-zh](skills/youtube-zh/SKILL.md) | YouTube 视频/频道搜索、详情获取和字幕提取 | 💰📦 |
 | [youtube-watcher-zh](skills/youtube-watcher-zh/SKILL.md) | 通过 yt-dlp 提取 YouTube 视频字幕，支持视频摘要、问答和内容提取，仅适用于有字幕的视频 | 📦 |
