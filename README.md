@@ -106,7 +106,7 @@
 | [Agent-Browser-zh](skills/Agent-Browser-zh/SKILL.md) | AI 专用无头浏览器自动化 CLI——基于无障碍树确定性引用驱动导航、点击、填充，Rust+Node.js 架构，支持会话管理与 JSON 结构化输出 | 📦 |
 | [desktop-control-zh](skills/desktop-control-zh/SKILL.md) | 基于 PyAutoGUI 的桌面自动化——像素级鼠标/键盘控制、屏幕截图与图像识别、窗口管理、剪贴板操作，内置故障保护机制 | 📦 |
 | [skill-creator-zh](skills/skill-creator-zh/SKILL.md) | AgentSkills 全生命周期工具——创建、编辑、验证、打包，内置初始化脚本和规范检查器 | ✅ |
-| [clawhub-zh](skills/clawhub-zh/SKILL.md) | ClawHub CLI——搜索、安装、更新和发布技能 | 📦 |
+| [clawhub-zh](skills/clawhub-zh/SKILL.md) | 通过 ClawHub CLI 管理 clawhub.com 上的智能体技能——搜索发现、安装指定版本、哈希匹配增量更新（支持全量）、列出已装技能及发布新技能，支持自定义注册表与工作目录 | 📦 |
 | [find-skills-zh](skills/find-skills-zh/SKILL.md) | 通过 `npx skills` CLI 搜索 skills.sh 开放技能库，按关键词发现并安装智能体扩展能力 | 📦 |
 | [n8n-workflow-automation-zh](skills/n8n-workflow-automation-zh/SKILL.md) | 设计健壮的 n8n 工作流 JSON，含重试、日志和审核队列 | ✅ |
 | [automation-workflows-zh](skills/automation-workflows-zh/SKILL.md) | 自动化工作流设计——识别重复任务、选择工具、构建流程 | ✅ |
