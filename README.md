@@ -137,7 +137,7 @@
 | 技能 | 描述 | 标记 |
 |------|------|------|
 | [stock-analysis-zh](skills/stock-analysis-zh/SKILL.md) | 基于 Yahoo Finance API 的全面股票研究——公司概览、技术指标与估值、多股对比、内部人士交易追踪及 SEC 监管文件，支持美股与国际市场 | 💰付费API |
-| [stock-market-pro-zh](skills/stock-market-pro-zh/SKILL.md) | 专业股市分析工具 | 📦 |
+| [stock-market-pro-zh](skills/stock-market-pro-zh/SKILL.md) | 基于 Yahoo Finance 的本地股票分析——实时报价、基本面数据、ASCII 趋势图与高分辨率技术图表（RSI/MACD/BB/VWAP/ATR），一键综合报告，可选新闻与期权扩展 | 📦需CLI |
 
 ### 🔒 安全与防护
 
