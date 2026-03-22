@@ -103,7 +103,7 @@
 |------|------|------|
 | [github-zh](skills/github-zh/SKILL.md) | 通过 `gh` CLI 管理 GitHub 全流程——Issues、PR 生命周期、CI/CD 监控与重跑、仓库操作，支持 `gh api` 高级查询与 JSON 结构化输出 | 📦 |
 | [mcporter-zh](skills/mcporter-zh/SKILL.md) | MCP 统一客户端与代码生成 CLI——零配置自动发现（Cursor/Claude/Codex 等），直接调用 MCP 工具，一键生成 TypeScript 类型定义与独立 CLI，内置 OAuth 认证与临时连接 | 📦 |
-| [playwright-mcp-zh](skills/playwright-mcp-zh/SKILL.md) | 通过 Playwright MCP 实现浏览器自动化 | 📦 |
+| [playwright-mcp-zh](skills/playwright-mcp-zh/SKILL.md) | 基于 Playwright MCP 的浏览器自动化——导航、点击、输入、表单填充、数据提取、截图与 JS 执行，支持 Chrome/Firefox/WebKit，内置沙箱与安全主机限制 | 📦 |
 | [Agent-Browser-zh](skills/Agent-Browser-zh/SKILL.md) | AI 专用无头浏览器自动化 CLI——基于无障碍树确定性引用驱动导航、点击、填充，Rust+Node.js 架构，支持会话管理与 JSON 结构化输出 | 📦 |
 | [desktop-control-zh](skills/desktop-control-zh/SKILL.md) | 基于 PyAutoGUI 的桌面自动化——像素级鼠标/键盘控制、屏幕截图与图像识别、窗口管理、剪贴板操作，内置故障保护机制 | 📦 |
 | [skill-creator-zh](skills/skill-creator-zh/SKILL.md) | AgentSkills 全生命周期工具——创建、编辑、验证、打包，内置初始化脚本和规范检查器 | ✅ |
