@@ -115,7 +115,7 @@
 | [qmd-zh](skills/qmd-zh/SKILL.md) | 本地搜索/索引 CLI（BM25 + 向量搜索 + 重排序），附带 MCP 模式 | 📦 |
 | [qa-engineer-zh](skills/qa-engineer-zh/SKILL.md) | 软件测试与质量保证——发现 bug、执行测试、生成报告 | ✅ |
 | [model-usage-zh](skills/model-usage-zh/SKILL.md) | 汇总 Codex/Claude 的按模型使用情况和成本数据 | 📦 |
-| [api-gateway-zh](skills/api-gateway-zh/SKILL.md) | API 网关技能 | ✅ |
+| [api-gateway-zh](skills/api-gateway-zh/SKILL.md) | 通过 Maton.ai 代理统一访问 100+ 第三方 API（Slack、HubSpot、Google Workspace、Notion、Stripe 等），托管 OAuth 自动注入令牌，支持原生端点透传与多连接管理 | 💰 |
 
 ### 📄 文档与文件处理
 
