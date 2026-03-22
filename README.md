@@ -88,7 +88,7 @@
 | 技能 | 描述 | 标记 |
 |------|------|------|
 | [frontend-design-zh](skills/frontend-design-zh/SKILL.md) | 从纯文本需求生成生产级网站，无需设计稿。React 18 + TypeScript + Tailwind + shadcn/ui + Framer Motion，反 AI 套路美学，支持 Vite 静态和 Next.js 双工作流 | 📦 |
-| [SuperDesign-zh](skills/SuperDesign-zh/SKILL.md) | 前端设计指南，专精创建美观现代的 UI 界面 | ✅ |
+| [SuperDesign-zh](skills/SuperDesign-zh/SKILL.md) | 前端设计系统参考——结构化工作流（ASCII 线框→主题→动画→落地），暗色/野兽派/玻璃拟态三套视觉风格模板，oklch 配色 + Google Fonts + Tailwind 实现，内置无障碍与响应式规范 | ✅ |
 | [ui-ux-pro-max-zh](skills/ui-ux-pro-max-zh/README.md) | AI 设计智能工具包——UI 风格、配色、字体、UX 指南数据库 | 📦 |
 | [nano-banana-pro-zh](skills/nano-banana-pro-zh/SKILL.md) | 通过 Gemini 3 Pro Image API 生成与编辑图像——支持文生图、图生图及 1K/2K/4K 分辨率，内置草稿→迭代→最终渐进工作流 | 💰📦 |
 | [content-ideas-generator-zh](skills/content-ideas-generator-zh/SKILL.md) | 从新闻通讯/笔记/脚本等素材中提炼反直觉洞察，生成 5 个高互动社交媒体帖子大纲——包含悖论框架、转变弧线、异议预判与语言技巧应用，仅输出大纲不写全文 | ✅ |
