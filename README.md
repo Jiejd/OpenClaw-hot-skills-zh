@@ -30,7 +30,7 @@
 | [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | Tavily API 网页搜索，免费 API Key，精准返回少量结果与 AI 摘要，Brave 的零成本替代方案 |
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | **让 Agent 越用越聪明**——自动捕获经验、纠正错误、积累知识 |
 | [frontend-design-zh](skills/frontend-design-zh/SKILL.md) | 纯文本描述即可生成生产级 React 网站，设计师的最强辅助 |
-| [word-docx-zh](skills/word-docx-zh/SKILL.md) | 一句话创建/编辑 Word 文档，支持样式、表格、修订，日常办公必备 |
+| [word-docx-zh](skills/word-docx-zh/SKILL.md) | **OOXML 感知的 Word 精准编辑**——样式、编号、修订、批注、域、节完整可控，往返编辑格式不漂移，审阅工作流首选 |
 | [markdown-converter-zh](skills/markdown-converter-zh/SKILL.md) | 15+ 格式一键转 Markdown——PDF/Office/图片(OCR)/音频转录/YouTube 字幕，喂给 AI 的万能适配器 |
 | [skill-vetter-zh](skills/skill-vetter-zh/SKILL.md) | 安装任何技能前先过一遍安全扫描，保护你的系统 |
 
@@ -122,7 +122,7 @@
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [word-docx-zh](skills/word-docx-zh/SKILL.md) | 创建/编辑 Word 文档，支持样式、表格、修订跟踪 | ✅ |
+| [word-docx-zh](skills/word-docx-zh/SKILL.md) | OOXML 感知的 Word 文档精准编辑——样式/编号/修订/批注/域/节完整支持，往返编辑格式不漂移 | ✅ |
 | [gongwen-zh](skills/gongwen-zh/SKILL.md) | 按党政机关公文格式标准自动排版 | ✅ |
 | [nano-pdf-zh](skills/nano-pdf-zh/SKILL.md) | 通过 nano-pdf CLI 用自然语言指令编辑 PDF 特定页面，支持标题修改、内容更正等精准操作 | 📦 |
 | [excel-xlsx-zh](skills/excel-xlsx-zh/SKILL.md) | 创建、检查和编辑 Excel 工作簿，支持公式、日期、格式化和模板保留 | 📦 |
