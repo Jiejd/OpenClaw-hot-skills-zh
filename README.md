@@ -27,7 +27,7 @@
 |------|---------|
 | [multi-search-engine-zh](skills/multi-search-engine-zh/SKILL.md) | **17 个搜索引擎一键切换**，国内外全覆盖，无需 API Key，搜索能力最强 |
 | [find-skills-zh](skills/find-skills-zh/SKILL.md) | 不知道装什么技能？让它帮你找，是探索技能生态的入口 |
-| [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | 轻量网页搜索首选，结果精准，API Key 免费申请即用 |
+| [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | Tavily API 网页搜索，免费 API Key，精准返回少量结果与 AI 摘要，Brave 的零成本替代方案 |
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | **让 Agent 越用越聪明**——自动捕获经验、纠正错误、积累知识 |
 | [frontend-design-zh](skills/frontend-design-zh/SKILL.md) | 纯文本描述即可生成生产级 React 网站，设计师的最强辅助 |
 | [word-docx-zh](skills/word-docx-zh/SKILL.md) | 一句话创建/编辑 Word 文档，支持样式、表格、修订，日常办公必备 |
@@ -43,7 +43,7 @@
 | 技能 | 描述 | 标记 |
 |------|------|------|
 | [multi-search-engine-zh](skills/multi-search-engine-zh/SKILL.md) | 多搜索引擎集成，支持 17 个引擎（8 国内 + 9 国际），高级搜索操作符 | ✅ |
-| [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | 通过 Tavily API 进行精准网页搜索，返回少量高质量结果 | 💰📦 |
+| [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | Tavily API 网页搜索，免费注册即用，返回精准结果与可选 AI 摘要，Brave 的零成本替代方案 | 💰📦 |
 | [baidu-search-zh](skills/baidu-search-zh/SKILL.md) | 百度 AI 搜索引擎，适合中文内容查询 | 💰📦 |
 | [brave-search-zh](skills/brave-search-zh/SKILL.md) | Brave Search API 网页搜索与内容提取，轻量无需浏览器 | 💰📦 |
 | [brave-web-search-zh](skills/brave-web-search-zh/SKILL.md) | Brave Search API 搜索 + AI 摘要答案生成 | 💰📦 |
@@ -156,7 +156,7 @@
 |------|------|------|
 | **全能搜索** | `multi-search-engine-zh` | 17 个引擎全覆盖，无需 API Key |
 | **中文内容** | `baidu-search-zh` | 百度生态，中文结果更精准 |
-| **精准搜索** | `tavily-search-zh` | 返回少量高质量结果，API Key 免费申请 |
+| **精准搜索** | `tavily-search-zh` | 免费 API Key，精准结果 + AI 摘要，Brave 替代 |
 | **Brave 用户** | `brave-web-search-zh` | 带 AI 摘要，体验更好；`brave-search-zh` 更轻量 |
 
 ### 🧠 记忆/自我改进怎么选？
