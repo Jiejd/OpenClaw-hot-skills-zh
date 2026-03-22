@@ -48,7 +48,7 @@
 | [brave-search-zh](skills/brave-search-zh/SKILL.md) | Brave Search API 轻量搜索 CLI——网页搜索 + 可选页面内容提取（Markdown），无需浏览器 | 💰📦 |
 | [brave-web-search-zh](skills/brave-web-search-zh/SKILL.md) | Brave Search API 双模式搜索：排序网页结果 + AI 摘要答案，支持时间筛选 | 💰📦 |
 | [answer-overflow-zh](skills/answer-overflow-zh/SKILL.md) | 搜索已索引的 Discord 社区讨论，获取编程问题、库问题和社区问答的解决方案，支持 MCP 服务器搜索与线程内容 Markdown 抓取 | ✅ |
-| [news-summary-zh](skills/news-summary-zh/SKILL.md) | 新闻摘要聚合，快速了解最新资讯 | ✅ |
+| [news-summary-zh](skills/news-summary-zh/SKILL.md) | 通过 RSS 订阅 BBC/路透社/NPR/半岛电视台等国际新闻源，按地区与主题分类输出摘要，支持文字与语音（OpenAI TTS）双模式 | ✅ |
 | [youtube-zh](skills/youtube-zh/SKILL.md) | 基于 YouTube Data API v3 的视频研究工具——通过 MCP 服务器实现视频搜索、频道信息查询、视频详情获取与带时间戳字幕提取，yt-dlp 作为字幕提取备用方案 | 💰📦 |
 | [youtube-watcher-zh](skills/youtube-watcher-zh/SKILL.md) | 通过 yt-dlp 提取 YouTube 视频字幕，支持视频摘要、问答和内容提取，仅适用于有字幕的视频 | 📦 |
 | [web-search-plus-zh](skills/web-search-plus-zh/SKILL.md) | 智能自动路由的统一搜索——连接 7 个搜索提供商（Serper/Tavily/Querit/Exa/Perplexity/You.com/SearXNG），通过多信号分析自动选择最佳引擎，附带置信度评分 | 💰📦 |
