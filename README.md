@@ -65,7 +65,7 @@
 | [memory-setup-zh](skills/memory-setup-zh/SKILL.md) | 启用并配置持久化记忆搜索功能，解决"金鱼记忆"问题 | ✅ |
 | [ai-persona-os-zh](skills/ai-persona-os-zh/SKILL.md) | AI 人格操作系统，统一管理人格设置、聊天指令和监控 | ✅ |
 | [capability-evolver-zh](skills/capability-evolver-zh/SKILL.md) | 面向 Agent 的自进化引擎，分析运行时历史发现改进机会 | 📦 |
-| [freeride-zh](skills/freeride-zh/SKILL.md) | 自动管理 OpenRouter 免费模型，降低 AI 使用成本 | 💰 |
+| [freeride-zh](skills/freeride-zh/SKILL.md) | 按 OpenRouter 免费模型质量自动排名并配置主模型与备用模型，限流时自动故障切换，零成本使用 AI | 💰📦 |
 | [auto-updater-zh](skills/auto-updater-zh/SKILL.md) | 每日自动检查并更新所有已安装技能 | ✅ |
 | [ontology-zh](skills/ontology-zh/SKILL.md) | 类型化知识图谱——实体/关系建模、Schema 约束验证（属性/枚举/基数/无环）、CLI 增删改查与图变换规划，支持跨技能数据共享 | ✅ |
 
