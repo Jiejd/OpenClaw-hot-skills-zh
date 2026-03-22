@@ -90,7 +90,7 @@
 | [SuperDesign-zh](skills/SuperDesign-zh/SKILL.md) | 前端设计指南，专精创建美观现代的 UI 界面 | ✅ |
 | [ui-ux-pro-max-zh](skills/ui-ux-pro-max-zh/README.md) | AI 设计智能工具包——UI 风格、配色、字体、UX 指南数据库 | 📦 |
 | [nano-banana-pro-zh](skills/nano-banana-pro-zh/SKILL.md) | 通过 Gemini 3 Pro Image API 生成与编辑图像——支持文生图、图生图及 1K/2K/4K 分辨率，内置草稿→迭代→最终渐进工作流 | 💰📦 |
-| [content-ideas-generator-zh](skills/content-ideas-generator-zh/SKILL.md) | 从参考资料生成结构化社交媒体帖子大纲 | ✅ |
+| [content-ideas-generator-zh](skills/content-ideas-generator-zh/SKILL.md) | 从新闻通讯/笔记/脚本等素材中提炼反直觉洞察，生成 5 个高互动社交媒体帖子大纲——包含悖论框架、转变弧线、异议预判与语言技巧应用，仅输出大纲不写全文 | ✅ |
 | [marketing-mode-zh](skills/marketing-mode-zh/SKILL.md) | 23 个营销技能整合——战略、心理学、SEO、转化优化、付费增长 | ✅ |
 | [marketing-skills-zh](skills/marketing-skills-zh/SKILL.md) | 23 个营销实战手册——CRO、SEO、文案、分析、实验、定价等 | ✅ |
 | [admapix-zh](skills/admapix-zh/SKILL.md) | 广告创意素材搜索，查找竞品广告视频和创意素材 | 💰 |
