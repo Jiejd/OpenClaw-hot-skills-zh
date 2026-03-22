@@ -58,7 +58,7 @@
 |------|------|------|
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | 自动捕获经验、纠正错误、积累学习，经验反复出现时自动晋升为永久规则 | ✅ |
 | [proactive-agent-zh](skills/proactive-agent-zh/SKILL.md) | 将 Agent 从被动执行转变为主动伙伴，含 WAL 协议、自主定时任务 | ✅ |
-| [self-improving-zh](skills/self-improving-zh/SKILL.md) | 自我反思 + 自我批评 + 自我学习 + 自组织记忆，持续改进 | ✅ |
+| [self-improving-zh](skills/self-improving-zh/SKILL.md) | 自我反思与持续改进引擎：自动捕获纠正和偏好信号，分层记忆存储（热/温/冷），模式出现3次后自动晋升为永久规则 | ✅ |
 | [self-improvement-zh](skills/self-improvement-zh/SKILL.md) | 捕获学习内容、错误和纠正以实现持续改进 | ✅ |
 | [self-improving-proactive-agent-zh](skills/self-improving-proactive-agent-zh/SKILL.md) | 自我改进 + 主动式 Agent 的组合版本 | ✅ |
 | [elite-longterm-memory-zh](skills/elite-longterm-memory-zh/SKILL.md) | 终极记忆系统——WAL 协议 + 向量搜索 + Git Notes + 云备份 | 📦 |
