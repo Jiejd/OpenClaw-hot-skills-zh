@@ -78,7 +78,7 @@
 | [slack-zh](skills/slack-zh/SKILL.md) | 控制 Slack 频道消息发送、置顶等操作 | ✅ |
 | [trello-zh](skills/trello-zh/SKILL.md) | 通过 REST API 管理 Trello 看板、列表和卡片 | 💰📦 |
 | [caldav-calendar-zh](skills/caldav-calendar-zh/SKILL.md) | CalDAV 日历本地同步与事件管理——基于 vdirsyncer + khal 实现 iCloud/Google/Fastmail/Nextcloud 等日历的双向同步、事件 CRUD、搜索与格式化输出，数据完全本地存储 | 📦 |
-| [obsidian-zh](skills/obsidian-zh/SKILL.md) | 管理 Obsidian 笔记库，自动化笔记工作流和任务追踪 | 📦 |
+| [obsidian-zh](skills/obsidian-zh/SKILL.md) | 基于 obsidian-cli 的 Obsidian 笔记库管理——日常笔记创建、前缀自动分区（任务/想法/问题/洞察）、集中式任务日志与艾森豪威尔优先级标签 | 📦 |
 | [weather-zh](skills/weather-zh/SKILL.md) | 通过 wttr.in + Open-Meteo 免费查询天气——紧凑/完整预报、中文输出、JSON API 程序化调用，仅需 curl | ✅ |
 | [minara-zh](skills/minara-zh/SKILL.md) | 加密货币交易 CLI——兑换、永续合约、支付，支持 EVM + Solana | 💰📦 |
 
