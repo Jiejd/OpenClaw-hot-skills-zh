@@ -66,7 +66,7 @@
 | [ai-persona-os-zh](skills/ai-persona-os-zh/SKILL.md) | AI 人格操作系统，统一管理人格设置、聊天指令和监控 | ✅ |
 | [capability-evolver-zh](skills/capability-evolver-zh/SKILL.md) | 面向 Agent 的自进化引擎，分析运行时历史发现改进机会 | 📦 |
 | [freeride-zh](skills/freeride-zh/SKILL.md) | 按 OpenRouter 免费模型质量自动排名并配置主模型与备用模型，限流时自动故障切换，零成本使用 AI | 💰📦 |
-| [auto-updater-zh](skills/auto-updater-zh/SKILL.md) | 每日自动检查并更新所有已安装技能 | ✅ |
+| [auto-updater-zh](skills/auto-updater-zh/SKILL.md) | 通过 cron 每日自动更新 Clawdbot 核心与所有已安装技能，检查可用版本、应用更新并向用户发送变更摘要 | 📦 |
 | [ontology-zh](skills/ontology-zh/SKILL.md) | 类型化知识图谱——实体/关系建模、Schema 约束验证（属性/枚举/基数/无环）、CLI 增删改查与图变换规划，支持跨技能数据共享 | ✅ |
 
 ### 📱 工具与服务集成
