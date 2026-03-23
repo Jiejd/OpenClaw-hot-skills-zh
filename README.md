@@ -29,7 +29,6 @@
 | [find-skills-zh](skills/find-skills-zh/SKILL.md) | 技能生态探索入口——关键词搜索 skills.sh 技能库，发现并安装所需能力 |
 | [tavily-search-zh](skills/tavily-search-zh/SKILL.md) | Tavily API 网页搜索，免费 API Key，精准返回少量结果与 AI 摘要，Brave 的零成本替代方案 |
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | **让 Agent 越用越聪明**——自动捕获经验、纠正错误、积累知识 |
-| [frontend-design-zh](skills/frontend-design-zh/SKILL.md) | 纯文本描述即可生成生产级 React 网站，设计师的最强辅助 |
 | [word-docx-zh](skills/word-docx-zh/SKILL.md) | **OOXML 感知的 Word 精准编辑**——样式、编号、修订、批注、域、节完整可控，往返编辑格式不漂移，审阅工作流首选 |
 | [markdown-converter-zh](skills/markdown-converter-zh/SKILL.md) | 15+ 格式一键转 Markdown——PDF/Office/图片(OCR)/音频转录/YouTube 字幕，喂给 AI 的万能适配器 |
 | [skill-vetter-zh](skills/skill-vetter-zh/SKILL.md) | 安装任何技能前先过一遍安全扫描，保护你的系统 |
