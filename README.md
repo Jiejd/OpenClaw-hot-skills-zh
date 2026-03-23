@@ -135,14 +135,14 @@
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [stock-analysis-zh](skills/stock-analysis-zh/SKILL.md) | 基于 Yahoo Finance API 的全面股票研究——公司概览、技术指标与估值、多股对比、内部人士交易追踪及 SEC 监管文件，支持美股与国际市场 | 💰付费API |
-| [stock-market-pro-zh](skills/stock-market-pro-zh/SKILL.md) | 基于 Yahoo Finance 的本地股票分析——实时报价、基本面数据、ASCII 趋势图与高分辨率技术图表（RSI/MACD/BB/VWAP/ATR），一键综合报告，可选新闻与期权扩展 | 📦需CLI |
+| [stock-analysis-zh](skills/stock-analysis-zh/SKILL.md) | 基于 Yahoo Finance API 的全面股票研究——公司概览、技术指标与估值、多股对比、内部人士交易追踪及 SEC 监管文件，支持美股与国际市场 | 💰 |
+| [stock-market-pro-zh](skills/stock-market-pro-zh/SKILL.md) | 基于 Yahoo Finance 的本地股票分析——实时报价、基本面数据、ASCII 趋势图与高分辨率技术图表（RSI/MACD/BB/VWAP/ATR），一键综合报告，可选新闻与期权扩展 | 📦 |
 
 ### 🔒 安全与防护
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [moltguard-zh](skills/moltguard-zh/openclaw.plugin.json) | OpenClaw 原生安全插件——通过 MoltGuard API 检测工具结果与消息中的提示注入，可选本地净化网关在发送前脱敏 PII（银行卡/密码等），首次使用自动注册 API 密钥 | 💰付费API |
+| [moltguard-zh](skills/moltguard-zh/openclaw.plugin.json) | OpenClaw 原生安全插件——通过 MoltGuard API 检测工具结果与消息中的提示注入，可选本地净化网关在发送前脱敏 PII（银行卡/密码等），首次使用自动注册 API 密钥 | 💰 |
 | [skill-vetter-zh](skills/skill-vetter-zh/SKILL.md) | 技能安装前安全审查协议——来源验证、14项危险信号检测、权限范围评估与四级风险分类，输出结构化审查报告 | ✅ |
 | [edgeone-clawscan-zh](skills/edgeone-clawscan-zh/SKILL.md) | 腾讯朱雀实验室 A.I.G 驱动的 OpenClaw 安全扫描——全环境 4 步体检（配置审计/供应链风险/CVE 漏洞/隐私泄露）与单技能深度安全审查，云端情报+本地审计双引擎 | ✅ |
 
