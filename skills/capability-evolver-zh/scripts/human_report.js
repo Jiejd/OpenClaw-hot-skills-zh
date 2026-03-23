@@ -6,7 +6,7 @@ const IN_FILE = path.join(REPO_ROOT, 'evolution_history_full.md');
 const OUT_FILE = path.join(REPO_ROOT, 'evolution_human_summary.md');
 
 function generateHumanReport() {
-    if (!fs.existsSync(IN_FILE)) return console.error("No input file");
+    if (!fs.existsSync(IN_FILE)) return console.error("无输入文件");
 
     const content = fs.readFileSync(IN_FILE, 'utf8');
     const entries = content.split('---').map(e => e.trim()).filter(e => e.length > 0);
@@ -140,7 +140,7 @@ function generateHumanReport() {
     });
 
     fs.writeFileSync(OUT_FILE, md);
-    console.log("Human report generated.");
+    console.log("人工报告已生成。");
 }
 
 generateHumanReport();

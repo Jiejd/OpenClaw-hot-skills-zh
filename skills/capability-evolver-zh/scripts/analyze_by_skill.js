@@ -7,7 +7,7 @@ const OUT_FILE = path.join(REPO_ROOT, 'evolution_detailed_report.md');
 
 function analyzeEvolution() {
     if (!fs.existsSync(LOG_FILE)) {
-        console.error("Source file missing.");
+        console.error("源文件缺失。");
         return;
     }
 
@@ -114,7 +114,7 @@ function analyzeEvolution() {
     });
 
     fs.writeFileSync(OUT_FILE, md);
-    console.log(`Generated report for ${sortedSkills.length} skills.`);
+    console.log(`已为 ${sortedSkills.length} 个技能生成报告。`);
 }
 
 analyzeEvolution();

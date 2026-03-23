@@ -785,7 +785,7 @@ function rollbackTracked(repoRoot) {
     const stashRef = 'evolver-rollback-' + Date.now();
     const result = tryRunCmd('git stash push -m "' + stashRef + '" --include-untracked', { cwd: repoRoot, timeoutMs: 60000 });
     if (result.ok) {
-      console.log('[Rollback] Changes stashed with ref: ' + stashRef + '. Recover with "git stash list" and "git stash pop".');
+      console.log('[回滚] 变更已暂存，引用: ' + stashRef + '。使用 "git stash list" 和 "git stash pop" 恢复。');
     } else {
       console.log('[Rollback] Stash failed or no changes, using hard reset');
       tryRunCmd('git restore --staged --worktree .', { cwd: repoRoot, timeoutMs: 60000 });
@@ -1119,7 +1119,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
 
   if (!isGitRepo(repoRoot)) {
     console.error('[Solidify] FATAL: Not a git repository (' + repoRoot + ').');
-    console.error('[Solidify] Solidify requires git for rollback, diff capture, and blast radius.');
+    console.error('[固化] 固化需要 git 进行回滚、diff 捕获和影响半径计算。');
     console.error('[Solidify] Run "git init && git add -A && git commit -m init" first.');
     return {
       ok: false,
@@ -1716,7 +1716,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         try {
           const { claimAndCompleteWorkerTask } = require('./taskReceiver');
           const taskId = String(lastRun.active_task_id);
-          console.log(`[WorkerPool] Atomic claim+complete for task "${lastRun.active_task_title || taskId}" with asset ${resultAssetId}`);
+          console.log(`[工作池] 原子认领+完成任务 "${lastRun.active_task_title || taskId}"，资产 ${resultAssetId}`);
           const result = claimAndCompleteWorkerTask(taskId, resultAssetId);
           if (result && typeof result.then === 'function') {
             result
@@ -1740,7 +1740,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         // Legacy path: already-claimed assignment, just complete it
         try {
           const { completeWorkerTask } = require('./taskReceiver');
-          console.log(`[WorkerComplete] Completing worker assignment "${workerAssignmentId}" with asset ${resultAssetId}`);
+          console.log(`[工作完成] 完成工作分配 "${workerAssignmentId}"，资产 ${resultAssetId}`);
           const completed = completeWorkerTask(workerAssignmentId, resultAssetId);
           if (completed && typeof completed.then === 'function') {
             completed
@@ -1765,7 +1765,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         try {
           const { completeTask } = require('./taskReceiver');
           const taskId = String(lastRun.active_task_id);
-          console.log(`[TaskComplete] Completing task "${lastRun.active_task_title || taskId}" with asset ${resultAssetId}`);
+          console.log(`[任务完成] 完成任务 "${lastRun.active_task_title || taskId}"，资产 ${resultAssetId}`);
           const completed = completeTask(taskId, resultAssetId);
           if (completed && typeof completed.then === 'function') {
             completed

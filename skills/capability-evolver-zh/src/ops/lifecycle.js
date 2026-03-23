@@ -161,7 +161,7 @@ if (require.main === module) {
             console.log(JSON.stringify(health, null, 2));
             if (!health.healthy) { console.log('[Lifecycle] Restarting...'); restart(); }
             break;
-        default: console.log('Usage: node lifecycle.js [start|stop|restart|status|log|check]');
+        default: console.log('用法: node lifecycle.js [start|stop|restart|status|log|check]');
     }
 }
 

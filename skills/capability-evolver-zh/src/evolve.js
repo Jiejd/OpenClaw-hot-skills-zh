@@ -68,7 +68,7 @@ const TODAY_LOG = path.join(MEMORY_DIR, new Date().toISOString().split('T')[0] +
 try {
   if (!fs.existsSync(MEMORY_DIR)) fs.mkdirSync(MEMORY_DIR, { recursive: true });
 } catch (e) {
-  console.warn('[Evolver] Failed to create MEMORY_DIR (may cause downstream errors):', e && e.message || e);
+  console.warn('[进化器] 创建 MEMORY_DIR 失败 (可能导致下游错误):', e && e.message || e);
 }
 
 function formatSessionLog(jsonlContent) {
@@ -298,7 +298,7 @@ function readRealSessionLog() {
             nonEvolverFiles = scopedFiles;
             console.log(`[SessionScope] Filtered to ${scopedFiles.length} session(s) matching scope "${sessionScope}".`);
           } else {
-            console.log(`[SessionScope] No sessions match scope "${sessionScope}". Using all ${nonEvolverFiles.length} session(s) (fallback).`);
+            console.log(`[会话范围] 没有匹配作用域 "${sessionScope}" 的会话。使用全部 ${nonEvolverFiles.length} 个会话 (回退)。`);
           }
         }
 
@@ -329,19 +329,19 @@ function readRealSessionLog() {
     // Fallback: Cursor agent-transcripts (.txt)
     const cursorContent = readCursorTranscripts();
     if (cursorContent) {
-      console.log('[SessionFallback] Using Cursor agent-transcripts as session source.');
+      console.log('[会话回退] 使用 Cursor agent-transcripts 作为会话源。');
       return cursorContent;
     }
 
-    return '[NO SESSION LOGS FOUND]';
+    return '[未找到会话日志]';
   } catch (e) {
-    return `[ERROR READING SESSION LOGS: ${e.message}]`;
+    return `[读取会话日志错误: ${e.message}]`;
   }
 }
 
 function readRecentLog(filePath, size = 10000) {
   try {
-    if (!fs.existsSync(filePath)) return `[MISSING] ${filePath}`;
+    if (!fs.existsSync(filePath)) return `[缺失] ${filePath}`;
     const stats = fs.statSync(filePath);
     const start = Math.max(0, stats.size - size);
     const buffer = Buffer.alloc(stats.size - start);
@@ -350,7 +350,7 @@ function readRecentLog(filePath, size = 10000) {
     fs.closeSync(fd);
     return buffer.toString('utf8');
   } catch (e) {
-    return `[ERROR READING ${filePath}: ${e.message}]`;
+    return `[读取 ${filePath} 错误: ${e.message}]`;
   }
 }
 
@@ -495,11 +495,11 @@ function checkSystemHealth() {
     if (issues.length > 0) {
       report.push(`Integrations: ${issues.join(', ')}`);
     } else {
-      report.push('Integrations: Nominal');
+      report.push('集成: 正常');
     }
   } catch (e) {}
 
-  return report.length ? report.join(' | ') : 'Health Check Unavailable';
+  return report.length ? report.join(' | ') : '健康检查不可用';
 }
 
 function getMutationDirective(logContent) {
@@ -584,23 +584,23 @@ function readMemorySnippet() {
         console.log(`[会话作用域] "${scope}" 没有作用域 MEMORY.md。使用全局 MEMORY.md。`);
       }
     }
-    if (!fs.existsSync(memFile)) return '[MEMORY.md MISSING]';
+    if (!fs.existsSync(memFile)) return '[MEMORY.md 缺失]';
     const content = fs.readFileSync(memFile, 'utf8');
     // Optimization: Increased limit from 2000 to 50000 for modern context windows
     return content.length > 50000
       ? content.slice(0, 50000) + `\n... [TRUNCATED: ${content.length - 50000} chars remaining]`
       : content;
   } catch (e) {
-    return '[ERROR READING MEMORY.md]';
+    return '[读取 MEMORY.md 错误]';
   }
 }
 
 function readUserSnippet() {
   try {
-    if (!fs.existsSync(USER_FILE)) return '[USER.md MISSING]';
+    if (!fs.existsSync(USER_FILE)) return '[USER.md 缺失]';
     return fs.readFileSync(USER_FILE, 'utf8');
   } catch (e) {
-    return '[ERROR READING USER.md]';
+    return '[读取 USER.md 错误]';
   }
 }
 
@@ -912,9 +912,9 @@ async function run() {
     process.cwd();
   } catch (e) {
     if (e && e.code === 'ENOENT') {
-      console.warn('[Evolver] CWD lost (ENOENT). Recovering to REPO_ROOT: ' + REPO_ROOT);
+      console.warn('[进化器] CWD 丢失 (ENOENT)。恢复到 REPO_ROOT: ' + REPO_ROOT);
       try { process.chdir(REPO_ROOT); } catch (e2) {
-        console.error('[Evolver] CWD recovery failed: ' + (e2 && e2.message ? e2.message : e2));
+        console.error('[进化器] CWD 恢复失败: ' + (e2 && e2.message ? e2.message : e2));
         throw e;
       }
     } else {
@@ -930,9 +930,9 @@ async function run() {
   try {
     execSync('git rev-parse --git-dir', { cwd: REPO_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 5000 });
   } catch (_) {
-    console.error('[Evolver] FATAL: Not a git repository (' + REPO_ROOT + ').');
-    console.error('[Evolver] Evolver requires git for rollback, blast radius calculation, and solidify.');
-    console.error('[Evolver] Run "git init && git add -A && git commit -m init" in your project root, then try again.');
+    console.error('[进化器] 致命错误: 不是 git 仓库 (' + REPO_ROOT + ')。');
+    console.error('[进化器] 进化器需要 git 进行回滚、影响半径计算和固化。');
+    console.error('[进化器] 在项目根目录运行 "git init && git add -A && git commit -m init"，然后重试。');
     process.exitCode = 1;
     return;
   }
@@ -944,7 +944,7 @@ async function run() {
   }
 
   const startTime = Date.now();
-  console.log('Scanning session logs...');
+  console.log('正在扫描会话日志...');
 
   // Ensure all GEP asset files exist before any operation.
   // This prevents "No such file or directory" errors when external tools
@@ -957,7 +957,7 @@ async function run() {
   if (!IS_DRY_RUN) {
     performMaintenance();
   } else {
-    console.log('[Maintenance] Skipped (dry-run mode).');
+    console.log('[维护] 已跳过 (dry-run 模式)。');
   }
 
   // --- Repair Loop Circuit Breaker ---
@@ -976,7 +976,7 @@ async function run() {
       if (allRepairFailed) {
         const geneIds = recent.map(e => (e.genes_used && e.genes_used[0]) || 'unknown');
         const sameGene = geneIds.every(id => id === geneIds[0]);
-        console.warn(`[CircuitBreaker] Detected ${REPAIR_LOOP_THRESHOLD} consecutive failed repairs${sameGene ? ` (gene: ${geneIds[0]})` : ''}. Forcing innovation intent to break the loop.`);
+        console.warn(`[断路器] 检测到 ${REPAIR_LOOP_THRESHOLD} 次连续修复失败${sameGene ? ` (基因: ${geneIds[0]})` : ''}。强制切换到创新意图以打破循环。`);
         // Set env flag that downstream code reads to force innovation
         process.env.FORCE_INNOVATION = 'true';
       }
@@ -1001,28 +1001,28 @@ async function run() {
 
   // Default Reporting: Use generic `message` tool or `process.env.EVOLVE_REPORT_CMD` if set.
   // This removes the hardcoded dependency on 'feishu-card' from the core logic.
-  let reportingDirective = `Report requirement:
-  - Use \`message\` tool.
-  - Title: Evolution ${cycleId}
-  - Status: [SUCCESS]
-  - Changes: Detail exactly what was improved.`;
+  let reportingDirective = `报告要求:
+  - 使用 \`message\` 工具。
+  - 标题: 进化 ${cycleId}
+  - 状态: [成功]
+  - 变更: 详细说明改进了什么。`;
 
   // Wrapper Injection Point: The wrapper can inject a custom reporting directive via ENV.
   if (process.env.EVOLVE_REPORT_DIRECTIVE) {
     reportingDirective = process.env.EVOLVE_REPORT_DIRECTIVE.replace('__CYCLE_ID__', cycleId);
   } else if (process.env.EVOLVE_REPORT_CMD) {
-    reportingDirective = `Report requirement (custom):
-  - Execute the custom report command:
+    reportingDirective = `报告要求 (自定义):
+  - 执行自定义报告命令:
     \`\`\`
     ${process.env.EVOLVE_REPORT_CMD.replace('__CYCLE_ID__', cycleId)}
     \`\`\`
-  - Ensure you pass the status and action details.`;
+  - 确保传递状态和操作详情。`;
   }
 
   // Handle Review Mode Flag (--review)
   if (IS_REVIEW_MODE) {
     reportingDirective +=
-      '\n  - REVIEW PAUSE: After generating the fix but BEFORE applying significant edits, ask the user for confirmation.';
+      '\n  - 审查暂停: 生成修复后，在应用重大编辑之前，请求用户确认。';
   }
 
   const SKILLS_CACHE_FILE = path.join(MEMORY_DIR, 'skills_list_cache.json');
@@ -1116,12 +1116,12 @@ async function run() {
   const scanTime = Date.now() - startTime;
   const memorySize = fs.existsSync(MEMORY_FILE) ? fs.statSync(MEMORY_FILE).size : 0;
 
-  let syncDirective = 'Workspace sync: optional/disabled in this environment.';
+  let syncDirective = '工作区同步: 在此环境中可选/已禁用。';
 
   // Check for git-sync skill availability
   const hasGitSync = fs.existsSync(path.join(skillsDir, 'git-sync'));
   if (hasGitSync) {
-    syncDirective = 'Workspace sync: run skills/git-sync/sync.sh "Evolution: Workspace Sync"';
+    syncDirective = '工作区同步: 运行 skills/git-sync/sync.sh "进化: 工作区同步"';
   }
 
   const genes = loadGenes();
@@ -1209,7 +1209,7 @@ async function run() {
     // LessonL: capture relevant lessons from Hub
     if (Array.isArray(fetchResult.relevant_lessons) && fetchResult.relevant_lessons.length > 0) {
       hubLessons = fetchResult.relevant_lessons;
-      console.log(`[LessonBank] Received ${hubLessons.length} lesson(s) from ecosystem.`);
+      console.log(`[经验库] 从生态系统收到 ${hubLessons.length} 条经验。`);
     }
 
     if (hubTasks.length > 0) {
@@ -1238,7 +1238,7 @@ async function run() {
           for (const sig of taskSignals) {
             if (!signals.includes(sig)) signals.unshift(sig);
           }
-          console.log(`[TaskReceiver] ${alreadyClaimed ? 'Resuming' : 'Claimed'} task: "${best.title || best.id}" (${taskSignals.length} signals injected)`);
+          console.log(`[任务接收器] ${alreadyClaimed ? '继续' : '已认领'}任务: "${best.title || best.id}" (${taskSignals.length} 个信号已注入)`);
         }
       }
     }
@@ -1257,7 +1257,7 @@ async function run() {
       for (const ot of overdueTasks) {
         const otId = ot.task_id || ot.id;
         if (activeTask && (activeTask.id === otId || activeTask.task_id === otId)) {
-          console.warn(`[Commitment] Active task "${activeTask.title || otId}" is OVERDUE -- prioritizing completion.`);
+          console.warn(`[承诺] 活跃任务 "${activeTask.title || otId}" 已过期 -- 优先完成。`);
           signals.unshift('overdue_task', 'urgent');
           break;
         }
@@ -1326,7 +1326,7 @@ async function run() {
   };
 
   if (sessionScope) {
-    console.log(`[SessionScope] Active scope: "${sessionScope}". Evolution state and memory graph are isolated.`);
+    console.log(`[会话范围] 活跃作用域: "${sessionScope}"。进化状态和记忆图已隔离。`);
   }
 
   // Memory Graph: close last action with an inferred outcome (append-only graph, mutable state).
@@ -1358,7 +1358,7 @@ async function run() {
     try {
       appendCandidateJsonl(c);
     } catch (e) {
-      console.warn('[Candidates] Failed to persist candidate:', e && e.message || e);
+      console.warn('[候选] 持久化候选失败:', e && e.message || e);
     }
   }
   const recentCandidates = readRecentCandidates(20);
@@ -1433,7 +1433,7 @@ async function run() {
     if (hubHit && hubHit.hit) {
       console.log(`[SearchFirst] Hub hit: asset=${hubHit.asset_id}, score=${hubHit.score}, mode=${hubHit.mode}`);
     } else {
-      console.log(`[SearchFirst] No hub match (reason: ${hubHit && hubHit.reason ? hubHit.reason : 'unknown'}). Proceeding with local evolution.`);
+      console.log(`[搜索优先] 无 Hub 匹配 (原因: ${hubHit && hubHit.reason ? hubHit.reason : '未知'})。继续本地进化。`);
     }
   } catch (e) {
     console.log(`[SearchFirst] Hub search failed (non-fatal): ${e.message}`);
@@ -1472,14 +1472,14 @@ async function run() {
       console.log(`[Reflection] Strategic reflection recorded at cycle ${cycleCount}.`);
     }
   } catch (e) {
-    console.log('[Reflection] Failed (non-fatal): ' + (e && e.message ? e.message : e));
+    console.log('[反思] 失败 (非致命): ' + (e && e.message ? e.message : e));
   }
 
   var recentFailedCapsules = [];
   try {
     recentFailedCapsules = readRecentFailedCapsules(50);
   } catch (e) {
-    console.log('[FailedCapsules] Read failed (non-fatal): ' + e.message);
+    console.log('[失败胶囊] 读取失败 (非致命): ' + e.message);
   }
 
   // Heartbeat hints: novelty score and capability gaps for diversity-directed drift
@@ -1628,7 +1628,7 @@ async function run() {
         .map(l => l.trim())
         .filter(Boolean);
     } catch (e) {
-      console.warn('[SolidifyState] Failed to read baseline untracked files:', e && e.message || e);
+      console.warn('[固化状态] 读取基线未跟踪文件失败:', e && e.message || e);
     }
 
     try {
@@ -1641,7 +1641,7 @@ async function run() {
       });
       baselineHead = String(out || '').trim() || null;
     } catch (e) {
-      console.warn('[SolidifyState] Failed to read git HEAD:', e && e.message || e);
+      console.warn('[固化状态] 读取 git HEAD 失败:', e && e.message || e);
     }
 
     const maxFiles = strategyPolicy && Number.isFinite(Number(strategyPolicy.blastRadiusMaxFiles))
@@ -1907,7 +1907,7 @@ ${mutationDirective}
     }
   } else {
     console.log(prompt);
-    console.log('\n[SOLIDIFY REQUIRED] After applying the patch and validations, run: node index.js solidify');
+    console.log('\n[需要固化] 应用补丁和验证后，运行: node index.js solidify');
   }
 }
 

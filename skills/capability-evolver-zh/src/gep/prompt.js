@@ -188,11 +188,11 @@ function buildAntiPatternZone(failedCapsules, signals) {
   }
   if (matched.length === 0) return '';
   var lines = matched.map(function (fc, idx) {
-    var diffPreview = fc.diff_snapshot ? String(fc.diff_snapshot).slice(0, 500) : '(no diff)';
+    var diffPreview = fc.diff_snapshot ? String(fc.diff_snapshot).slice(0, 500) : '(无差异)';
     return [
-      '  ' + (idx + 1) + '. Gene: ' + (fc.gene || 'unknown') + ' | Signals: [' + (fc.trigger || []).slice(0, 4).join(', ') + ']',
-      '     Failure: ' + String(fc.failure_reason || 'unknown').slice(0, 300),
-      '     Diff (first 500 chars): ' + diffPreview.replace(/\n/g, ' '),
+      '  ' + (idx + 1) + '. 基因: ' + (fc.gene || '未知') + ' | 信号: [' + (fc.trigger || []).slice(0, 4).join(', ') + ']',
+      '     失败原因: ' + String(fc.failure_reason || '未知').slice(0, 300),
+      '     差异 (前500字符): ' + diffPreview.replace(/\n/g, ' '),
     ].join('\n');
   });
   return '\n上下文 [反模式区域] (避免这些失败的方法):\n' + lines.join('\n') + '\n';
@@ -208,7 +208,7 @@ function buildLessonsBlock(hubLessons, signals) {
     var l = hubLessons[i];
     if (!l || !l.content) continue;
     var entry = '  - [' + (l.scenario || l.lesson_type || '?') + '] ' + String(l.content).slice(0, 300);
-    if (l.source_node_id) entry += ' (from: ' + String(l.source_node_id).slice(0, 20) + ')';
+    if (l.source_node_id) entry += ' (来源: ' + String(l.source_node_id).slice(0, 20) + ')';
     if (l.lesson_type === 'negative') {
       negative.push(entry);
     } else {
@@ -588,7 +588,7 @@ STATUSEOF
 
   if (basePrompt.length <= maxChars) return basePrompt;
   
-  const executionContextIndex = basePrompt.indexOf("Context [Execution]:");
+  const executionContextIndex = basePrompt.indexOf("上下文 [执行]:");
   if (executionContextIndex > -1) {
       const prefix = basePrompt.slice(0, executionContextIndex + 20);
       const currentExecution = basePrompt.slice(executionContextIndex + 20);

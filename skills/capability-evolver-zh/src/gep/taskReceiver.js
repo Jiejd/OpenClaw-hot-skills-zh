@@ -506,7 +506,7 @@ async function claimAndCompleteWorkerTask(taskId, resultAssetId) {
 
   const completed = await completeWorkerTask(assignmentId, resultAssetId);
   if (!completed) {
-    console.warn(`[WorkerPool] Claimed assignment ${assignmentId} but complete failed -- will expire on Hub`);
+    console.warn(`[工作池] 已认领分配 ${assignmentId} 但完成失败 -- 将在 Hub 上过期`);
     return { ok: false, error: 'complete_failed', assignment_id: assignmentId };
   }
 

@@ -180,7 +180,7 @@ async function submitHubReview({
       _markReviewed(reusedAssetId, rating, false);
     }
 
-    console.log('[HubReview] Hub rejected review for ' + reusedAssetId + ': ' + errCode);
+    console.log('[Hub审查] Hub 拒绝了 ' + reusedAssetId + ' 的审查: ' + errCode);
     logAssetCall({
       run_id: runId || null,
       action: 'hub_review_rejected',

@@ -13,7 +13,7 @@ try {
     // --format: Hash, Date (ISO), Author, Subject, Body
     const cmd = `git log --reverse --grep="Evolution" --format="%H${SEP}%ai${SEP}%an${SEP}%s${SEP}%b"`;
     
-    console.log('Executing git log...');
+    console.log('正在执行 git log...');
     const output = execSync(cmd, { 
         encoding: 'utf8', 
         cwd: REPO_ROOT,
@@ -65,11 +65,11 @@ try {
     const outPath = path.join(outDir, 'evolution_history.md');
     fs.writeFileSync(outPath, markdown);
     
-    console.log(`Successfully generated report with ${count} entries.`);
-    console.log(`Saved to: ${outPath}`);
+    console.log(`成功生成包含 ${count} 条记录的报告。`);
+    console.log(`已保存到: ${outPath}`);
 
 } catch (e) {
-    console.error('Error generating history:', e.message);
+    console.error('生成历史报告出错:', e.message);
     process.exit(1);
 }
 

@@ -7,7 +7,7 @@ const OUT_FILE = path.join(REPO_ROOT, 'evolution_history.md');
 
 function parseLog() {
     if (!fs.existsSync(LOG_FILE)) {
-        console.log("Log file not found.");
+        console.log("日志文件未找到。");
         return;
     }
 
@@ -78,7 +78,7 @@ function parseLog() {
     });
 
     fs.writeFileSync(OUT_FILE, md);
-    console.log(`Extracted ${sortedReports.length} reports to ${OUT_FILE}`);
+    console.log(`已提取 ${sortedReports.length} 份报告到 ${OUT_FILE}`);
 }
 
 parseLog();

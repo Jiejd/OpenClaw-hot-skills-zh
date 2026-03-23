@@ -72,9 +72,9 @@ function run() {
 }
 
 if (require.main === module) {
-    console.log('[Cleanup] Scanning for old artifacts...');
+    console.log('[清理] 正在扫描旧产物...');
     var count = run();
-    console.log('[Cleanup] ' + (count > 0 ? 'Deleted ' + count + ' files.' : 'No files to delete.'));
+    console.log('[清理] ' + (count > 0 ? '已删除 ' + count + ' 个文件。' : '没有需要删除的文件。'));
 }
 
 module.exports = { run };

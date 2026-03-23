@@ -83,9 +83,9 @@ function getNodeId() {
     return _cachedNodeId;
   }
 
-  console.warn('[a2aProtocol] A2A_NODE_ID is not set. Computing node ID from device fingerprint. ' +
-    'This ID may change across machines or environments. ' +
-    'Set A2A_NODE_ID after registering at https://evomap.ai to use a stable identity.');
+  console.warn('[a2a协议] A2A_NODE_ID 未设置。正在从设备指纹计算节点 ID。' +
+    '此 ID 可能会在不同机器或环境中变化。' +
+    '注册 https://evomap.ai 后设置 A2A_NODE_ID 以使用稳定身份。');
 
   const deviceId = getDeviceId();
   const agentName = process.env.AGENT_NAME || 'default';
@@ -579,7 +579,7 @@ function sendHeartbeat() {
         console.warn('[Heartbeat] Node not registered on hub. Sending hello to re-register...');
         return sendHelloToHub().then(function (helloResult) {
           if (helloResult.ok) {
-            console.log('[Heartbeat] Re-registered with hub successfully.');
+            console.log('[心跳] 已成功重新注册到 Hub。');
             _heartbeatConsecutiveFailures = 0;
           } else {
             console.warn('[Heartbeat] Re-registration failed: ' + (helloResult.error || 'unknown'));
@@ -702,8 +702,8 @@ function startHeartbeat(intervalMs) {
   _heartbeatRunning = true;
 
   sendHelloToHub().then(function (r) {
-    if (r.ok) console.log('[Heartbeat] Registered with hub. Node: ' + getNodeId());
-    else console.warn('[Heartbeat] Hello failed (will retry via heartbeat): ' + (r.error || 'unknown'));
+    if (r.ok) console.log('[心跳] 已注册到 Hub。节点: ' + getNodeId());
+    else console.warn('[心跳] Hello 失败 (将通过心跳重试): ' + (r.error || '未知'));
   }).catch(function () {}).then(function () {
     if (!_heartbeatRunning) return;
     // First heartbeat after hello completes, with enough gap to avoid rate limit

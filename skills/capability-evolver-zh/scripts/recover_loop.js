@@ -40,17 +40,17 @@ function main() {
   const waitMs = parseInt(String(process.env.EVOLVER_RECOVER_WAIT_MS || '10000'), 10);
   const wait = Number.isFinite(waitMs) ? Math.max(0, waitMs) : 10000;
 
-  console.log(`[RECOVERY] Waiting ${wait}ms before restart...`);
+  console.log(`[恢复] 等待 ${wait}ms 后重启...`);
   sleepMs(wait);
 
   const workspaceRoot = resolveWorkspaceRoot();
   const entry = resolveEvolverEntry(workspaceRoot);
   if (!entry) {
-    console.error('[RECOVERY] Failed: cannot locate evolver entry under skills/.');
+    console.error('[恢复] 失败: 无法在 skills/ 下找到进化器入口。');
     process.exit(2);
   }
 
-  console.log(`[RECOVERY] Restarting loop via ${path.relative(workspaceRoot, entry)} ...`);
+  console.log(`[恢复] 通过 ${path.relative(workspaceRoot, entry)} 重启循环...`);
   const r = spawnSync(process.execPath, [entry, '--loop'], { stdio: 'inherit' });
   process.exit(typeof r.status === 'number' ? r.status : 1);
 }
