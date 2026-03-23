@@ -1,13 +1,13 @@
 # OpenClaw-hot-skills-zh 🇨🇳
 
-> 致力于将 ClawHub 平台的优质安全项目转化为中文版 Skills，降低阅读理解门槛，提供更符合中文开发者习惯的开源技能库。
+> 致力于将 各个skills 平台的优质、热门、安全的项目转化为中文版 Skills。降低阅读理解难度和优化门槛，提供更符合中文开发者习惯的开源技能库。
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/L-LesterYu/OpenClaw-hot-skills-zh.svg?style=social)](https://github.com/L-LesterYu/OpenClaw-hot-skills-zh/stargazers)
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 ClawHub 平台上优质技能（Skills）的中文版本，共收录 **69 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **69 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
