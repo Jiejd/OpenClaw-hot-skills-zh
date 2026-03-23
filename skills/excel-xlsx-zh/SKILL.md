@@ -1,7 +1,7 @@
 ---
 name: Excel / XLSX
 slug: excel-xlsx-zh
-version: 1.0.0
+version: 3
 homepage: https://clawhub.ai/ivangdavila/excel-xlsx
 description: "创建、检查和编辑 Microsoft Excel 工作簿和 XLSX 文件，支持可靠的公式、日期、数据类型、格式化、重新计算和模板保留。适用于以下场景：(1) 任务涉及 Excel 或 `.xlsx` 文件；(2) 文件包含公式、多工作表、数据验证、合并单元格或工作簿结构；(3) 日期、数字格式或类型精度要求高；(4) 工作簿需要在往返编辑后保持格式不漂移。"
 changelog: 初始发布
