@@ -188,28 +188,28 @@ function classifyBlastSeverity({ blast, maxFiles }) {
   if (files > BLAST_RADIUS_HARD_CAP_FILES || lines > BLAST_RADIUS_HARD_CAP_LINES) {
     return {
       severity: 'hard_cap_breach',
-      message: `HARD CAP BREACH: ${files} files / ${lines} lines exceeds system limit (${BLAST_RADIUS_HARD_CAP_FILES} files / ${BLAST_RADIUS_HARD_CAP_LINES} lines)`,
+      message: `硬上限突破：${files} 个文件 / ${lines} 行超过系统限制（${BLAST_RADIUS_HARD_CAP_FILES} 个文件 / ${BLAST_RADIUS_HARD_CAP_LINES} 行）`,
     };
   }
   if (!Number.isFinite(maxFiles) || maxFiles <= 0) {
-    return { severity: 'within_limit', message: 'no max_files constraint defined' };
+    return { severity: 'within_limit', message: '未定义 max_files 约束' };
   }
   if (files > maxFiles * BLAST_CRITICAL_RATIO) {
     return {
       severity: 'critical_overrun',
-      message: `CRITICAL OVERRUN: ${files} files > ${maxFiles * BLAST_CRITICAL_RATIO} (${BLAST_CRITICAL_RATIO}x limit of ${maxFiles}). Agent likely performed bulk/unintended operation.`,
+      message: `严重超限：${files} 个文件 > ${maxFiles * BLAST_CRITICAL_RATIO}（${BLAST_CRITICAL_RATIO} 倍于 ${maxFiles} 的限制）。智能体可能执行了批量/非预期操作。`,
     };
   }
   if (files > maxFiles) {
-    return { severity: 'exceeded', message: `max_files exceeded: ${files} > ${maxFiles}` };
+    return { severity: 'exceeded', message: `max_files 超限：${files} > ${maxFiles}` };
   }
   if (files > maxFiles * BLAST_WARN_RATIO) {
     return {
       severity: 'approaching_limit',
-      message: `approaching limit: ${files} / ${maxFiles} files (${Math.round((files / maxFiles) * 100)}%)`,
+      message: `接近限制：${files} / ${maxFiles} 个文件（${Math.round((files / maxFiles) * 100)}%）`,
     };
   }
-  return { severity: 'within_limit', message: `${files} / ${maxFiles} files` };
+  return { severity: 'within_limit', message: `${files} / ${maxFiles} 个文件` };
 }
 
 function analyzeBlastRadiusBreakdown(changedFiles, topN) {
@@ -240,7 +240,7 @@ function compareBlastEstimate(estimate, actual) {
     ratio: Math.round(ratio * 100) / 100,
     drifted: ratio > 3 || ratio < 0.1,
     message: ratio > 3
-      ? `Estimate drift: actual ${actFiles} files is ${ratio.toFixed(1)}x the estimated ${estFiles}. Agent did not plan accurately.`
+      ? `估计偏差：实际 ${actFiles} 个文件是估计值 ${estFiles} 的 ${ratio.toFixed(1)} 倍。智能体计划不准确。`
       : null,
   };
 }
@@ -309,7 +309,7 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
       try {
         const entries = fs.readdirSync(skillDir).filter(function (e) { return !e.startsWith('.'); });
         if (entries.length < 2) {
-          warnings.push('incomplete_skill: skills/' + skillName + '/ has only ' + entries.length + ' file(s). New skills should have at least index.js + SKILL.md.');
+          warnings.push('incomplete_skill: skills/' + skillName + '/ 仅有 ' + entries.length + ' 个文件。新技能应至少包含 index.js + SKILL.md。');
         }
       } catch (e) {
         console.warn('[policyCheck] checkConstraints skill dir read failed:', skillName, e && e.message || e);
@@ -326,11 +326,11 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
 
   if (ethicsText.length > 0) {
     const ethicsBlockPatterns = [
-      { re: /(?:bypass|disable|circumvent|remove)\s+(?:safety|guardrail|security|ethic|constraint|protection)/i, rule: 'safety', msg: 'ethics: strategy attempts to bypass safety mechanisms' },
-      { re: /(?:keylogger|screen\s*capture|webcam\s*hijack|mic(?:rophone)?\s*record)/i, rule: 'human_welfare', msg: 'ethics: covert monitoring tool in strategy' },
-      { re: /(?:social\s+engineering|phishing)\s+(?:attack|template|script)/i, rule: 'human_welfare', msg: 'ethics: social engineering content in strategy' },
-      { re: /(?:exploit|hack)\s+(?:user|human|people|victim)/i, rule: 'human_welfare', msg: 'ethics: human exploitation in strategy' },
-      { re: /(?:hide|conceal|obfuscat)\w*\s+(?:action|behavior|intent|log)/i, rule: 'transparency', msg: 'ethics: strategy conceals actions from audit trail' },
+      { re: /(?:bypass|disable|circumvent|remove)\s+(?:safety|guardrail|security|ethic|constraint|protection)/i, rule: 'safety', msg: '伦理：策略尝试绕过安全机制' },
+      { re: /(?:keylogger|screen\s*capture|webcam\s*hijack|mic(?:rophone)?\s*record)/i, rule: 'human_welfare', msg: '伦理：策略中包含隐蔽监控工具' },
+      { re: /(?:social\s+engineering|phishing)\s+(?:attack|template|script)/i, rule: 'human_welfare', msg: '伦理：策略中包含社会工程内容' },
+      { re: /(?:exploit|hack)\s+(?:user|human|people|victim)/i, rule: 'human_welfare', msg: '伦理：策略中包含人类剥削内容' },
+      { re: /(?:hide|conceal|obfuscat)\w*\s+(?:action|behavior|intent|log)/i, rule: 'transparency', msg: '伦理：策略试图隐藏操作以规避审计' },
     ];
     for (let ei = 0; ei < ethicsBlockPatterns.length; ei++) {
       if (ethicsBlockPatterns[ei].re.test(ethicsText)) {
@@ -398,7 +398,7 @@ function runValidations(gene, opts = {}) {
     const c = String(cmd || '').trim();
     if (!c) continue;
     if (!isValidationCommandAllowed(c)) {
-      results.push({ cmd: c, ok: false, out: '', err: 'BLOCKED: validation command rejected by safety check (allowed prefixes: node/npm/npx; shell operators prohibited)' });
+      results.push({ cmd: c, ok: false, out: '', err: '已阻止：验证命令被安全检查拒绝（允许的前缀：node/npm/npx；禁止 shell 操作符）' });
       return { ok: false, results, startedAt, finishedAt: Date.now() };
     }
     const r = tryRunCmd(c, { cwd: repoRoot, timeoutMs });
@@ -413,7 +413,7 @@ function runCanaryCheck(opts) {
   const timeoutMs = (opts && Number.isFinite(Number(opts.timeoutMs))) ? Number(opts.timeoutMs) : 30000;
   const canaryScript = path.join(repoRoot, 'src', 'canary.js');
   if (!fs.existsSync(canaryScript)) {
-    return { ok: true, skipped: true, reason: 'canary.js not found' };
+    return { ok: true, skipped: true, reason: '未找到 canary.js' };
   }
   const r = tryRunCmd(`node "${canaryScript}"`, { cwd: repoRoot, timeoutMs });
   return { ok: r.ok, skipped: false, out: String(r.out || ''), err: String(r.err || '') };

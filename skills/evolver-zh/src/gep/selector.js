@@ -379,7 +379,6 @@ function selectGeneAndCapsule({ genes, capsules, signals, memoryAdvice, driftEna
 }
 
 function buildSelectorDecision({ gene, capsule, signals, alternatives, memoryAdvice, driftEnabled, driftIntensity }) {
-  const reason = [];
   if (gene) reason.push('信号匹配 gene.signals_match');
   if (capsule) reason.push('胶囊触发器匹配信号');
   if (!gene) reason.push('未找到匹配基因；可能需要新基因');

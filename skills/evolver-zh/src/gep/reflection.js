@@ -27,8 +27,8 @@ function shouldReflect({ cycleCount, recentEvents }) {
 }
 
 function buildReflectionContext({ recentEvents, signals, memoryAdvice, narrative }) {
-  const parts = ['You are performing a strategic reflection on recent evolution cycles.'];
-  parts.push('Analyze the patterns below and provide concise strategic guidance.');
+  const parts = ['你正在对最近的进化周期进行战略反思。'];
+  parts.push('分析以下模式并提供简洁的战略指导。');
   parts.push('');
 
   if (Array.isArray(recentEvents) && recentEvents.length > 0) {
@@ -46,47 +46,47 @@ function buildReflectionContext({ recentEvents, signals, memoryAdvice, narrative
       genes[g] = (genes[g] || 0) + 1;
     });
 
-    parts.push('## Recent Cycle Statistics (last 10)');
-    parts.push(`- Success: ${successCount}, Failed: ${failCount}`);
-    parts.push(`- Intent distribution: ${JSON.stringify(intents)}`);
-    parts.push(`- Gene usage: ${JSON.stringify(genes)}`);
+    parts.push('## 近期周期统计（最近 10 次）');
+    parts.push(`- 成功：${successCount}，失败：${failCount}`);
+    parts.push(`- 意图分布：${JSON.stringify(intents)}`);
+    parts.push(`- 基因使用：${JSON.stringify(genes)}`);
     parts.push('');
   }
 
   if (Array.isArray(signals) && signals.length > 0) {
-    parts.push('## Current Signals');
+    parts.push('## 当前信号');
     parts.push(signals.slice(0, 20).join(', '));
     parts.push('');
   }
 
   if (memoryAdvice) {
-    parts.push('## Memory Graph Advice');
+    parts.push('## 记忆图谱建议');
     if (memoryAdvice.preferredGeneId) {
-      parts.push(`- Preferred gene: ${memoryAdvice.preferredGeneId}`);
+      parts.push(`- 首选基因：${memoryAdvice.preferredGeneId}`);
     }
     if (Array.isArray(memoryAdvice.bannedGeneIds) && memoryAdvice.bannedGeneIds.length > 0) {
-      parts.push(`- Banned genes: ${memoryAdvice.bannedGeneIds.join(', ')}`);
+      parts.push(`- 已封禁基因：${memoryAdvice.bannedGeneIds.join(', ')}`);
     }
     if (memoryAdvice.explanation) {
-      parts.push(`- Explanation: ${memoryAdvice.explanation}`);
+      parts.push(`- 说明：${memoryAdvice.explanation}`);
     }
     parts.push('');
   }
 
   if (narrative) {
-    parts.push('## Recent Evolution Narrative');
+    parts.push('## 近期进化叙事');
     parts.push(String(narrative).slice(0, 3000));
     parts.push('');
   }
 
-  parts.push('## Questions to Answer');
-  parts.push('1. Are there persistent signals being ignored?');
-  parts.push('2. Is the gene selection strategy optimal, or are we stuck in a local maximum?');
-  parts.push('3. Should the balance between repair/optimize/innovate shift?');
-  parts.push('4. Are there capability gaps that no current gene addresses?');
-  parts.push('5. What single strategic adjustment would have the highest impact?');
+  parts.push('## 需要回答的问题');
+  parts.push('1. 是否有被忽略的持续信号？');
+  parts.push('2. 基因选择策略是否最优，还是我们陷入了局部最优？');
+  parts.push('3. 修复/优化/创新之间的平衡是否需要调整？');
+  parts.push('4. 是否有当前基因无法覆盖的能力缺口？');
+  parts.push('5. 哪个单一的战略调整能产生最大影响？');
   parts.push('');
-  parts.push('Respond with a JSON object: { "insights": [...], "strategy_adjustment": "...", "priority_signals": [...] }');
+  parts.push('以 JSON 对象回复：{ "insights": [...], "strategy_adjustment": "...", "priority_signals": [...] }');
 
   return parts.join('\n');
 }

@@ -175,35 +175,35 @@ function proposeMutations({ baseState, reason, driftEnabled, signals }) {
 
   const r = String(reason || '');
   if (driftEnabled) {
-    muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || 'drift enabled' });
+    muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || '漂移已启用' });
     // Keep risk bounded under drift by default.
-    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.05, reason: 'drift safety clamp' });
+    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.05, reason: '漂移安全约束' });
   } else if (sig.includes('protocol_drift')) {
-    muts.push({ type: 'PersonalityMutation', param: 'obedience', delta: +0.1, reason: r || 'protocol drift' });
-    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: 'tighten protocol compliance' });
+    muts.push({ type: 'PersonalityMutation', param: 'obedience', delta: +0.1, reason: r || '协议漂移' });
+    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: '加强协议合规性' });
   } else if (sig.includes('log_error') || sig.some(x => x.startsWith('errsig:') || x.startsWith('errsig_norm:'))) {
-    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.1, reason: r || 'repair instability' });
-    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.1, reason: 'reduce risky changes under errors' });
+    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.1, reason: r || '修复不稳定性' });
+    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.1, reason: '在错误状态下降低风险变更' });
   } else if (hasOpportunitySignal(sig)) {
     // Opportunity detected: nudge towards creativity to enable innovation.
-    muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || 'opportunity signal detected' });
-    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: +0.05, reason: 'allow exploration for innovation' });
+    muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || '检测到机会信号' });
+    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: +0.05, reason: '允许创新探索' });
   } else {
     // Plateau-like generic: slightly increase rigor, slightly decrease verbosity (more concise execution).
-    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: r || 'stability bias' });
-    muts.push({ type: 'PersonalityMutation', param: 'verbosity', delta: -0.05, reason: 'reduce noise' });
+    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: r || '稳定性偏好' });
+    muts.push({ type: 'PersonalityMutation', param: 'verbosity', delta: -0.05, reason: '减少噪音' });
   }
 
   // If already very high obedience, avoid pushing it further; swap second mutation to creativity.
   if (s.obedience >= 0.95) {
     const idx = muts.findIndex(x => x.param === 'obedience');
-    if (idx >= 0) muts[idx] = { type: 'PersonalityMutation', param: 'creativity', delta: +0.05, reason: 'obedience saturated' };
+    if (idx >= 0) muts[idx] = { type: 'PersonalityMutation', param: 'creativity', delta: +0.05, reason: '服从度已饱和' };
   }
   return muts;
 }
 
 function shouldTriggerPersonalityMutation({ driftEnabled, recentEvents }) {
-  if (driftEnabled) return { ok: true, reason: 'drift enabled' };
+  if (driftEnabled) return { ok: true, reason: '漂移已启用' };
   const list = Array.isArray(recentEvents) ? recentEvents : [];
   const tail = list.slice(-6);
   const outcomes = tail
@@ -211,14 +211,14 @@ function shouldTriggerPersonalityMutation({ driftEnabled, recentEvents }) {
     .filter(Boolean);
   if (outcomes.length >= 4) {
     const recentFailed = outcomes.slice(-4).filter(x => x === 'failed').length;
-    if (recentFailed >= 3) return { ok: true, reason: 'long failure streak' };
+    if (recentFailed >= 3) return { ok: true, reason: '长期失败连续' };
   }
   // Mutation consecutive failure proxy: last 3 events that have mutation_id.
   const withMut = tail.filter(e => e && typeof e.mutation_id === 'string' && e.mutation_id);
   if (withMut.length >= 3) {
     const last3 = withMut.slice(-3);
     const fail3 = last3.filter(e => e && e.outcome && e.outcome.status === 'failed').length;
-    if (fail3 >= 3) return { ok: true, reason: 'mutation consecutive failures' };
+    if (fail3 >= 3) return { ok: true, reason: '变异连续失败' };
   }
   return { ok: false, reason: '' };
 }
@@ -267,7 +267,7 @@ function selectPersonalityForRun({ driftEnabled, signals, recentEvents } = {}) {
     const muts = [];
     for (const d of diffs.slice(0, 2)) {
       const clipped = Math.max(-0.1, Math.min(0.1, d.delta));
-      muts.push({ type: 'PersonalityMutation', param: d.param, delta: clipped, reason: 'natural_selection' });
+      muts.push({ type: 'PersonalityMutation', param: d.param, delta: clipped, reason: '自然选择' });
     }
     const applied = applyPersonalityMutations(base, muts);
     model.current = applied.state;

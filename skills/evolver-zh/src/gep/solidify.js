@@ -551,9 +551,9 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
   const repoRoot = getRepoRoot();
 
   if (!isGitRepo(repoRoot)) {
-    console.error('[Solidify] FATAL: Not a git repository (' + repoRoot + ').');
-    console.error('[Solidify] Solidify requires git for rollback, diff capture, and blast radius.');
-    console.error('[Solidify] Run "git init && git add -A && git commit -m init" first.');
+    console.error('[Solidify] 致命错误：不是 git 仓库（' + repoRoot + '）。');
+    console.error('[Solidify] 固化需要 git 来支持回滚、差异捕获和爆炸半径计算。');
+    console.error('[Solidify] 请先运行 "git init && git add -A && git commit -m init"。');
     return {
       ok: false,
       status: 'failed',
@@ -608,17 +608,17 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       constraintCheck.blastSeverity.severity !== 'within_limit' &&
       constraintCheck.blastSeverity.severity !== 'approaching_limit') {
     const breakdown = analyzeBlastRadiusBreakdown(blast.all_changed_files || blast.changed_files || []);
-    console.error(`[Solidify] Blast radius breakdown: ${JSON.stringify(breakdown)}`);
+    console.error(`[Solidify] 爆炸半径明细：${JSON.stringify(breakdown)}`);
     const estComp = compareBlastEstimate(blastRadiusEstimate, blast);
     if (estComp) {
-      console.error(`[Solidify] Estimate comparison: estimated ${estComp.estimateFiles} files, actual ${estComp.actualFiles} files (${estComp.ratio}x)`);
+      console.error(`[Solidify] 估计偏差：预计 ${estComp.estimateFiles} 个文件，实际 ${estComp.actualFiles} 个文件（${estComp.ratio} 倍）`);
     }
   }
 
   // Log warnings even on success (approaching limit, estimate drift).
   if (constraintCheck.warnings && constraintCheck.warnings.length > 0) {
     for (const w of constraintCheck.warnings) {
-      console.log(`[Solidify] WARNING: ${w}`);
+      console.log(`[Solidify] 警告：${w}`);
     }
   }
 
@@ -633,7 +633,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       constraintCheck.violations.push(v);
     }
     constraintCheck.ok = false;
-    console.error(`[Solidify] CRITICAL: Destructive changes detected: ${destructiveViolations.join('; ')}`);
+    console.error(`[Solidify] 严重错误：检测到破坏性变更：${destructiveViolations.join('; ')}`);
   }
 
   // Capture environment fingerprint before validation.
@@ -652,7 +652,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       `canary_failed: index.js cannot load in child process: ${canary.err}`
     );
     constraintCheck.ok = false;
-    console.error(`[Solidify] CANARY FAILED: ${canary.err}`);
+    console.error(`[Solidify] 金丝雀测试失败：${canary.err}`);
   }
 
   // Optional LLM review: when EVOLVER_LLM_REVIEW=true, submit diff for review.
@@ -669,12 +669,12 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       if (llmReviewResult && llmReviewResult.approved === false) {
         constraintCheck.violations.push('llm_review_rejected: ' + (llmReviewResult.summary || 'no reason'));
         constraintCheck.ok = false;
-        console.log('[LLMReview] Change REJECTED: ' + (llmReviewResult.summary || ''));
+        console.log('[LLMReview] 变更已拒绝：' + (llmReviewResult.summary || ''));
       } else if (llmReviewResult) {
-        console.log('[LLMReview] Change approved (confidence: ' + (llmReviewResult.confidence || '?') + ')');
+        console.log('[LLMReview] 变更已批准（置信度：' + (llmReviewResult.confidence || '?') + ')');
       }
     } catch (e) {
-      console.log('[LLMReview] Failed (non-fatal): ' + (e && e.message ? e.message : e));
+      console.log('[LLMReview] 审查失败（非致命）：' + (e && e.message ? e.message : e));
     }
   }
 
@@ -835,7 +835,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         prevCapsule = Array.isArray(list) ? list.find(c => c && c.type === 'Capsule' && String(c.id) === selectedCapsuleId) : null;
       }
     } catch (e) {
-      console.warn('[evolver] solidify loadCapsules failed:', e && e.message || e);
+      console.warn('[evolver] solidify 加载胶囊失败：', e && e.message || e);
     }
     const successReason = buildSuccessReason({ gene: geneUsed, signals, blast, mutation, score });
     const capsuleDiff = captureDiffSnapshot(repoRoot);
@@ -891,10 +891,10 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         };
         failedCapsule.asset_id = computeAssetId(failedCapsule);
         appendFailedCapsule(failedCapsule);
-        console.log('[Solidify] Preserved failed mutation as FailedCapsule: ' + failedCapsule.id);
+        console.log('[Solidify] 已保存失败变异为 FailedCapsule：' + failedCapsule.id);
       }
     } catch (e) {
-      console.log('[Solidify] FailedCapsule capture error (non-fatal): ' + (e && e.message ? e.message : e));
+      console.log('[Solidify] FailedCapsule 捕获错误（非致命）：' + (e && e.message ? e.message : e));
     }
   }
 
@@ -920,7 +920,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       applyEpigeneticMarks(geneUsed, envFp, outcomeStatus);
       upsertGene(geneUsed);
     } catch (e) {
-      console.warn('[evolver] applyEpigeneticMarks failed (non-blocking):', e && e.message || e);
+      console.warn('[evolver] applyEpigeneticMarks 失败（非阻塞）：', e && e.message || e);
     }
   }
 
@@ -945,7 +945,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         updatePersonalityStats({ personalityState, outcome: outcomeStatus, score, notes: `event:${event.id}` });
       }
     } catch (e) {
-      console.warn('[evolver] updatePersonalityStats failed:', e && e.message || e);
+      console.warn('[evolver] updatePersonalityStats 失败：', e && e.message || e);
     }
   }
 
@@ -969,7 +969,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         capsule,
       });
     } catch (e) {
-      console.log('[Narrative] Record failed (non-fatal): ' + (e && e.message ? e.message : e));
+      console.log('[Narrative] 记录失败（非致命）：' + (e && e.message ? e.message : e));
     }
   }
 
@@ -1036,13 +1036,13 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
             result
               .then(function (res) {
                 if (res && res.ok) {
-                  console.log('[AutoPublish] Published bundle (Gene+Capsule) ' + (capsule.asset_id || capsule.id) + ' to Hub.');
+                  console.log('[AutoPublish] 已发布捆绑包（基因+胶囊）' + (capsule.asset_id || capsule.id) + ' 到 Hub。');
                 } else {
-                  console.log('[AutoPublish] Hub rejected: ' + JSON.stringify(res));
+                  console.log('[AutoPublish] Hub 拒绝：' + JSON.stringify(res));
                 }
               })
               .catch(function (err) {
-                console.log('[AutoPublish] Failed (non-fatal): ' + err.message);
+                console.log('[AutoPublish] 失败（非致命）：' + err.message);
               });
           }
           publishResult = { attempted: true, asset_id: capsule.asset_id || capsule.id, bundle: true };
@@ -1065,7 +1065,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
           publishResult = { attempted: false, reason: 'no_hub_url' };
         }
       } catch (e) {
-        console.log('[AutoPublish] Error (non-fatal): ' + e.message);
+        console.log('[AutoPublish] 错误（非致命）：' + e.message);
         publishResult = { attempted: false, reason: e.message };
       }
     } else {
@@ -1125,16 +1125,16 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         if (apResult && typeof apResult.then === 'function') {
           apResult
             .then(function (res) {
-              if (res && res.ok) console.log('[AntiPatternPublish] Published failed bundle to Hub: ' + apCapsule.id);
-              else console.log('[AntiPatternPublish] Hub rejected: ' + JSON.stringify(res));
+              if (res && res.ok) console.log('[AntiPatternPublish] 已发布失败捆绑包到 Hub：' + apCapsule.id);
+              else console.log('[AntiPatternPublish] Hub 拒绝：' + JSON.stringify(res));
             })
             .catch(function (err) {
-              console.log('[AntiPatternPublish] Failed (non-fatal): ' + err.message);
+              console.log('[AntiPatternPublish] 失败（非致命）：' + err.message);
             });
         }
         antiPatternPublishResult = { attempted: true, asset_id: apCapsule.asset_id };
       } catch (e) {
-        console.log('[AntiPatternPublish] Error (non-fatal): ' + e.message);
+        console.log('[AntiPatternPublish] 错误（非致命）：' + e.message);
         antiPatternPublishResult = { attempted: false, reason: e.message };
       }
     }
@@ -1170,48 +1170,48 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         try {
           const { claimAndCompleteWorkerTask } = require('./taskReceiver');
           const taskId = String(lastRun.active_task_id);
-          console.log(`[WorkerPool] Atomic claim+complete for task "${lastRun.active_task_title || taskId}" with asset ${resultAssetId}`);
+          console.log(`[WorkerPool] 原子认领+完成任务 "${lastRun.active_task_title || taskId}"，资产 ${resultAssetId}`);
           const result = claimAndCompleteWorkerTask(taskId, resultAssetId);
           if (result && typeof result.then === 'function') {
             result
               .then(function (r) {
                 if (r.ok) {
-                  console.log('[WorkerPool] Claim+complete succeeded, assignment=' + r.assignment_id);
+                  console.log('[WorkerPool] 认领+完成成功，assignment=' + r.assignment_id);
                 } else {
-                  console.log('[WorkerPool] Claim+complete failed: ' + (r.error || 'unknown') + (r.assignment_id ? ' assignment=' + r.assignment_id : ''));
+                  console.log('[WorkerPool] 认领+完成失败：' + (r.error || '未知') + (r.assignment_id ? ' assignment=' + r.assignment_id : ''));
                 }
               })
               .catch(function (err) {
-                console.log('[WorkerPool] Claim+complete error (non-fatal): ' + (err && err.message ? err.message : err));
+                console.log('[WorkerPool] 认领+完成错误（非致命）：' + (err && err.message ? err.message : err));
               });
           }
           taskCompleteResult = { attempted: true, task_id: lastRun.active_task_id, asset_id: resultAssetId, worker: true, deferred: true };
         } catch (e) {
-          console.log('[WorkerPool] Atomic claim+complete error (non-fatal): ' + e.message);
+          console.log('[WorkerPool] 原子认领+完成错误（非致命）：' + e.message);
           taskCompleteResult = { attempted: false, reason: e.message, worker: true, deferred: true };
         }
       } else if (workerAssignmentId) {
         // Legacy path: already-claimed assignment, just complete it
         try {
           const { completeWorkerTask } = require('./taskReceiver');
-          console.log(`[WorkerComplete] Completing worker assignment "${workerAssignmentId}" with asset ${resultAssetId}`);
+          console.log(`[WorkerComplete] 完成工作器任务 "${workerAssignmentId}"，资产 ${resultAssetId}`);
           const completed = completeWorkerTask(workerAssignmentId, resultAssetId);
           if (completed && typeof completed.then === 'function') {
             completed
               .then(function (ok) {
                 if (ok) {
-                  console.log('[WorkerComplete] Worker task completed successfully on Hub.');
+                  console.log('[WorkerComplete] 工作器任务在 Hub 上成功完成。');
                 } else {
-                  console.log('[WorkerComplete] Hub rejected worker completion (non-fatal).');
+                  console.log('[WorkerComplete] Hub 拒绝工作器完成（非致命）。');
                 }
               })
               .catch(function (err) {
-                console.log('[WorkerComplete] Failed (non-fatal): ' + (err && err.message ? err.message : err));
+                console.log('[WorkerComplete] 失败（非致命）：' + (err && err.message ? err.message : err));
               });
           }
           taskCompleteResult = { attempted: true, task_id: lastRun.active_task_id, assignment_id: workerAssignmentId, asset_id: resultAssetId, worker: true };
         } catch (e) {
-          console.log('[WorkerComplete] Error (non-fatal): ' + e.message);
+          console.log('[WorkerComplete] 错误（非致命）：' + e.message);
           taskCompleteResult = { attempted: false, reason: e.message, worker: true };
         }
       } else {
@@ -1219,24 +1219,24 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         try {
           const { completeTask } = require('./taskReceiver');
           const taskId = String(lastRun.active_task_id);
-          console.log(`[TaskComplete] Completing task "${lastRun.active_task_title || taskId}" with asset ${resultAssetId}`);
+          console.log(`[TaskComplete] 完成任务 "${lastRun.active_task_title || taskId}"，资产 ${resultAssetId}`);
           const completed = completeTask(taskId, resultAssetId);
           if (completed && typeof completed.then === 'function') {
             completed
               .then(function (ok) {
                 if (ok) {
-                  console.log('[TaskComplete] Task completed successfully on Hub.');
+                  console.log('[TaskComplete] 任务在 Hub 上成功完成。');
                 } else {
-                  console.log('[TaskComplete] Hub rejected task completion (non-fatal).');
+                  console.log('[TaskComplete] Hub 拒绝任务完成（非致命）。');
                 }
               })
               .catch(function (err) {
-                console.log('[TaskComplete] Failed (non-fatal): ' + (err && err.message ? err.message : err));
+                console.log('[TaskComplete] 失败（非致命）：' + (err && err.message ? err.message : err));
               });
           }
           taskCompleteResult = { attempted: true, task_id: taskId, asset_id: resultAssetId };
         } catch (e) {
-          console.log('[TaskComplete] Error (non-fatal): ' + e.message);
+          console.log('[TaskComplete] 错误（非致命）：' + e.message);
           taskCompleteResult = { attempted: false, reason: e.message };
         }
       }
@@ -1267,7 +1267,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
           .then(function (r) {
             hubReviewResult = r;
             if (r && r.submitted) {
-              console.log('[HubReview] Review submitted successfully (rating=' + r.rating + ').');
+              console.log('[HubReview] 审查提交成功（评分=' + r.rating + '）。');
             }
             return r;
           })

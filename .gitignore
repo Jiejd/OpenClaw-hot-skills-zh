@@ -23,6 +23,12 @@ dist/
 build/
 *.zip
 
+# Python 缓存
+__pycache__/
+*.egg-info/
+*.pyc
+*.pyo
+
 # 环境变量
 .env
 .env.local
