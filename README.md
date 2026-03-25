@@ -7,7 +7,7 @@
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **73 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **75 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
@@ -108,6 +108,7 @@
 | [mcporter-zh](skills/mcporter-zh/SKILL.md) | MCP 统一客户端与代码生成 CLI——零配置自动发现（Cursor/Claude/Codex 等），直接调用 MCP 工具，一键生成 TypeScript 类型定义与独立 CLI，内置 OAuth 认证与临时连接 | 📦 |
 | [playwright-mcp-zh](skills/playwright-mcp-zh/SKILL.md) | 基于 Playwright MCP 的浏览器自动化——导航、点击、输入、表单填充、数据提取、截图与 JS 执行，支持 Chrome/Firefox/WebKit，内置沙箱与安全主机限制 | 📦 |
 | [Agent-Browser-zh](skills/Agent-Browser-zh/SKILL.md) | AI 专用无头浏览器自动化 CLI——基于无障碍树确定性引用驱动导航、点击、填充，Rust+Node.js 架构，支持会话管理与 JSON 结构化输出 | 📦 |
+| [browser-use-zh](skills/browser-use-zh/SKILL.md) | browser-use 浏览器自动化 CLI——后台守护进程保持浏览器持久打开（约 50ms 延迟），支持导航、点击、输入、表单填充、截图与数据提取，适合网页测试与爬取 | 📦 |
 | [desktop-control-zh](skills/desktop-control-zh/SKILL.md) | 基于 PyAutoGUI 的桌面自动化——像素级鼠标/键盘控制、屏幕截图与图像识别、窗口管理、剪贴板操作，内置故障保护机制 | 📦 |
 | [skill-creator-zh](skills/skill-creator-zh/SKILL.md) | AgentSkills 全生命周期工具——创建、编辑、验证、打包，内置初始化脚本和规范检查器 | ✅ |
 | [clawhub-zh](skills/clawhub-zh/SKILL.md) | 通过 ClawHub CLI 管理 clawhub.com 上的智能体技能——搜索发现、安装指定版本、哈希匹配增量更新（支持全量）、列出已装技能及发布新技能，支持自定义注册表与工作目录 | 📦 |
