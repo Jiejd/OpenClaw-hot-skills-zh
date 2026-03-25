@@ -7,7 +7,7 @@
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **71 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **72 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
@@ -80,6 +80,7 @@
 | [trello-zh](skills/trello-zh/SKILL.md) | Trello 看板完整管理——通过 curl 调用 REST API 实现看板/列表/卡片的查询、创建、移动、评论与归档，需 API Key + Token 认证 | 📦 |
 | [caldav-calendar-zh](skills/caldav-calendar-zh/SKILL.md) | CalDAV 日历本地同步与事件管理——基于 vdirsyncer + khal 实现 iCloud/Google/Fastmail/Nextcloud 等日历的双向同步、事件 CRUD、搜索与格式化输出，数据完全本地存储 | 📦 |
 | [obsidian-zh](skills/obsidian-zh/SKILL.md) | 基于 obsidian-cli 的 Obsidian 笔记库管理——日常笔记创建、前缀自动分区（任务/想法/问题/洞察）、集中式任务日志与艾森豪威尔优先级标签 | 📦 |
+| [imap-smtp-email-zh](skills/imap-smtp-email-zh/SKILL.md) | 通过 IMAP/SMTP 收发邮件——检查新邮件/未读、获取内容、搜索邮箱、标记已读/未读、发送带附件邮件，支持多账号，兼容 Gmail/Outlook/163 等主流邮箱 | 📦 |
 | [weather-zh](skills/weather-zh/SKILL.md) | 通过 wttr.in + Open-Meteo 免费查询天气——紧凑/完整预报、中文输出、JSON API 程序化调用，仅需 curl | ✅ |
 | [minara-zh](skills/minara-zh/SKILL.md) | 加密货币全功能交易 CLI——现货兑换、永续合约、AI 自动交易、限价单、充值提现（信用卡/加密货币）、x402 协议支付、市场发现与 AI 研究聊天，支持 EVM + Solana 多链 | 💰📦 |
 

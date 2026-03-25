@@ -1,9 +1,0 @@
-{
-  "name": "api-gateway-zh",
-  "version": "1.0.58",
-  "language": "zh-CN",
-  "description": "API 网关中文版 - 连接 100+ API，支持托管 OAuth 认证",
-  "original": "api-gateway",
-  "translated_at": "2026-03-05",
-  "translator": "OpenClaw Hot Skills Translation Project"
-}
