@@ -127,6 +127,7 @@
 |------|------|------|
 | [word-docx-zh](skills/word-docx-zh/SKILL.md) | OOXML 感知的 Word 文档精准编辑——样式/编号/修订/批注/域/节完整支持，往返编辑格式不漂移 | ✅ |
 | [gongwen-zh](skills/gongwen-zh/SKILL.md) | 按党政机关公文格式标准自动排版 | ✅ |
+| [gongwen-writing-zh](skills/gongwen-writing-zh/SKILL.md) | 政府公文写作助手——按标准模板起草公文，包含完整的写作流程、结构模板、风险分析等，支持多种公文类型 | ✅ |
 | [nano-pdf-zh](skills/nano-pdf-zh/SKILL.md) | 通过 nano-pdf CLI 用自然语言指令编辑 PDF 特定页面，支持标题修改、内容更正等精准操作 | 📦 |
 | [excel-xlsx-zh](skills/excel-xlsx-zh/SKILL.md) | OOXML 感知的 Excel 工作簿精准编辑——公式/日期/数据类型完整保留，往返编辑格式不漂移，pandas+openpyxl 双引擎按场景自动选择 | 📦 |
 | [markdown-converter-zh](skills/markdown-converter-zh/SKILL.md) | 基于 markitdown 将 15+ 种文档格式转为 Markdown，支持图片 OCR、音频转录、YouTube 字幕提取及 ZIP 解包 | 📦 |
@@ -146,7 +147,7 @@
 
 | 技能 | 描述 | 标记 |
 |------|------|------|
-| [moltguard-zh](skills/moltguard-zh/openclaw.plugin.json) | OpenClaw 原生安全插件——通过 MoltGuard API 检测工具结果与消息中的提示注入，可选本地净化网关在发送前脱敏 PII（银行卡/密码等），首次使用自动注册 API 密钥 | 💰 |
+| [moltguard-zh](skills/moltguard-zh/SKILL.md) | OpenClaw 原生安全插件——通过 MoltGuard API 检测工具结果与消息中的提示注入，可选本地净化网关在发送前脱敏 PII（银行卡/密码等），首次使用自动注册 API 密钥 | 💰 |
 | [skill-vetter-zh](skills/skill-vetter-zh/SKILL.md) | 技能安装前安全审查协议——来源验证、14项危险信号检测、权限范围评估与四级风险分类，输出结构化审查报告 | ✅ |
 | [edgeone-clawscan-zh](skills/edgeone-clawscan-zh/SKILL.md) | 腾讯朱雀实验室 A.I.G 驱动的 OpenClaw 安全扫描——全环境 4 步体检（配置审计/供应链风险/CVE 漏洞/隐私泄露）与单技能深度安全审查，云端情报+本地审计双引擎 | ✅ |
 
