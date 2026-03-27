@@ -1,0 +1,41 @@
+{
+  "name": "clawdbot-filesystem",
+  "version": "1.0.0",
+  "description": "面向 AI 智能体的高级文件系统操作工具",
+  "defaultPath": "./",
+  "maxDepth": 10,
+  "defaultFilters": ["*"],
+  "excludePatterns": [
+    "node_modules",
+    ".git",
+    ".DS_Store",
+    "*.tmp",
+    "*.swp",
+    "*.log~",
+    ".cache",
+    "dist",
+    "build"
+  ],
+  "outputFormat": "table",
+  "dateFormat": "YYYY-MM-DD HH:mm:ss",
+  "sizeFormat": "human",
+  "colorOutput": true,
+  "performance": {
+    "maxFileSize": 52428800,
+    "maxFiles": 10000,
+    "timeoutMs": 30000
+  },
+  "safety": {
+    "requireConfirmation": true,
+    "preventSystemPaths": true,
+    "allowedOperations": ["read", "copy", "analyze"],
+    "protectedPaths": [
+      "/etc",
+      "/var/lib",
+      "/usr/bin",
+      "/system",
+      "C:\\Windows",
+      "C:\\Program Files"
+    ]
+  }
+}

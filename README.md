@@ -7,7 +7,7 @@
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **73 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **79 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
@@ -57,6 +57,7 @@
 | 技能 | 描述 | 标记 |
 |------|------|------|
 | [proactive-self-improving-agent-zh](skills/proactive-self-improving-agent-zh/SKILL.md) | Agent 自进化引擎——7 种触发条件自动捕获经验（错误/纠正/最佳实践/任务回顾等），结构化记录并去重，经验出现 ≥3 次自动晋升为永久规则，ADL 防漂移 + VFM 价值评分保障安全进化 | ✅ |
+| [agent-autonomy-kit-zh](skills/agent-autonomy-kit-zh/SKILL.md) | Agent 自主执行工具包——任务队列系统 + 主动心跳 + 持续运行，将智能体从被动响应转变为主动执行，含队列检查脚本与任务后协议 | ✅ |
 | [proactive-agent-zh](skills/proactive-agent-zh/SKILL.md) | 主动式 Agent 架构——WAL 预写日志、工作缓冲区、压缩恢复、自主定时任务、反向提示与安全演进护栏，让 Agent 预测需求并在上下文丢失中存活 | ✅ |
 | [self-improving-zh](skills/self-improving-zh/SKILL.md) | 自我反思与持续改进引擎：自动捕获纠正和偏好信号，分层记忆存储（热/温/冷），模式出现3次后自动晋升为永久规则 | ✅ |
 | [self-improvement-zh](skills/self-improvement-zh/SKILL.md) | 捕获学习内容、错误和纠正以实现持续改进 | ✅ |
@@ -108,6 +109,7 @@
 | [mcporter-zh](skills/mcporter-zh/SKILL.md) | MCP 统一客户端与代码生成 CLI——零配置自动发现（Cursor/Claude/Codex 等），直接调用 MCP 工具，一键生成 TypeScript 类型定义与独立 CLI，内置 OAuth 认证与临时连接 | 📦 |
 | [playwright-mcp-zh](skills/playwright-mcp-zh/SKILL.md) | 基于 Playwright MCP 的浏览器自动化——导航、点击、输入、表单填充、数据提取、截图与 JS 执行，支持 Chrome/Firefox/WebKit，内置沙箱与安全主机限制 | 📦 |
 | [Agent-Browser-zh](skills/Agent-Browser-zh/SKILL.md) | AI 专用无头浏览器自动化 CLI——基于无障碍树确定性引用驱动导航、点击、填充，Rust+Node.js 架构，支持会话管理与 JSON 结构化输出 | 📦 |
+| [browser-use-zh](skills/browser-use-zh/SKILL.md) | browser-use 浏览器自动化 CLI——后台守护进程保持浏览器持久打开（约 50ms 延迟），支持导航、点击、输入、表单填充、截图与数据提取，适合网页测试与爬取 | 📦 |
 | [desktop-control-zh](skills/desktop-control-zh/SKILL.md) | 基于 PyAutoGUI 的桌面自动化——像素级鼠标/键盘控制、屏幕截图与图像识别、窗口管理、剪贴板操作，内置故障保护机制 | 📦 |
 | [skill-creator-zh](skills/skill-creator-zh/SKILL.md) | AgentSkills 全生命周期工具——创建、编辑、验证、打包，内置初始化脚本和规范检查器 | ✅ |
 | [clawhub-zh](skills/clawhub-zh/SKILL.md) | 通过 ClawHub CLI 管理 clawhub.com 上的智能体技能——搜索发现、安装指定版本、哈希匹配增量更新（支持全量）、列出已装技能及发布新技能，支持自定义注册表与工作目录 | 📦 |
@@ -119,6 +121,8 @@
 | [qmd-zh](skills/qmd-zh/SKILL.md) | 本地文件混合搜索引擎——集合级索引管理，支持 BM25 关键词搜索、Ollama 向量语义搜索及混合重排序，内置 MCP 服务器模式，需安装 qmd CLI 及 Ollama | 📦 |
 | [qa-engineer-zh](skills/qa-engineer-zh/SKILL.md) | 软件测试与质量保证——发现 bug、执行测试、生成报告 | ✅ |
 | [model-usage-zh](skills/model-usage-zh/SKILL.md) | 通过 CodexBar CLI 从本地成本日志汇总 Codex/Claude 按模型使用量与成本，支持当前模型快照或全量明细，文本/JSON 双输出 | 📦 |
+| [filesystem-management-zh](skills/filesystem-management-zh/SKILL.md) | 高级文件系统操作工具——智能文件列表/搜索/批量复制/目录分析，支持 Glob/正则过滤、树形可视化与安全防护，专为 AI 智能体优化 | 📦 |
+| [opencode-controller-zh](skills/opencode-controller-zh/SKILL.md) | Opencode 编码工作流控制器——管理会话与模型选择、Plan/Build 智能体模式切换、协调编码任务的全流程，需安装 Opencode CLI | 📦 |
 | [api-gateway-zh](skills/api-gateway-zh/SKILL.md) | 通过 Maton.ai 代理统一访问 100+ 第三方 API（Slack、HubSpot、Google Workspace、Notion、Stripe 等），托管 OAuth 自动注入令牌，支持原生端点透传与多连接管理 | 💰 |
 
 ### 📄 文档与文件处理
@@ -142,6 +146,7 @@
 |------|------|------|
 | [stock-analysis-zh](skills/stock-analysis-zh/SKILL.md) | 基于 Yahoo Finance API 的全面股票研究——公司概览、技术指标与估值、多股对比、内部人士交易追踪及 SEC 监管文件，支持美股与国际市场 | 💰 |
 | [stock-market-pro-zh](skills/stock-market-pro-zh/SKILL.md) | 基于 Yahoo Finance 的本地股票分析——实时报价、基本面数据、ASCII 趋势图与高分辨率技术图表（RSI/MACD/BB/VWAP/ATR），一键综合报告，可选新闻与期权扩展 | 📦 |
+| [stock-watcher-zh](skills/stock-watcher-zh/SKILL.md) | A股自选股管理与监控——添加/删除/查看自选股列表，基于同花顺数据源获取实时行情摘要与技术指标，支持沪深A股及科创板市场 | 📦 |
 
 ### 🔒 安全与防护
 
