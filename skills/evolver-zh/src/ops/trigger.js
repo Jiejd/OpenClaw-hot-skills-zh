@@ -1,5 +1,5 @@
-// Evolver Wake Trigger - Evolver Core Module
-// Writes a signal file that the wrapper can poll to wake up immediately.
+// Evolver 唤醒触发器 - Evolver 核心模块
+// 写入信号文件，供 wrapper 轮询以立即唤醒。
 
 const fs = require('fs');
 const path = require('path');
@@ -10,10 +10,10 @@ var WAKE_FILE = path.join(getWorkspaceRoot(), 'memory', 'evolver_wake.signal');
 function send() {
     try {
         fs.writeFileSync(WAKE_FILE, 'WAKE');
-        console.log('[Trigger] Wake signal sent to ' + WAKE_FILE);
+        console.log('[Trigger] 唤醒信号已发送至 ' + WAKE_FILE);
         return true;
     } catch (e) {
-        console.error('[Trigger] Failed: ' + e.message);
+        console.error('[Trigger] 发送失败: ' + e.message);
         return false;
     }
 }

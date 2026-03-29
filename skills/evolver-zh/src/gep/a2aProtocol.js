@@ -1,4 +1,4 @@
-// GEP A2A Protocol - Standard message types and pluggable transport layer.
+// GEP A2A 协议 - 标准消息类型和可插拔传输层。
 //
 // Protocol messages:
 //   hello    - capability advertisement and node discovery
@@ -83,7 +83,7 @@ function getNodeId() {
     return _cachedNodeId;
   }
 
-  console.warn('[a2aProtocol] A2A_NODE_ID is not set. Computing node ID from device fingerprint. ' +
+  console.warn('[a2aProtocol] A2A_NODE_ID 未设置。正在从设备指纹计算节点 ID。' +
     'This ID may change across machines or environments. ' +
     'Set A2A_NODE_ID after registering at https://evomap.ai to use a stable identity.');
 
@@ -101,13 +101,13 @@ function getNodeId() {
 
 function buildMessage(params) {
   if (!params || typeof params !== 'object') {
-    throw new Error('buildMessage requires a params object');
+    throw new Error('buildMessage 需要一个 params 对象');
   }
   const messageType = params.messageType;
   const payload = params.payload;
   const senderId = params.senderId;
   if (!VALID_MESSAGE_TYPES.includes(messageType)) {
-    throw new Error('Invalid message type: ' + messageType + '. Valid: ' + VALID_MESSAGE_TYPES.join(', '));
+    throw new Error('无效的消息类型：' + messageType + '。有效类型：' + VALID_MESSAGE_TYPES.join(', '));
   }
   return {
     protocol: PROTOCOL_NAME,
@@ -140,7 +140,7 @@ function buildPublish(opts) {
   const o = opts || {};
   const asset = o.asset;
   if (!asset || !asset.type || !asset.id) {
-    throw new Error('publish: asset must have type and id');
+    throw new Error('publish: asset 必须包含 type 和 id');
   }
   // Generate signature: HMAC-SHA256 of asset_id with node secret
   const assetIdVal = asset.asset_id || computeAssetId(asset);
@@ -167,10 +167,10 @@ function buildPublishBundle(opts) {
   const capsule = o.capsule;
   const event = o.event || null;
   if (!gene || gene.type !== 'Gene' || !gene.id) {
-    throw new Error('publishBundle: gene must be a valid Gene with type and id');
+    throw new Error('publishBundle: gene 必须是包含 type 和 id 的有效 Gene');
   }
   if (!capsule || capsule.type !== 'Capsule' || !capsule.id) {
-    throw new Error('publishBundle: capsule must be a valid Capsule with type and id');
+    throw new Error('publishBundle: capsule 必须是包含 type 和 id 的有效 Capsule');
   }
   if (o.modelName && typeof o.modelName === 'string') {
     gene.model_name = o.modelName;
@@ -245,7 +245,7 @@ function buildDecision(opts) {
   const o = opts || {};
   const validDecisions = ['accept', 'reject', 'quarantine'];
   if (!validDecisions.includes(o.decision)) {
-    throw new Error('decision must be one of: ' + validDecisions.join(', '));
+    throw new Error('decision 必须是以下之一：' + validDecisions.join(', '));
   }
   return buildMessage({
     messageType: 'decision',
@@ -306,7 +306,7 @@ function ensureDir(dir) {
   try {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   } catch (e) {
-    console.warn('[a2aProtocol] ensureDir failed:', dir, e && e.message || e);
+    console.warn('[a2aProtocol] ensureDir 失败：', dir, e && e.message || e);
   }
 }
 
@@ -338,7 +338,7 @@ function fileTransportReceive(opts) {
           const msg = JSON.parse(lines[li]);
           if (msg && msg.protocol === PROTOCOL_NAME) messages.push(msg);
         } catch (e) {
-          console.warn('[a2aProtocol] Malformed JSON line in inbox file ' + files[fi] + ' (line ' + (li + 1) + '):', e && e.message || e);
+          console.warn('[a2aProtocol] 收件箱文件 ' + files[fi] + ' 中存在格式错误的 JSON 行（第 ' + (li + 1) + ' 行）：', e && e.message || e);
         }
       }
     } catch (e) {
@@ -576,20 +576,20 @@ function sendHeartbeat() {
         const windowMs = Number(policy.window_ms) || 0;
         const backoff = retryMs > 0 ? retryMs + 5000 : (windowMs > 0 ? windowMs + 5000 : _heartbeatIntervalMs);
         if (backoff > _heartbeatIntervalMs) {
-          console.warn('[Heartbeat] Rate limited by hub. Next attempt in ' + Math.round(backoff / 1000) + 's. ' +
+          console.warn('[Heartbeat] 被 Hub 限流。下次尝试在 ' + Math.round(backoff / 1000) + ' 秒后。' +
             'Consider increasing HEARTBEAT_INTERVAL_MS to >= ' + (windowMs || backoff) + 'ms.');
           _scheduleNextHeartbeat(backoff);
         }
         return { ok: false, error: 'rate_limited', retryMs: backoff };
       }
       if (data && data.status === 'unknown_node') {
-        console.warn('[Heartbeat] Node not registered on hub. Sending hello to re-register...');
+        console.warn('[Heartbeat] 节点未在 Hub 上注册。正在发送 hello 重新注册...');
         return sendHelloToHub().then(function (helloResult) {
           if (helloResult.ok) {
-            console.log('[Heartbeat] Re-registered with hub successfully.');
+            console.log('[Heartbeat] 重新注册成功。');
             _heartbeatConsecutiveFailures = 0;
           } else {
-            console.warn('[Heartbeat] Re-registration failed: ' + (helloResult.error || 'unknown'));
+            console.warn('[Heartbeat] 重新注册失败：' + (helloResult.error || '未知'));
           }
           return { ok: helloResult.ok, response: data, reregistered: helloResult.ok };
         });
@@ -599,7 +599,7 @@ function sendHeartbeat() {
       }
       if (Array.isArray(data.overdue_tasks) && data.overdue_tasks.length > 0) {
         _latestOverdueTasks = data.overdue_tasks;
-        console.warn('[Commitment] ' + data.overdue_tasks.length + ' overdue task(s) detected via heartbeat.');
+        console.warn('[Commitment] 通过心跳检测到 ' + data.overdue_tasks.length + ' 个逾期任务。');
       }
       if (data.skill_store) {
         _latestSkillStoreHint = data.skill_store;
@@ -614,7 +614,7 @@ function sendHeartbeat() {
         _latestCapabilityGaps = data.capability_gaps;
       }
       if (data.circle_experience && typeof data.circle_experience === 'object') {
-        console.log('[EvolutionCircle] Active circle: ' + (data.circle_experience.circle_id || '?') + ' (' + (data.circle_experience.member_count || 0) + ' members)');
+        console.log('[EvolutionCircle] 活跃圈子：' + (data.circle_experience.circle_id || '?') + '（' + (data.circle_experience.member_count || 0) + ' 名成员）');
       }
       _heartbeatConsecutiveFailures = 0;
       try {
@@ -630,14 +630,14 @@ function sendHeartbeat() {
               fs.closeSync(fd);
               fs.utimesSync(logPath, now, now);
             } catch (innerErr) {
-              console.warn('[Heartbeat] Failed to create evolver_loop.log: ' + innerErr.message);
+              console.warn('[Heartbeat] 创建 evolver_loop.log 失败：' + innerErr.message);
             }
           } else {
-            console.warn('[Heartbeat] Failed to touch evolver_loop.log: ' + e.message);
+            console.warn('[Heartbeat] 更新 evolver_loop.log 失败：' + e.message);
           }
         }
       } catch (outerErr) {
-        console.warn('[Heartbeat] Failed to ensure evolver_loop.log: ' + outerErr.message);
+        console.warn('[Heartbeat] 确保 evolver_loop.log 失败：' + outerErr.message);
       }
       return { ok: true, response: data };
     })
@@ -645,11 +645,11 @@ function sendHeartbeat() {
       _heartbeatConsecutiveFailures++;
       _heartbeatTotalFailed++;
       if (_heartbeatConsecutiveFailures === 3) {
-        console.warn('[Heartbeat] 3 consecutive failures. Network issue? Last error: ' + err.message);
+        console.warn('[Heartbeat] 连续 3 次失败。网络问题？最后错误：' + err.message);
       } else if (_heartbeatConsecutiveFailures === 10) {
-        console.warn('[Heartbeat] 10 consecutive failures. Hub may be unreachable. (' + err.message + ')');
+        console.warn('[Heartbeat] 连续 10 次失败。Hub 可能不可达。（' + err.message + ')');
       } else if (_heartbeatConsecutiveFailures % 50 === 0) {
-        console.warn('[Heartbeat] ' + _heartbeatConsecutiveFailures + ' consecutive failures. (' + err.message + ')');
+        console.warn('[Heartbeat] 连续 ' + _heartbeatConsecutiveFailures + ' 次失败。（' + err.message + ')');
       }
       return { ok: false, error: err.message };
     });
@@ -709,10 +709,10 @@ function startHeartbeat(intervalMs) {
   _heartbeatRunning = true;
 
   sendHelloToHub().then(function (r) {
-    if (r.ok) console.log('[Heartbeat] Registered with hub. Node: ' + getNodeId());
-    else console.warn('[Heartbeat] Hello failed (will retry via heartbeat): ' + (r.error || 'unknown'));
+    if (r.ok) console.log('[Heartbeat] 已在 Hub 注册。节点：' + getNodeId());
+    else console.warn('[Heartbeat] Hello 失败（将通过心跳重试）：' + (r.error || '未知'));
   }).catch(function (err) {
-    console.warn('[Heartbeat] Hello during startup failed:', err && err.message || err);
+    console.warn('[Heartbeat] 启动时 Hello 失败：', err && err.message || err);
   }).then(function () {
     if (!_heartbeatRunning) return;
     // First heartbeat after hello completes, with enough gap to avoid rate limit
@@ -756,14 +756,14 @@ const transports = {
 function getTransport(name) {
   const n = String(name || process.env.A2A_TRANSPORT || 'file').toLowerCase();
   const t = transports[n];
-  if (!t) throw new Error('Unknown A2A transport: ' + n + '. Available: ' + Object.keys(transports).join(', '));
+  if (!t) throw new Error('未知 A2A 传输：' + n + '。可用：' + Object.keys(transports).join(', '));
   return t;
 }
 
 function registerTransport(name, impl) {
-  if (!name || typeof name !== 'string') throw new Error('transport name required');
+  if (!name || typeof name !== 'string') throw new Error('需要传输名称');
   if (!impl || typeof impl.send !== 'function' || typeof impl.receive !== 'function') {
-    throw new Error('transport must implement send() and receive()');
+    throw new Error('传输必须实现 send() 和 receive()');
   }
   transports[name] = impl;
 }

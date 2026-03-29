@@ -115,18 +115,18 @@ async function submitHubReview({
   runId,
 }) {
   var hubUrl = getHubUrl();
-  if (!hubUrl) return { submitted: false, reason: 'no_hub_url' };
+  if (!hubUrl) return { submitted: false, reason: '无 Hub URL' };
 
   if (!reusedAssetId || typeof reusedAssetId !== 'string') {
-    return { submitted: false, reason: 'no_reused_asset_id' };
+    return { submitted: false, reason: '无复用资产 ID' };
   }
 
   if (sourceType !== 'reused' && sourceType !== 'reference') {
-    return { submitted: false, reason: 'not_hub_sourced' };
+    return { submitted: false, reason: '非 Hub 来源' };
   }
 
   if (_alreadyReviewed(reusedAssetId)) {
-    return { submitted: false, reason: 'already_reviewed' };
+    return { submitted: false, reason: '已审查过' };
   }
 
   var rating = _deriveRating(outcome, constraintCheck);
@@ -180,7 +180,7 @@ async function submitHubReview({
       _markReviewed(reusedAssetId, rating, false);
     }
 
-    console.log('[HubReview] Hub rejected review for ' + reusedAssetId + ': ' + errCode);
+    console.log('[HubReview] Hub 拒绝了对 ' + reusedAssetId + ' 的审查：' + errCode);
     logAssetCall({
       run_id: runId || null,
       action: 'hub_review_rejected',
@@ -189,8 +189,8 @@ async function submitHubReview({
     });
     return { submitted: false, reason: errCode, rating: rating };
   } catch (err) {
-    var reason = err.name === 'AbortError' ? 'timeout' : 'fetch_error';
-    console.log('[HubReview] Failed (non-fatal, ' + reason + '): ' + err.message);
+    var reason = err.name === 'AbortError' ? '超时' : '网络错误';
+    console.log('[HubReview] 失败（非致命，' + reason + '）：' + err.message);
     logAssetCall({
       run_id: runId || null,
       action: 'hub_review_failed',

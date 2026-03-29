@@ -8,9 +8,8 @@ function getRepoRoot() {
 
   const ownDir = path.resolve(__dirname, '..', '..');
 
-  // Safety: check evolver's own directory first to prevent operating on a
-  // parent repo that happens to contain .git (which could cause data loss
-  // when git reset --hard runs in the wrong scope).
+  // 安全检查：先检查 evolver 自身目录，防止在包含 .git 的
+  // 父级仓库中操作（git reset --hard 在错误范围内运行可能导致数据丢失）。
   if (fs.existsSync(path.join(ownDir, '.git'))) {
     return ownDir;
   }
@@ -19,13 +18,13 @@ function getRepoRoot() {
   while (dir !== '/' && dir !== '.') {
     if (fs.existsSync(path.join(dir, '.git'))) {
       if (process.env.EVOLVER_USE_PARENT_GIT === 'true') {
-        console.warn('[evolver] Using parent git repository at:', dir);
+        console.warn('[evolver] 使用父级 git 仓库：', dir);
         return dir;
       }
       console.warn(
-        '[evolver] Detected .git in parent directory', dir,
-        '-- ignoring. Set EVOLVER_USE_PARENT_GIT=true to override,',
-        'or EVOLVER_REPO_ROOT to specify the target directory explicitly.'
+        '[evolver] 检测到父级目录中存在 .git', dir,
+        '-- 已忽略。设置 EVOLVER_USE_PARENT_GIT=true 覆盖，',
+        '或设置 EVOLVER_REPO_ROOT 显式指定目标目录。'
       );
       return ownDir;
     }
@@ -46,9 +45,9 @@ function getWorkspaceRoot() {
     return workspaceDir;
   }
 
-  // Standalone / Cursor / non-OpenClaw: use the repo root itself as workspace.
-  // The old 4-level-up fallback assumed OpenClaw's skill directory layout
-  // (/workspace/skills/evolver/) which resolves incorrectly in other environments.
+  // 独立/Cursor/非 OpenClaw：使用仓库根目录作为工作区。
+  // 旧的 4 级向上回退假设了 OpenClaw 的技能目录布局
+  // (/workspace/skills/evolver/)，在其他环境中解析不正确。
   return repoRoot;
 }
 
@@ -64,15 +63,15 @@ function getMemoryDir() {
   return process.env.MEMORY_DIR || path.join(getWorkspaceRoot(), 'memory');
 }
 
-// --- Session Scope Isolation ---
-// When EVOLVER_SESSION_SCOPE is set (e.g., to a Discord channel ID or project name),
-// evolution state, memory graph, and assets are isolated to a per-scope subdirectory.
-// This prevents cross-channel/cross-project memory contamination.
-// When NOT set, everything works as before (global scope, backward compatible).
+// --- 会话作用域隔离 ---
+// 当设置了 EVOLVER_SESSION_SCOPE 时（例如 Discord 频道 ID 或项目名称），
+// 进化状态、记忆图谱和资产会被隔离到每个作用域的子目录中。
+// 这防止了跨频道/跨项目的记忆污染。
+// 未设置时，一切照旧工作（全局作用域，向后兼容）。
 function getSessionScope() {
   const raw = String(process.env.EVOLVER_SESSION_SCOPE || '').trim();
   if (!raw) return null;
-  // Sanitize: only allow alphanumeric, dash, underscore, dot (prevent path traversal).
+  // 净化：仅允许字母数字、连字符、下划线、点（防止路径穿越）。
   const safe = raw.replace(/[^a-zA-Z0-9_\-\.]/g, '_').slice(0, 128);
   if (!safe || /^\.{1,2}$/.test(safe) || /\.\./.test(safe)) return null;
   return safe;

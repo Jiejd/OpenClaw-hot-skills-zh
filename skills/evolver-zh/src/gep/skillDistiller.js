@@ -523,24 +523,24 @@ function shouldDistill() {
 // Step 5a: prepareDistillation -- collect data, build prompt, write to file
 // ---------------------------------------------------------------------------
 function prepareDistillation() {
-  console.log('[Distiller] Preparing skill distillation...');
+  console.log('[Distiller] 正在准备技能蒸馏...');
 
   const data = collectDistillationData();
-  console.log('[Distiller] Collected ' + data.successCapsules.length + ' successful capsules across ' + Object.keys(data.grouped).length + ' gene groups.');
+  console.log('[Distiller] 已收集 ' + data.successCapsules.length + ' 个成功 Capsule，涵盖 ' + Object.keys(data.grouped).length + ' 个基因组。');
 
   if (data.successCapsules.length < DISTILLER_MIN_CAPSULES) {
-    console.log('[Distiller] Not enough successful capsules (' + data.successCapsules.length + ' < ' + DISTILLER_MIN_CAPSULES + '). Skipping.');
+    console.log('[Distiller] 成功 Capsule 数量不足（' + data.successCapsules.length + ' < ' + DISTILLER_MIN_CAPSULES + '）。跳过。');
     return { ok: false, reason: 'insufficient_data' };
   }
 
   const state = readDistillerState();
   if (state.last_data_hash === data.dataHash) {
-    console.log('[Distiller] Data unchanged since last distillation (hash: ' + data.dataHash + '). Skipping.');
+    console.log('[Distiller] 数据自上次蒸馏以来未变化（哈希：' + data.dataHash + '）。跳过。');
     return { ok: false, reason: 'idempotent_skip' };
   }
 
   const analysis = analyzePatterns(data);
-  console.log('[Distiller] Analysis: high_freq=' + analysis.high_frequency.length + ' drift=' + analysis.strategy_drift.length + ' gaps=' + analysis.coverage_gaps.length);
+  console.log('[Distiller] 分析：高频=' + analysis.high_frequency.length + ' 漂移=' + analysis.strategy_drift.length + ' 空白=' + analysis.coverage_gaps.length);
 
   const assetsDir = paths.getGepAssetsDir();
   const existingGenesJson = readJsonIfExists(path.join(assetsDir, 'genes.json'), { genes: [] });
@@ -570,7 +570,7 @@ function prepareDistillation() {
   };
   fs.writeFileSync(reqPath, JSON.stringify(requestData, null, 2) + '\n', 'utf8');
 
-  console.log('[Distiller] Prompt written to: ' + promptPath);
+  console.log('[Distiller] Prompt 已写入：' + promptPath);
   return { ok: true, promptPath: promptPath, requestPath: reqPath, dataHash: data.dataHash };
 }
 
@@ -702,7 +702,7 @@ function completeDistillation(responseText) {
   const request = readJsonIfExists(reqPath, null);
 
   if (!request) {
-    console.warn('[Distiller] No pending distillation request found.');
+    console.warn('[Distiller] 未找到待处理的蒸馏请求。');
     return { ok: false, reason: 'no_request' };
   }
 
@@ -714,7 +714,7 @@ function completeDistillation(responseText) {
       status: 'error',
       error: 'LLM response did not contain a valid Gene JSON',
     });
-    console.error('[Distiller] LLM response did not contain a valid Gene JSON.');
+    console.error('[Distiller] LLM 响应中未包含有效的 Gene JSON。');
     return { ok: false, reason: 'no_gene_in_response' };
   }
 
@@ -737,7 +737,7 @@ function completeDistillation(responseText) {
   if (!validation.valid) {
     logEntry.status = 'validation_failed';
     appendJsonl(distillerLogPath(), logEntry);
-    console.warn('[Distiller] Gene failed validation: ' + validation.errors.join(', '));
+    console.warn('[Distiller] Gene 验证失败：' + validation.errors.join(', '));
     return { ok: false, reason: 'validation_failed', errors: validation.errors };
   }
 
@@ -750,7 +750,7 @@ function completeDistillation(responseText) {
 
   const assetStore = require('./assetStore');
   assetStore.upsertGene(gene);
-  console.log('[Distiller] Gene "' + gene.id + '" written to genes.json.');
+  console.log('[Distiller] Gene "' + gene.id + '" 已写入 genes.json。');
 
   const state = readDistillerState();
   state.last_distillation_at = new Date().toISOString();
@@ -766,20 +766,20 @@ function completeDistillation(responseText) {
   try { fs.unlinkSync(reqPath); } catch (e) {}
   try { if (request.prompt_path) fs.unlinkSync(request.prompt_path); } catch (e) {}
 
-  console.log('[Distiller] Distillation complete. New gene: ' + gene.id);
+  console.log('[Distiller] 蒸馏完成。新基因：' + gene.id);
 
   if (process.env.SKILL_AUTO_PUBLISH !== '0') {
     try {
       const skillPublisher = require('./skillPublisher');
       skillPublisher.publishSkillToHub(gene).then(function (res) {
         if (res.ok) {
-          console.log('[Distiller] Skill published to Hub: ' + (res.result?.skill_id || gene.id));
+          console.log('[Distiller] 技能已发布到 Hub：' + (res.result?.skill_id || gene.id));
         } else {
-          console.warn('[Distiller] Skill publish failed: ' + (res.error || 'unknown'));
+          console.warn('[Distiller] 技能发布失败：' + (res.error || '未知'));
         }
       }).catch(function () {});
     } catch (e) {
-      console.warn('[Distiller] Skill publisher unavailable: ' + e.message);
+      console.warn('[Distiller] 技能发布器不可用：' + e.message);
     }
   }
 
@@ -789,12 +789,12 @@ function completeDistillation(responseText) {
 function autoDistill() {
   const data = collectDistillationData();
   if (data.successCapsules.length < DISTILLER_MIN_CAPSULES) {
-    return { ok: false, reason: 'insufficient_data' };
+    return { ok: false, reason: '数据不足' };
   }
 
   const state = readDistillerState();
   if (state.last_data_hash === data.dataHash) {
-    return { ok: false, reason: 'idempotent_skip' };
+    return { ok: false, reason: '幂等跳过' };
   }
 
   const analysis = analyzePatterns(data);

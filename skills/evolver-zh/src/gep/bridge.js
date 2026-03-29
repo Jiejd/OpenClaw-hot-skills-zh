@@ -21,7 +21,7 @@ function clip(text, maxChars) {
 
 function writePromptArtifact({ memoryDir, cycleId, runId, prompt, meta }) {
   const dir = String(memoryDir || '').trim();
-  if (!dir) throw new Error('bridge: missing memoryDir');
+  if (!dir) throw new Error('bridge: 缺少 memoryDir');
   ensureDir(dir);
   const safeCycle = String(cycleId || 'cycle').replace(/[^a-zA-Z0-9_\-#]/g, '_');
   const safeRun = String(runId || Date.now()).replace(/[^a-zA-Z0-9_\-]/g, '_');
@@ -52,7 +52,7 @@ function writePromptArtifact({ memoryDir, cycleId, runId, prompt, meta }) {
 
 function renderSessionsSpawnCall({ task, agentId, label, cleanup }) {
   const t = String(task || '').trim();
-  if (!t) throw new Error('bridge: missing task');
+  if (!t) throw new Error('bridge: 缺少 task');
   const a = String(agentId || 'main');
   const l = String(label || 'gep_bridge');
   const c = cleanup ? String(cleanup) : 'delete';

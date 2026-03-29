@@ -109,7 +109,7 @@ function writeStateForSolidify(state) {
   try {
     if (!fs.existsSync(evolutionDir)) fs.mkdirSync(evolutionDir, { recursive: true });
   } catch (e) {
-    console.warn('[evolver] writeStateForSolidify mkdir failed:', evolutionDir, e && e.message || e);
+    console.warn('[evolver] solidify 创建目录失败：', evolutionDir, e && e.message || e);
   }
   const tmp = `${statePath}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(state, null, 2) + '\n', 'utf8');
@@ -313,7 +313,7 @@ function applyEpigeneticMarks(gene, envFingerprint, outcomeStatus) {
       // Reinforce: increase boost (max 0.5)
       const cur = gene.epigenetic_marks[existingIdx];
       cur.boost = Math.min(0.5, (Number(cur.boost) || 0) + 0.05);
-      cur.reason = 'reinforced_by_success';
+      cur.reason = '成功强化';
       cur.created_at = new Date().toISOString();
     } else {
       // New positive mark
@@ -326,7 +326,7 @@ function applyEpigeneticMarks(gene, envFingerprint, outcomeStatus) {
       // Suppress: decrease boost
       const cur = gene.epigenetic_marks[existingIdx];
       cur.boost = Math.max(-0.5, (Number(cur.boost) || 0) - 0.1);
-      cur.reason = 'suppressed_by_failure';
+      cur.reason = '失败抑制';
       cur.created_at = new Date().toISOString();
     } else {
       // New negative mark
@@ -400,14 +400,14 @@ function buildAutoGene({ signals, intent }) {
 }
 
 function ensureGene({ genes, selectedGene, signals, intent, dryRun }) {
-  if (selectedGene && selectedGene.type === 'Gene') return { gene: selectedGene, created: false, reason: 'selected_gene_id_present' };
+  if (selectedGene && selectedGene.type === 'Gene') return { gene: selectedGene, created: false, reason: '已有选中基因 ID' };
   const res = selectGene(Array.isArray(genes) ? genes : [], Array.isArray(signals) ? signals : [], {
     bannedGeneIds: new Set(), preferredGeneId: null, driftEnabled: false,
   });
-  if (res && res.selected) return { gene: res.selected, created: false, reason: 'reselected_from_existing' };
+  if (res && res.selected) return { gene: res.selected, created: false, reason: '从已有基因中重新选择' };
   const auto = buildAutoGene({ signals, intent });
   if (!dryRun) upsertGene(auto);
-  return { gene: auto, created: true, reason: 'no_match_create_new' };
+  return { gene: auto, created: true, reason: '无匹配，创建新基因' };
 }
 
 function readRecentSessionInputs() {
@@ -552,12 +552,12 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
 
   if (!isGitRepo(repoRoot)) {
     console.error('[Solidify] 致命错误：不是 git 仓库（' + repoRoot + '）。');
-    console.error('[Solidify] 固化需要 git 来支持回滚、差异捕获和爆炸半径计算。');
+    console.error('[Solidify] 固化需要 git 以支持回滚、diff 捕获和爆炸半径分析。');
     console.error('[Solidify] 请先运行 "git init && git add -A && git commit -m init"。');
     return {
       ok: false,
       status: 'failed',
-      failure_reason: 'not_a_git_repository',
+      failure_reason: '非 git 仓库',
       event: null,
     };
   }
@@ -608,10 +608,10 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       constraintCheck.blastSeverity.severity !== 'within_limit' &&
       constraintCheck.blastSeverity.severity !== 'approaching_limit') {
     const breakdown = analyzeBlastRadiusBreakdown(blast.all_changed_files || blast.changed_files || []);
-    console.error(`[Solidify] 爆炸半径明细：${JSON.stringify(breakdown)}`);
+    console.error(`[Solidify] 爆炸半径分析：${JSON.stringify(breakdown)}`);
     const estComp = compareBlastEstimate(blastRadiusEstimate, blast);
     if (estComp) {
-      console.error(`[Solidify] 估计偏差：预计 ${estComp.estimateFiles} 个文件，实际 ${estComp.actualFiles} 个文件（${estComp.ratio} 倍）`);
+      console.error(`[Solidify] 估算对比：预估 ${estComp.estimateFiles} 个文件，实际 ${estComp.actualFiles} 个文件（${estComp.ratio}x）`);
     }
   }
 
@@ -633,7 +633,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       constraintCheck.violations.push(v);
     }
     constraintCheck.ok = false;
-    console.error(`[Solidify] 严重错误：检测到破坏性变更：${destructiveViolations.join('; ')}`);
+    console.error(`[Solidify] 严重：检测到破坏性变更：${destructiveViolations.join('; ')}`);
   }
 
   // Capture environment fingerprint before validation.
@@ -652,7 +652,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       `canary_failed: index.js cannot load in child process: ${canary.err}`
     );
     constraintCheck.ok = false;
-    console.error(`[Solidify] 金丝雀测试失败：${canary.err}`);
+    console.error(`[Solidify] CANARY 失败：${canary.err}`);
   }
 
   // Optional LLM review: when EVOLVER_LLM_REVIEW=true, submit diff for review.
@@ -667,14 +667,14 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         mutation,
       });
       if (llmReviewResult && llmReviewResult.approved === false) {
-        constraintCheck.violations.push('llm_review_rejected: ' + (llmReviewResult.summary || 'no reason'));
+        constraintCheck.violations.push('LLM 审查拒绝：' + (llmReviewResult.summary || '无原因'));
         constraintCheck.ok = false;
-        console.log('[LLMReview] 变更已拒绝：' + (llmReviewResult.summary || ''));
+        console.log('[LLMReview] 变更被拒绝：' + (llmReviewResult.summary || ''));
       } else if (llmReviewResult) {
         console.log('[LLMReview] 变更已批准（置信度：' + (llmReviewResult.confidence || '?') + ')');
       }
     } catch (e) {
-      console.log('[LLMReview] 审查失败（非致命）：' + (e && e.message ? e.message : e));
+      console.log('[LLMReview] 失败（非致命）：' + (e && e.message ? e.message : e));
     }
   }
 
@@ -835,7 +835,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         prevCapsule = Array.isArray(list) ? list.find(c => c && c.type === 'Capsule' && String(c.id) === selectedCapsuleId) : null;
       }
     } catch (e) {
-      console.warn('[evolver] solidify 加载胶囊失败：', e && e.message || e);
+      console.warn('[evolver] solidify 加载 Capsules 失败：', e && e.message || e);
     }
     const successReason = buildSuccessReason({ gene: geneUsed, signals, blast, mutation, score });
     const capsuleDiff = captureDiffSnapshot(repoRoot);
@@ -891,7 +891,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         };
         failedCapsule.asset_id = computeAssetId(failedCapsule);
         appendFailedCapsule(failedCapsule);
-        console.log('[Solidify] 已保存失败变异为 FailedCapsule：' + failedCapsule.id);
+        console.log('[Solidify] 已将失败变异保存为 FailedCapsule：' + failedCapsule.id);
       }
     } catch (e) {
       console.log('[Solidify] FailedCapsule 捕获错误（非致命）：' + (e && e.message ? e.message : e));
@@ -920,7 +920,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
       applyEpigeneticMarks(geneUsed, envFp, outcomeStatus);
       upsertGene(geneUsed);
     } catch (e) {
-      console.warn('[evolver] applyEpigeneticMarks 失败（非阻塞）：', e && e.message || e);
+      console.warn('[evolver] 应用表观遗传标记失败（非阻塞）：', e && e.message || e);
     }
   }
 
@@ -945,7 +945,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         updatePersonalityStats({ personalityState, outcome: outcomeStatus, score, notes: `event:${event.id}` });
       }
     } catch (e) {
-      console.warn('[evolver] updatePersonalityStats 失败：', e && e.message || e);
+      console.warn('[evolver] 更新人格统计失败：', e && e.message || e);
     }
   }
 
@@ -1036,7 +1036,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
             result
               .then(function (res) {
                 if (res && res.ok) {
-                  console.log('[AutoPublish] 已发布捆绑包（基因+胶囊）' + (capsule.asset_id || capsule.id) + ' 到 Hub。');
+                  console.log('[AutoPublish] 已发布捆绑包（Gene+Capsule）' + (capsule.asset_id || capsule.id) + ' 到 Hub。');
                 } else {
                   console.log('[AutoPublish] Hub 拒绝：' + JSON.stringify(res));
                 }
@@ -1062,17 +1062,17 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
             },
           });
         } else {
-          publishResult = { attempted: false, reason: 'no_hub_url' };
+          publishResult = { attempted: false, reason: '无 Hub URL' };
         }
       } catch (e) {
         console.log('[AutoPublish] 错误（非致命）：' + e.message);
         publishResult = { attempted: false, reason: e.message };
       }
     } else {
-      const reason = !autoPublish ? 'auto_publish_disabled'
-        : visibility !== 'public' ? 'visibility_private'
-        : sourceType === 'reused' ? 'skip_direct_reused_asset'
-        : 'below_min_score';
+      const reason = !autoPublish ? '自动发布已禁用'
+        : visibility !== 'public' ? '可见性为私有'
+        : sourceType === 'reused' ? '跳过直接复用的资产'
+        : '低于最低分数';
       publishResult = { attempted: false, reason };
       logAssetCall({
         run_id: lastRun && lastRun.run_id ? lastRun.run_id : null,
@@ -1111,7 +1111,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
           id: 'failed_' + buildCapsuleId(ts),
           trigger: signals.slice(0, 8),
           gene: apGene.id,
-          summary: 'Anti-pattern: ' + String(apGene.failure_reason).slice(0, 200),
+          summary: '反模式：' + String(apGene.failure_reason).slice(0, 200),
           confidence: 0,
           blast_radius: { files: blast.files, lines: blast.lines },
           outcome: { status: 'failed', score: score },
@@ -1170,7 +1170,7 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         try {
           const { claimAndCompleteWorkerTask } = require('./taskReceiver');
           const taskId = String(lastRun.active_task_id);
-          console.log(`[WorkerPool] 原子认领+完成任务 "${lastRun.active_task_title || taskId}"，资产 ${resultAssetId}`);
+          console.log(`[WorkerPool] 任务 "${lastRun.active_task_title || taskId}" 原子认领+完成，资产 ${resultAssetId}`);
           const result = claimAndCompleteWorkerTask(taskId, resultAssetId);
           if (result && typeof result.then === 'function') {
             result
@@ -1194,15 +1194,15 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
         // Legacy path: already-claimed assignment, just complete it
         try {
           const { completeWorkerTask } = require('./taskReceiver');
-          console.log(`[WorkerComplete] 完成工作器任务 "${workerAssignmentId}"，资产 ${resultAssetId}`);
+          console.log(`[WorkerComplete] 完成工作分配 "${workerAssignmentId}"，资产 ${resultAssetId}`);
           const completed = completeWorkerTask(workerAssignmentId, resultAssetId);
           if (completed && typeof completed.then === 'function') {
             completed
               .then(function (ok) {
                 if (ok) {
-                  console.log('[WorkerComplete] 工作器任务在 Hub 上成功完成。');
+                  console.log('[WorkerComplete] 工作任务在 Hub 上成功完成。');
                 } else {
-                  console.log('[WorkerComplete] Hub 拒绝工作器完成（非致命）。');
+                  console.log('[WorkerComplete] Hub 拒绝工作完成（非致命）。');
                 }
               })
               .catch(function (err) {
@@ -1272,12 +1272,12 @@ function solidify({ intent, summary, dryRun = false, rollbackOnFailure = true } 
             return r;
           })
           .catch(function (err) {
-            console.log('[HubReview] Error (non-fatal): ' + (err && err.message ? err.message : err));
+            console.log('[HubReview] 错误（非致命）：' + (err && err.message ? err.message : err));
             return null;
           });
       }
     } catch (e) {
-      console.log('[HubReview] Error (non-fatal): ' + e.message);
+      console.log('[HubReview] 错误（非致命）：' + e.message);
     }
   }
   return { ok: success, event, capsule, gene: geneUsed, constraintCheck, validation, validationReport, blast, publishResult, antiPatternPublishResult, taskCompleteResult, hubReviewResult, hubReviewPromise };

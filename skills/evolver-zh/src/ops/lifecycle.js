@@ -1,6 +1,6 @@
-// Evolver Lifecycle Manager - Evolver Core Module
-// Provides: start, stop, restart, status, log, health check
-// The loop script to spawn is configurable via EVOLVER_LOOP_SCRIPT env var.
+// Evolver 生命周期管理器 - Evolver 核心模块
+// 提供：start、stop、restart、status、log、健康检查
+// 循环脚本通过 EVOLVER_LOOP_SCRIPT 环境变量配置。
 
 const fs = require('fs');
 const path = require('path');
@@ -13,14 +13,14 @@ var PID_FILE = path.join(WORKSPACE_ROOT, 'memory', 'evolver_loop.pid');
 var MAX_SILENCE_MS = 30 * 60 * 1000;
 
 function getLoopScript() {
-    // Prefer wrapper if exists, fallback to core evolver
+    // 优先使用 wrapper，回退到核心 evolver
     if (process.env.EVOLVER_LOOP_SCRIPT) return process.env.EVOLVER_LOOP_SCRIPT;
     var wrapper = path.join(WORKSPACE_ROOT, 'skills/feishu-evolver-wrapper/index.js');
     if (fs.existsSync(wrapper)) return wrapper;
     return path.join(getRepoRoot(), 'index.js');
 }
 
-// --- Process Discovery ---
+// --- 进程发现 ---
 
 function getRunningPids() {
     try {
@@ -53,19 +53,19 @@ function getCmdLine(pid) {
     try { return execSync('ps -p ' + pid + ' -o args=', { encoding: 'utf8' }).trim(); } catch (e) { return null; }
 }
 
-// --- Lifecycle ---
+// --- 生命周期 ---
 
 function start(options) {
     var delayMs = (options && options.delayMs) || 0;
     var pids = getRunningPids();
     if (pids.length > 0) {
-        console.log('[Lifecycle] Already running (PIDs: ' + pids.join(', ') + ').');
+        console.log('[Lifecycle] 已在运行 (PID: ' + pids.join(', ') + ')。');
         return { status: 'already_running', pids: pids };
     }
     if (delayMs > 0) execSync('sleep ' + (delayMs / 1000));
 
     var script = getLoopScript();
-    console.log('[Lifecycle] Starting: node ' + path.relative(WORKSPACE_ROOT, script) + ' --loop');
+    console.log('[Lifecycle] 正在启动: node ' + path.relative(WORKSPACE_ROOT, script) + ' --loop');
 
     var out = fs.openSync(LOG_FILE, 'a');
     var err = fs.openSync(LOG_FILE, 'a');
@@ -81,19 +81,19 @@ function start(options) {
     });
     child.unref();
     fs.writeFileSync(PID_FILE, String(child.pid));
-    console.log('[Lifecycle] Started PID ' + child.pid);
+    console.log('[Lifecycle] 已启动 PID ' + child.pid);
     return { status: 'started', pid: child.pid };
 }
 
 function stop() {
     var pids = getRunningPids();
     if (pids.length === 0) {
-        console.log('[Lifecycle] No running evolver loops found.');
+        console.log('[Lifecycle] 未找到运行中的 evolver 循环。');
         if (fs.existsSync(PID_FILE)) fs.unlinkSync(PID_FILE);
         return { status: 'not_running' };
     }
     for (var i = 0; i < pids.length; i++) {
-        console.log('[Lifecycle] Stopping PID ' + pids[i] + '...');
+        console.log('[Lifecycle] 正在停止 PID ' + pids[i] + '...');
         try { process.kill(pids[i], 'SIGTERM'); } catch (e) {}
     }
     var attempts = 0;
@@ -109,7 +109,7 @@ function stop() {
     if (fs.existsSync(PID_FILE)) fs.unlinkSync(PID_FILE);
     var evolverLock = path.join(getRepoRoot(), 'evolver.pid');
     if (fs.existsSync(evolverLock)) fs.unlinkSync(evolverLock);
-    console.log('[Lifecycle] All stopped.');
+    console.log('[Lifecycle] 全部已停止。');
     return { status: 'stopped', killed: pids };
 }
 
@@ -127,7 +127,7 @@ function status() {
 }
 
 function tailLog(lines) {
-    if (!fs.existsSync(LOG_FILE)) return { error: 'No log file' };
+    if (!fs.existsSync(LOG_FILE)) return { error: '未找到日志文件' };
     try {
         return { file: path.relative(WORKSPACE_ROOT, LOG_FILE), content: execSync('tail -n ' + (lines || 20) + ' "' + LOG_FILE + '"', { encoding: 'utf8' }) };
     } catch (e) {
@@ -147,7 +147,7 @@ function checkHealth() {
     return { healthy: true, pids: pids };
 }
 
-// --- CLI ---
+// --- 命令行接口 ---
 if (require.main === module) {
     var action = process.argv[2];
     switch (action) {
@@ -159,9 +159,9 @@ if (require.main === module) {
         case 'check':
             var health = checkHealth();
             console.log(JSON.stringify(health, null, 2));
-            if (!health.healthy) { console.log('[Lifecycle] Restarting...'); restart(); }
+            if (!health.healthy) { console.log('[Lifecycle] 正在重启...'); restart(); }
             break;
-        default: console.log('Usage: node lifecycle.js [start|stop|restart|status|log|check]');
+        default: console.log('用法: node lifecycle.js [start|stop|restart|status|log|check]');
     }
 }
 

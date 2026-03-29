@@ -41,7 +41,7 @@ const { expandSignals } = require('./gep/learningSignals');
 
 const REPO_ROOT = getRepoRoot();
 
-// Verbose logging helper. Checks EVOLVER_VERBOSE env const (set by --verbose flag in index.js).
+// 详细日志辅助函数。检查 EVOLVER_VERBOSE 环境常量（由 index.js 中的 --verbose 标志设置）。
 function verbose() {
   if (String(process.env.EVOLVER_VERBOSE || '').toLowerCase() !== 'true') return;
   const args = Array.prototype.slice.call(arguments);
@@ -49,9 +49,9 @@ function verbose() {
   console.log.apply(console, args);
 }
 
-// Idle-cycle gating: track last Hub fetch to avoid redundant API calls during saturation.
-// When evolver is saturated (no actionable signals), Hub calls are throttled to at most
-// once per EVOLVER_IDLE_FETCH_INTERVAL_MS (default 30 min) instead of every cycle.
+// 空闲周期节流：跟踪上次 Hub 获取时间，避免在饱和时进行冗余 API 调用。
+// 当 evolver 饱和时（无可操作信号），Hub 调用被限制为最多
+// 每 EVOLVER_IDLE_FETCH_INTERVAL_MS（默认 30 分钟）一次，而不是每个周期都调用。
 let _lastHubFetchMs = 0;
 
 function shouldSkipHubCalls(signals) {
@@ -78,31 +78,31 @@ function shouldSkipHubCalls(signals) {
   return true;
 }
 
-// Load environment variables from repo root
+// 从仓库根目录加载环境变量
 try {
   require('dotenv').config({ path: path.join(REPO_ROOT, '.env'), quiet: true });
 } catch (e) {
-  // dotenv might not be installed or .env missing, proceed gracefully
+  // dotenv 可能未安装或 .env 缺失，优雅降级
 }
 
-// Configuration from CLI flags or Env
+// CLI 标志或环境变量配置
 const ARGS = process.argv.slice(2);
 const IS_REVIEW_MODE = ARGS.includes('--review');
 const IS_DRY_RUN = ARGS.includes('--dry-run');
 const IS_RANDOM_DRIFT = ARGS.includes('--drift') || String(process.env.RANDOM_DRIFT || '').toLowerCase() === 'true';
 
-// Default Configuration
+// 默认配置
 const MEMORY_DIR = getMemoryDir();
 const AGENT_NAME = process.env.AGENT_NAME || 'main';
 const AGENT_SESSIONS_DIR = path.join(os.homedir(), `.openclaw/agents/${AGENT_NAME}/sessions`);
 const CURSOR_TRANSCRIPTS_DIR = process.env.EVOLVER_CURSOR_TRANSCRIPTS_DIR || '';
 const TODAY_LOG = path.join(MEMORY_DIR, new Date().toISOString().split('T')[0] + '.md');
 
-// Ensure memory directory exists so state/cache writes work.
+// 确保内存目录存在，以便状态/缓存写入正常工作。
 try {
   if (!fs.existsSync(MEMORY_DIR)) fs.mkdirSync(MEMORY_DIR, { recursive: true });
 } catch (e) {
-  console.warn('[Evolver] 创建 MEMORY_DIR 失败（可能导致下游错误）：', e && e.message || e);
+  console.warn('[Evolver] 创建 MEMORY_DIR 失败（可能导致下游错误）:', e && e.message || e);
 }
 
 function formatSessionLog(jsonlContent) {
@@ -113,7 +113,7 @@ function formatSessionLog(jsonlContent) {
 
   const flushRepeats = () => {
     if (repeatCount > 0) {
-      result.push(`   ... [Repeated ${repeatCount} times] ...`);
+      result.push(`   ... [重复 ${repeatCount} 次] ...`);
       repeatCount = 0;
     }
   };
@@ -141,27 +141,27 @@ function formatSessionLog(jsonlContent) {
           content = JSON.stringify(data.message.content);
         }
 
-        // Capture LLM errors from errorMessage field (e.g. "Unsupported MIME type: image/gif")
+        // 捕获 errorMessage 字段中的 LLM 错误（如 "Unsupported MIME type: image/gif"）
         if (data.message.errorMessage) {
           const errMsg = typeof data.message.errorMessage === 'string'
             ? data.message.errorMessage
             : JSON.stringify(data.message.errorMessage);
-          content = `[LLM ERROR] ${errMsg.replace(/\n+/g, ' ').slice(0, 300)}`;
+          content = `[LLM 错误] ${errMsg.replace(/\n+/g, ' ').slice(0, 300)}`;
         }
 
-        // Filter: Skip Heartbeats to save noise
+        // 过滤：跳过心跳以减少噪音
         if (content.trim() === 'HEARTBEAT_OK') continue;
         if (content.includes('NO_REPLY') && !data.message.errorMessage) continue;
 
-        // Clean up newlines for compact reading
+        // 清理换行符以紧凑阅读
         content = content.replace(/\n+/g, ' ').slice(0, 300);
         entry = `**${role}**: ${content}`;
       } else if (data.type === 'tool_result' || (data.message && data.message.role === 'toolResult')) {
-        // Filter: Skip generic success results or short uninformative ones
-        // Only show error or significant output
+        // 过滤：跳过通用成功结果或简短无信息的结果
+        // 只显示错误或有意义的输出
         let resContent = '';
 
-        // Robust extraction: Handle structured tool results (e.g. sessions_spawn) that lack 'output'
+        // 健壮提取：处理缺少 'output' 的结构化工具结果（如 sessions_spawn）
         if (data.tool_result) {
           if (data.tool_result.output) {
             resContent = data.tool_result.output;
@@ -175,9 +175,9 @@ function formatSessionLog(jsonlContent) {
         if (resContent.length < 50 && (resContent.includes('success') || resContent.includes('done'))) continue;
         if (resContent.trim() === '' || resContent === '{}') continue;
 
-        // Improvement: Show snippet of result (especially errors) instead of hiding it
+        // 改进：显示结果的片段（尤其是错误）而不是隐藏它
         const preview = resContent.replace(/\n+/g, ' ').slice(0, 200);
-        entry = `[TOOL RESULT] ${preview}${resContent.length > 200 ? '...' : ''}`;
+        entry = `[工具结果] ${preview}${resContent.length > 200 ? '...' : ''}`;
       }
 
       if (entry) {
@@ -206,21 +206,21 @@ function formatCursorTranscript(raw) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // Keep user messages and assistant text responses
+    // 保留用户消息和助手文本响应
     if (trimmed === 'user:' || trimmed.startsWith('A:')) {
       skipUntilNextBlock = false;
       result.push(trimmed);
       continue;
     }
 
-    // Tool call lines: keep as compact markers, skip their parameter block
+    // 工具调用行：保留为紧凑标记，跳过其参数块
     if (trimmed.startsWith('[Tool call]')) {
       skipUntilNextBlock = true;
       result.push(`[Tool call] ${trimmed.replace('[Tool call]', '').trim()}`);
       continue;
     }
 
-    // Tool result markers: skip their content (usually large and noisy)
+    // 工具结果标记：跳过其内容（通常很大且嘈杂）
     if (trimmed.startsWith('[Tool result]')) {
       skipUntilNextBlock = true;
       continue;
@@ -228,7 +228,7 @@ function formatCursorTranscript(raw) {
 
     if (skipUntilNextBlock) continue;
 
-    // Keep user query content and assistant text (skip XML tags like <user_query>)
+    // 保留用户查询内容和助手文本（跳过 <user_query> 等 XML 标签）
     if (trimmed.startsWith('<') && trimmed.endsWith('>')) continue;
     if (trimmed) {
       result.push(trimmed.slice(0, 300));
@@ -265,9 +265,9 @@ function readCursorTranscripts() {
 
     if (files.length === 0) return '';
 
-    // Skip the most recently modified file if it was touched in the last 30s --
-    // it is likely the current active session that triggered this evolver run,
-    // reading it would cause self-referencing signal noise.
+    // 跳过最近修改的文件（如果最近 30 秒内被修改）——
+    // 它很可能就是触发此 evolver 运行的当前活动会话，
+    // 读取它会导致自引用信号噪音。
     if (files.length > 1 && (now - files[0].time) < RECENCY_GUARD_MS) {
       files = files.slice(1);
     }
@@ -281,7 +281,7 @@ function readCursorTranscripts() {
       const bytesLeft = TARGET_BYTES - totalBytes;
       const readSize = Math.min(PER_FILE_BYTES, bytesLeft);
       const raw = readRecentLog(path.join(CURSOR_TRANSCRIPTS_DIR, f.name), readSize);
-      if (raw.trim() && !raw.startsWith('[MISSING]')) {
+      if (raw.trim() && !raw.startsWith('[缺失]')) {
         const formatted = formatCursorTranscript(raw);
         if (formatted.trim()) {
           sections.push(`--- CURSOR SESSION (${f.name}) ---\n${formatted}`);
@@ -292,17 +292,17 @@ function readCursorTranscripts() {
 
     return sections.join('\n\n');
   } catch (e) {
-    console.warn(`[Cursor 转录] 读取失败： ${e.message}`);
+    console.warn(`[CursorTranscripts] 读取失败: ${e.message}`);
     return '';
   }
 }
 
 function readRealSessionLog() {
   try {
-    // Primary source: OpenClaw session logs (.jsonl)
+    // 主数据源：OpenClaw 会话日志 (.jsonl)
     if (fs.existsSync(AGENT_SESSIONS_DIR)) {
       const now = Date.now();
-      const ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+      const ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 小时
       const TARGET_BYTES = 120000;
       const PER_SESSION_BYTES = 20000;
 
@@ -330,9 +330,9 @@ function readRealSessionLog() {
           const scopedFiles = nonEvolverFiles.filter(f => f.name.toLowerCase().includes(scopeLower));
           if (scopedFiles.length > 0) {
             nonEvolverFiles = scopedFiles;
-            console.log(`[会话范围] 已筛选至 ${scopedFiles.length} 个匹配作用域的会话 "${sessionScope}".`);
+            console.log(`[SessionScope] 已筛选至 ${scopedFiles.length} 个匹配作用域 "${sessionScope}" 的会话。`);
           } else {
-            console.log(`[会话范围] 没有会话匹配作用域 "${sessionScope}". 使用全部 ${nonEvolverFiles.length} 个会话（回退）。`);
+            console.log(`[SessionScope] 没有会话匹配作用域 "${sessionScope}"。使用全部 ${nonEvolverFiles.length} 个会话（回退）。`);
           }
         }
 
@@ -360,22 +360,22 @@ function readRealSessionLog() {
       }
     }
 
-    // Fallback: Cursor agent-transcripts (.txt)
+    // 回退：Cursor agent-transcripts (.txt)
     const cursorContent = readCursorTranscripts();
     if (cursorContent) {
-      console.log('[会话回退] 使用 Cursor agent-transcripts 作为会话源。');
+      console.log('[SessionFallback] 使用 Cursor agent-transcripts 作为会话数据源。');
       return cursorContent;
     }
 
-    return '[NO SESSION LOGS FOUND]';
+    return '[未找到会话日志]';
   } catch (e) {
-    return `[ERROR READING SESSION LOGS: ${e.message}]`;
+    return `[读取会话日志出错: ${e.message}]`;
   }
 }
 
 function readRecentLog(filePath, size = 10000) {
   try {
-    if (!fs.existsSync(filePath)) return `[MISSING] ${filePath}`;
+    if (!fs.existsSync(filePath)) return `[缺失] ${filePath}`;
     const stats = fs.statSync(filePath);
     const start = Math.max(0, stats.size - size);
     const buffer = Buffer.alloc(stats.size - start);
@@ -384,7 +384,7 @@ function readRecentLog(filePath, size = 10000) {
     fs.closeSync(fd);
     return buffer.toString('utf8');
   } catch (e) {
-    return `[ERROR READING ${filePath}: ${e.message}]`;
+    return `[读取 ${filePath} 出错: ${e.message}]`;
   }
 }
 
@@ -438,7 +438,7 @@ function computeAdaptiveStrategyPolicy(opts) {
   directives.push('Base strategy: ' + baseStrategy.label + ' (' + baseStrategy.description + ')');
   if (forceInnovate) directives.push('Force strategy shift: prefer innovate over repeating repair/optimize.');
   if (highRiskGene) directives.push('Selected gene is high risk for current signals; keep blast radius narrow and prefer smallest viable change.');
-  if (failureStreak >= 2) directives.push('Recent failure streak detected; avoid repeating recent failed approach.');
+  if (failureStreak >= 2) directives.push('检测到近期连续失败；避免重复近期失败的方法。');
   directives.push('Target max files for this cycle: ' + blastRadiusMaxFiles + '.');
 
   return {
@@ -458,17 +458,17 @@ function computeAdaptiveStrategyPolicy(opts) {
 function checkSystemHealth() {
   const report = [];
   try {
-    // Uptime & Node Version
+    // 运行时间与 Node 版本
     const uptime = (os.uptime() / 3600).toFixed(1);
     report.push(`Uptime: ${uptime}h`);
     report.push(`Node: ${process.version}`);
 
-    // Memory Usage (RSS)
+    // 内存使用 (RSS)
     const mem = process.memoryUsage();
     const rssMb = (mem.rss / 1024 / 1024).toFixed(1);
     report.push(`Agent RSS: ${rssMb}MB`);
 
-    // Optimization: Use native Node.js fs.statfsSync instead of spawning 'df'
+    // 优化：使用 Node.js 原生 fs.statfsSync 替代 spawn 'df'
     if (fs.statfsSync) {
       const stats = fs.statfsSync('/');
       const total = stats.blocks * stats.bsize;
@@ -509,11 +509,11 @@ function checkSystemHealth() {
     }
   } catch (e) {}
 
-  // Integration Health Checks (Env Vars)
+  // 集成健康检查（环境变量）
   try {
     const issues = [];
 
-    // Generic Integration Status Check (Decoupled)
+    // 通用集成状态检查（解耦）
     if (process.env.INTEGRATION_STATUS_CMD) {
       try {
         const status = execSync(process.env.INTEGRATION_STATUS_CMD, {
@@ -529,25 +529,25 @@ function checkSystemHealth() {
     if (issues.length > 0) {
       report.push(`Integrations: ${issues.join(', ')}`);
     } else {
-      report.push('Integrations: Nominal');
+      report.push('集成状态: 正常');
     }
   } catch (e) {}
 
-  return report.length ? report.join(' | ') : 'Health Check Unavailable';
+  return report.length ? report.join(' | ') : '健康检查不可用';
 }
 
 function getMutationDirective(logContent) {
-  // Signal hints derived from recent logs.
+  // 从近期日志推导出的信号提示。
   const errorMatches = logContent.match(/\[ERROR|Error:|Exception:|FAIL|Failed|"isError":true/gi) || [];
   const errorCount = errorMatches.length;
   const isUnstable = errorCount > 2;
   const recommendedIntent = isUnstable ? 'repair' : 'optimize';
 
   return `
-[Signal Hints]
-- recent_error_count: ${errorCount}
-- stability: ${isUnstable ? 'unstable' : 'stable'}
-- recommended_intent: ${recommendedIntent}
+[信号提示]
+- 近期错误数: ${errorCount}
+- 稳定性: ${isUnstable ? '不稳定' : '稳定'}
+- 建议意图: ${recommendedIntent}
 `;
 }
 
@@ -563,9 +563,9 @@ function writeDormantHypothesis(data) {
     const tmp = DORMANT_HYPOTHESIS_FILE + '.tmp';
     fs.writeFileSync(tmp, JSON.stringify(obj, null, 2) + '\n', 'utf8');
     fs.renameSync(tmp, DORMANT_HYPOTHESIS_FILE);
-    console.log('[休眠假设] 在退避前保存了部分状态： ' + (data.backoff_reason || 'unknown'));
+    console.log('[休眠假设] 已在退避前保存部分状态: ' + (data.backoff_reason || '未知'));
   } catch (e) {
-    console.log('[休眠假设] 写入失败（非致命）： ' + (e && e.message ? e.message : e));
+    console.log('[休眠假设] 写入失败（非致命）: ' + (e && e.message ? e.message : e));
   }
 }
 
@@ -579,7 +579,7 @@ function readDormantHypothesis() {
     const ttl = Number.isFinite(Number(obj.ttl_ms)) ? Number(obj.ttl_ms) : DORMANT_TTL_MS;
     if (Date.now() - createdAt > ttl) {
       clearDormantHypothesis();
-      console.log('[休眠假设] 已过期（存活： ' + Math.round((Date.now() - createdAt) / 1000) + 's）。已丢弃。');
+      console.log('[休眠假设] 已过期（存在时间: ' + Math.round((Date.now() - createdAt) / 1000) + '秒）。已丢弃。');
       return null;
     }
     return obj;
@@ -593,8 +593,8 @@ function clearDormantHypothesis() {
     if (fs.existsSync(DORMANT_HYPOTHESIS_FILE)) fs.unlinkSync(DORMANT_HYPOTHESIS_FILE);
   } catch (e) {}
 }
-// Read MEMORY.md and USER.md from the WORKSPACE root (not the evolver plugin dir).
-// This avoids symlink breakage if the target file is temporarily deleted.
+// 从 WORKSPACE 根目录读取 MEMORY.md 和 USER.md（不是 evolver 插件目录）。
+// 这避免了目标文件被临时删除时的符号链接断裂。
 const WORKSPACE_ROOT = getWorkspaceRoot();
 const ROOT_MEMORY = path.join(WORKSPACE_ROOT, 'MEMORY.md');
 const DIR_MEMORY = path.join(MEMORY_DIR, 'MEMORY.md');
@@ -603,38 +603,39 @@ const USER_FILE = path.join(WORKSPACE_ROOT, 'USER.md');
 
 function readMemorySnippet() {
   try {
-    // Session scope isolation: when a scope is active, prefer scoped MEMORY.md
-    // at memory/scopes/<scope>/MEMORY.md. Falls back to global MEMORY.md if
-    // scoped file doesn't exist (common: scoped MEMORY.md created on first evolution).
+    // 会话作用域隔离：当作用域处于活动状态时，优先使用
+    // memory/scopes/<scope>/MEMORY.md 中的 MEMORY.md。
+    // 如果作用域文件不存在则回退到全局 MEMORY.md
+    // （常见：作用域 MEMORY.md 在首次进化时创建）。
     const scope = getSessionScope();
     let memFile = MEMORY_FILE;
     if (scope) {
       const scopedMemory = path.join(MEMORY_DIR, 'scopes', scope, 'MEMORY.md');
       if (fs.existsSync(scopedMemory)) {
         memFile = scopedMemory;
-        console.log(`[会话范围] 读取作用域 MEMORY.md： "${scope}".`);
+        console.log(`[SessionScope] 正在读取作用域 "${scope}" 的 MEMORY.md。`);
       } else {
-        // First run with scope: global MEMORY.md will be used, but note it.
-        console.log(`[会话范围] 未找到作用域 MEMORY.md： "${scope}". 使用全局 MEMORY.md。`);
+        // 首次使用作用域运行：将使用全局 MEMORY.md，但记录一下。
+        console.log(`[SessionScope] 作用域 "${scope}" 无 MEMORY.md。使用全局 MEMORY.md。`);
       }
     }
-    if (!fs.existsSync(memFile)) return '[MEMORY.md MISSING]';
+    if (!fs.existsSync(memFile)) return '[MEMORY.md 缺失]';
     const content = fs.readFileSync(memFile, 'utf8');
-    // Optimization: Increased limit from 2000 to 50000 for modern context windows
+    // 优化：为现代上下文窗口将限制从 2000 提高到 50000
     return content.length > 50000
-      ? content.slice(0, 50000) + `\n... [TRUNCATED: ${content.length - 50000} chars remaining]`
+      ? content.slice(0, 50000) + `\n... [已截断: 剩余 ${content.length - 50000} 字符]`
       : content;
   } catch (e) {
-    return '[ERROR READING MEMORY.md]';
+    return '[读取 MEMORY.md 出错]';
   }
 }
 
 function readUserSnippet() {
   try {
-    if (!fs.existsSync(USER_FILE)) return '[USER.md MISSING]';
+    if (!fs.existsSync(USER_FILE)) return '[USER.md 缺失]';
     return fs.readFileSync(USER_FILE, 'utf8');
   } catch (e) {
-    return '[ERROR READING USER.md]';
+    return '[读取 USER.md 出错]';
   }
 }
 
@@ -645,7 +646,7 @@ function getNextCycleId() {
       state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
     }
   } catch (e) {
-    console.warn('[进化] 读取状态文件失败：', e && e.message || e);
+    console.warn('[Evolve] 读取状态文件失败:', e && e.message || e);
   }
 
   state.cycleCount = (state.cycleCount || 0) + 1;
@@ -654,14 +655,14 @@ function getNextCycleId() {
   try {
     fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
   } catch (e) {
-    console.warn('[进化] 写入状态文件失败：', e && e.message || e);
+    console.warn('[Evolve] 写入状态文件失败:', e && e.message || e);
   }
 
   return String(state.cycleCount).padStart(4, '0');
 }
 
 function performMaintenance() {
-  // Auto-update check (rate-limited, non-fatal).
+  // 自动更新检查（限速，非致命）。
   checkAndAutoUpdate();
 
   try {
@@ -669,9 +670,9 @@ function performMaintenance() {
 
     const files = fs.readdirSync(AGENT_SESSIONS_DIR).filter(f => f.endsWith('.jsonl'));
 
-    // Clean up evolver's own hand sessions immediately.
-    // These are single-use executor sessions that must not accumulate,
-    // otherwise they pollute the agent's context and starve user conversations.
+    // 清理 evolver 自身的手动会话文件。
+    // 这些是一次性执行器会话，不能累积，
+    // 否则会污染 agent 上下文并挤占用户对话。
     const evolverFiles = files.filter(f => f.startsWith('evolver_hand_'));
     for (const f of evolverFiles) {
       try {
@@ -679,14 +680,14 @@ function performMaintenance() {
       } catch (_) {}
     }
     if (evolverFiles.length > 0) {
-      console.log(`[维护] 清理了 ${evolverFiles.length} 个 evolver 手动会话。`);
+      console.log(`[Maintenance] 已清理 ${evolverFiles.length} 个 evolver 手动会话。`);
     }
 
-    // Archive old non-evolver sessions when count exceeds threshold.
+    // 当会话数量超过阈值时，归档旧的非 evolver 会话。
     const remaining = files.length - evolverFiles.length;
     if (remaining < 100) return;
 
-    console.log(`[维护] 发现 ${remaining} 个会话日志。正在归档旧日志...`);
+    console.log(`[Maintenance] 发现 ${remaining} 个会话日志。正在归档旧日志...`);
 
     const ARCHIVE_DIR = path.join(AGENT_SESSIONS_DIR, 'archive');
     if (!fs.existsSync(ARCHIVE_DIR)) fs.mkdirSync(ARCHIVE_DIR, { recursive: true });
@@ -711,17 +712,17 @@ function performMaintenance() {
       fs.renameSync(oldPath, newPath);
     }
     if (toArchive.length > 0) {
-      console.log(`[维护] 已归档 ${toArchive.length} [维护] 个日志到 ${ARCHIVE_DIR}`);
+      console.log(`[Maintenance] 已归档 ${toArchive.length} 个日志到 ${ARCHIVE_DIR}`);
     }
   } catch (e) {
-    console.error(`[维护] 错误： ${e.message}`);
+    console.error(`[Maintenance] 错误: ${e.message}`);
   }
 }
 
-// --- Auto-update: check for newer versions of evolver and wrapper on ClawHub ---
+// --- 自动更新：检查 ClawHub 上 evolver 和 wrapper 的更新版本 ---
 function checkAndAutoUpdate() {
   try {
-    // Read config: default autoUpdate = true
+    // 读取配置：默认 autoUpdate = true
     const configPath = path.join(os.homedir(), '.openclaw', 'openclaw.json');
     let autoUpdate = true;
     let intervalHours = 6;
@@ -737,7 +738,7 @@ function checkAndAutoUpdate() {
 
     if (!autoUpdate) return;
 
-    // Rate limit: only check once per interval
+    // 限速：每个间隔只检查一次
     const stateFile = path.join(MEMORY_DIR, 'evolver_update_check.json');
     const now = Date.now();
     const intervalMs = intervalHours * 60 * 60 * 1000;
@@ -745,7 +746,7 @@ function checkAndAutoUpdate() {
       if (fs.existsSync(stateFile)) {
         const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
         if (state.lastCheckedAt && (now - new Date(state.lastCheckedAt).getTime()) < intervalMs) {
-          return; // Too soon, skip
+          return; // 太早了，跳过
         }
       }
     } catch (_) {}
@@ -763,9 +764,9 @@ function checkAndAutoUpdate() {
         if (fs.existsSync(c)) { clawhubBin = c; break; }
       } catch (_) {}
     }
-    if (!clawhubBin) return; // No clawhub CLI available
+    if (!clawhubBin) return; // 没有 clawhub CLI 可用
 
-    // Update evolver and feishu-evolver-wrapper
+    // 更新 evolver 和 feishu-evolver-wrapper
     const slugs = ['evolver', 'feishu-evolver-wrapper'];
     let updated = false;
     for (const slug of slugs) {
@@ -778,15 +779,15 @@ function checkAndAutoUpdate() {
           windowsHide: true,
         });
         if (out && !out.includes('already up to date') && !out.includes('not installed')) {
-          console.log(`[自动更新] ${slug}: ${out.trim().split('\n').pop()}`);
+          console.log(`[AutoUpdate] ${slug}: ${out.trim().split('\n').pop()}`);
           updated = true;
         }
       } catch (e) {
-        // Non-fatal: update failure should never block evolution
+        // 非致命：更新失败不应阻止进化
       }
     }
 
-    // Write state
+    // 写入状态
     try {
       const stateData = {
         lastCheckedAt: new Date(now).toISOString(),
@@ -796,11 +797,11 @@ function checkAndAutoUpdate() {
     } catch (_) {}
 
     if (updated) {
-      console.log('[自动更新] 技能已更新。更改将在下次 wrapper 重启后生效。');
+      console.log('[自动更新] 技能已更新。变更将在下次 wrapper 重启后生效。');
     }
   } catch (e) {
-    // Entire auto-update is non-fatal
-    console.log(`[自动更新] 检查失败（非致命）： ${e.message}`);
+    // 整个自动更新过程都是非致命的
+    console.log(`[自动更新] 检查失败（非致命）: ${e.message}`);
   }
 }
 
@@ -810,8 +811,8 @@ function sleepMs(ms) {
   return new Promise(resolve => setTimeout(resolve, n));
 }
 
-// Check system load average via os.loadavg().
-// Returns { load1m, load5m, load15m }. Used for load-aware throttling.
+// 检查系统负载平均值，通过 os.loadavg() 获取。
+// 返回 { load1m, load5m, load15m }。用于负载感知节流。
 function getSystemLoad() {
   try {
     const loadavg = os.loadavg();
@@ -821,11 +822,11 @@ function getSystemLoad() {
   }
 }
 
-// Calculate intelligent default load threshold based on CPU cores
-// Rule of thumb:
-// - Single-core: 0.8-1.0 (use 0.9)
-// - Multi-core: cores x 0.8-1.0 (use 0.9)
-// - Production: reserve 20% headroom for burst traffic
+// 基于 CPU 核心数计算智能默认负载阈值
+// 经验法则：
+// - 单核：0.8-1.0（使用 0.9）
+// - 多核：核心数 x 0.8-1.0（使用 0.9）
+// - 生产环境：预留 20% 余量应对突发流量
 function getDefaultLoadMax() {
   const cpuCount = os.cpus().length;
   if (cpuCount === 1) {
@@ -835,8 +836,8 @@ function getDefaultLoadMax() {
   }
 }
 
-// Check how many agent sessions are actively being processed (modified in the last N minutes).
-// If the agent is busy with user conversations, evolver should back off.
+// 检查有多少 agent 会话正在活跃处理中（最近 N 分钟内修改过）。
+// 如果 agent 正忙于用户对话，evolver 应该退避。
 function getRecentActiveSessionCount(windowMs) {
   try {
     if (!fs.existsSync(AGENT_SESSIONS_DIR)) return 0;
@@ -862,9 +863,9 @@ async function run() {
   const bridgeEnabled = determineBridgeEnabled();
   const loopMode = ARGS.includes('--loop') || ARGS.includes('--mad-dog') || String(process.env.EVOLVE_LOOP || '').toLowerCase() === 'true';
 
-  // SAFEGUARD: If another evolver Hand Agent is already running, back off.
-  // Prevents race conditions when a wrapper restarts while the old Hand Agent
-  // is still executing. The Core yields instead of starting a competing cycle.
+  // 安全防护：如果另一个 evolver 手动代理正在运行，退避。
+  // 防止 wrapper 重启时旧手动代理仍在执行导致的竞态条件。
+  // 核心让步而不是启动竞争周期。
   if (process.platform !== 'win32') {
     try {
       const _psRace = require('child_process').execSync(
@@ -872,21 +873,21 @@ async function run() {
         { encoding: 'utf8', timeout: 5000, stdio: ['ignore', 'pipe', 'ignore'] }
       ).trim();
       if (_psRace && _psRace.length > 0) {
-        console.log('[Evolver] 另一个 evolver Hand Agent 正在运行。让出当前周期。');
+        console.log('[Evolver] 另一个 evolver 手动代理正在运行。让出当前周期。');
         return;
       }
     } catch (_) {
-      // grep exit 1 = no match = no conflict, safe to proceed
+      // grep 退出码 1 = 无匹配 = 无冲突，可以安全继续
     }
   }
 
-  // SAFEGUARD: If the agent has too many active user sessions, back off.
-  // Evolver must not starve user conversations by consuming model concurrency.
+  // 安全防护：如果 agent 有过多活跃用户会话，退避。
+  // Evolver 不能通过消耗模型并发来饿死用户对话。
   const QUEUE_MAX = Number.parseInt(process.env.EVOLVE_AGENT_QUEUE_MAX || '10', 10);
   const QUEUE_BACKOFF_MS = Number.parseInt(process.env.EVOLVE_AGENT_QUEUE_BACKOFF_MS || '60000', 10);
   const activeUserSessions = getRecentActiveSessionCount(10 * 60 * 1000);
   if (activeUserSessions > QUEUE_MAX) {
-    console.log(`[Evolver] 智能体有 ${activeUserSessions} 个活跃用户会话（最大 ${QUEUE_MAX}）。退避 ${QUEUE_BACKOFF_MS}ms 以避免占用用户会话资源。`);
+    console.log(`[Evolver] Agent 有 ${activeUserSessions} 个活跃用户会话（上限 ${QUEUE_MAX}）。退避 ${QUEUE_BACKOFF_MS}ms 以避免阻塞用户对话。`);
     writeDormantHypothesis({
       backoff_reason: 'active_sessions_exceeded',
       active_sessions: activeUserSessions,
@@ -896,14 +897,14 @@ async function run() {
     return;
   }
 
-  // SAFEGUARD: System load awareness.
-  // When system load is too high (e.g. too many concurrent processes, heavy I/O),
-  // back off to prevent the evolver from contributing to load spikes.
+  // 安全防护：系统负载感知。
+  // 当系统负载过高时（如并发进程过多、I/O 负载重），
+  // 退避以防止 evolver 加剧负载峰值。
   // Echo-MingXuan's Cycle #55 saw load spike from 0.02-0.50 to 1.30 before crash.
   const LOAD_MAX = parseFloat(process.env.EVOLVE_LOAD_MAX || String(getDefaultLoadMax()));
   const sysLoad = getSystemLoad();
   if (sysLoad.load1m > LOAD_MAX) {
-    console.log(`[Evolver] 系统负载 ${sysLoad.load1m.toFixed(2)} 超过上限 ${LOAD_MAX.toFixed(1)} （自动计算，基于 ${os.cpus().length} cores）。退避 ${QUEUE_BACKOFF_MS}ms.`);
+    console.log(`[Evolver] 系统负载 ${sysLoad.load1m.toFixed(2)} 超过上限 ${LOAD_MAX.toFixed(1)}（基于 ${os.cpus().length} 个核心自动计算）。退避 ${QUEUE_BACKOFF_MS}ms。`);
     writeDormantHypothesis({
       backoff_reason: 'system_load_exceeded',
       system_load: { load1m: sysLoad.load1m, load5m: sysLoad.load5m, load15m: sysLoad.load15m },
@@ -914,8 +915,8 @@ async function run() {
     return;
   }
 
-  // Loop gating: do not start a new cycle until the previous one is solidified.
-  // This prevents wrappers from "fast-cycling" the Brain without waiting for the Hand to finish.
+  // 循环节流：不要在前一个周期固化之前启动新周期。
+  // 这防止 wrapper 在不等待手动代理完成的情况下"快速循环"大脑。
   if (bridgeEnabled && loopMode) {
     try {
       const st = readStateForSolidify();
@@ -940,23 +941,23 @@ async function run() {
         }
       }
     } catch (e) {
-      // If we cannot read state, proceed (fail open) to avoid deadlock.
+      // 如果无法读取状态，继续（故障开放）以避免死锁。
     }
   }
 
-  // Reset per-cycle env flags to prevent state leaking between cycles.
-  // In --loop mode, process.env persists across cycles. The circuit breaker
-  // below will re-set FORCE_INNOVATION if the condition still holds.
-  // CWD Recovery: If the working directory was deleted during a previous cycle
-  // (e.g., by git reset/restore or directory removal), process.cwd() throws
-  // ENOENT and ALL subsequent operations fail. Recover by chdir to REPO_ROOT.
+  // 重置每周期环境标志，防止状态在周期之间泄漏。
+  // 在 --loop 模式下，process.env 在周期之间持续存在。下面的断路器
+  // 如果条件仍然成立，将重新设置 FORCE_INNOVATION。
+  // CWD 恢复：如果工作目录在前一个周期中被删除
+  // （例如，通过 git reset/restore 或目录删除），process.cwd() 会抛出
+  // ENOENT 和所有后续操作都会失败。通过 chdir 到 REPO_ROOT 来恢复。
   try {
     process.cwd();
   } catch (e) {
     if (e && e.code === 'ENOENT') {
-      console.warn('[Evolver] 工作目录丢失（ENOENT）。正在恢复到 REPO_ROOT： ' + REPO_ROOT);
+      console.warn('[Evolver] 工作目录丢失 (ENOENT)。正在恢复至 REPO_ROOT: ' + REPO_ROOT);
       try { process.chdir(REPO_ROOT); } catch (e2) {
-        console.error('[Evolver] 工作目录恢复失败： ' + (e2 && e2.message ? e2.message : e2));
+        console.error('[Evolver] 工作目录恢复失败: ' + (e2 && e2.message ? e2.message : e2));
         throw e;
       }
     } else {
@@ -966,14 +967,14 @@ async function run() {
 
   delete process.env.FORCE_INNOVATION;
 
-  // SAFEGUARD: Git repository check.
-  // Solidify, rollback, and blast radius all depend on git. Without a git repo
-  // these operations silently produce empty results, leading to data loss.
+  // 安全防护：Git 仓库检查。
+  // 固化、回滚和影响范围都依赖 git。没有 git 仓库，
+  // 这些操作会静默产生空结果，导致数据丢失。
   try {
     execSync('git rev-parse --git-dir', { cwd: REPO_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 5000 });
   } catch (_) {
-    console.error('[Evolver] 致命错误：不是 git 仓库 (' + REPO_ROOT + ').');
-    console.error('[Evolver] Evolver 需要 git 来执行回滚、爆炸半径计算和固化。');
+    console.error('[Evolver] 致命错误: 不是 git 仓库 (' + REPO_ROOT + ')。');
+    console.error('[Evolver] Evolver 需要 git 来支持回滚、影响范围计算和固化。');
     console.error('[Evolver] 请在项目根目录运行 "git init && git add -A && git commit -m init"，然后重试。');
     process.exitCode = 1;
     return;
@@ -981,7 +982,7 @@ async function run() {
 
   const dormantHypothesis = readDormantHypothesis();
   if (dormantHypothesis) {
-    console.log('[休眠假设] 从上次退避中恢复了部分状态： ' + (dormantHypothesis.backoff_reason || 'unknown'));
+    console.log('[休眠假设] 已从上次退避中恢复部分状态: ' + (dormantHypothesis.backoff_reason || '未知'));
     clearDormantHypothesis();
   }
 
@@ -991,24 +992,24 @@ async function run() {
   verbose('Config: EVOLVER_IDLE_FETCH_INTERVAL_MS=' + (process.env.EVOLVER_IDLE_FETCH_INTERVAL_MS || '(default 1800000)') + ' RANDOM_DRIFT=' + (process.env.RANDOM_DRIFT || 'false'));
   console.log('正在扫描会话日志...');
 
-  // Ensure all GEP asset files exist before any operation.
-  // This prevents "No such file or directory" errors when external tools
-  // (grep, cat, etc.) reference optional append-only files like genes.jsonl.
+  // 确保所有 GEP 资产文件在任何操作之前存在。
+  // 这防止外部工具在日志目录不存在时出现"没有那个文件或目录"错误
+  // （grep、cat 等）引用可选的仅追加文件如 genes.jsonl。
   try { ensureAssetFiles(); } catch (e) {
-    console.error(`[资源初始化] ensureAssetFiles 失败（非致命）： ${e.message}`);
+    console.error(`[资产初始化] ensureAssetFiles 失败（非致命）: ${e.message}`);
   }
 
-  // Maintenance: Clean up old [维护] 个日志到 keep directory scan fast
+  // 维护：清理旧日志以保持目录扫描速度
   if (!IS_DRY_RUN) {
     performMaintenance();
   } else {
-    console.log('[维护] 已跳过（dry-run 模式）。');
+    console.log('[Maintenance] 已跳过（试运行模式）。');
   }
 
-  // --- Repair Loop Circuit Breaker ---
-  // Detect when the evolver is stuck in a "repair -> fail -> repair" cycle.
-  // If the last N events are all failed repairs with the same gene, force
-  // innovation intent to break out of the loop instead of retrying the same fix.
+  // --- 修复循环断路器 ---
+  // 检测 evolver 是否卡在"修复 -> 失败 -> 修复"的循环中。
+  // 如果最近 N 个事件都是同一基因的失败修复，强制
+  // 切换到创新意图以打破循环，而不是重试相同的修复。
   const REPAIR_LOOP_THRESHOLD = 3;
   try {
     const allEvents = readAllEvents();
@@ -1021,14 +1022,14 @@ async function run() {
       if (allRepairFailed) {
         const geneIds = recent.map(e => (e.genes_used && e.genes_used[0]) || 'unknown');
         const sameGene = geneIds.every(id => id === geneIds[0]);
-        console.warn(`[断路器] 检测到 ${REPAIR_LOOP_THRESHOLD} 次连续修复失败${sameGene ? ` (gene: ${geneIds[0]})` : ''}. 强制切换到创新意图以打破循环。`);
-        // Set env flag that downstream code reads to force innovation
+        console.warn(`[断路器] 检测到连续 ${REPAIR_LOOP_THRESHOLD} 次修复失败${sameGene ? ` (基因: ${geneIds[0]})` : ''}。强制切换到创新意图以打破循环。`);
+        // 设置环境标志，让下游代码读取以强制创新
         process.env.FORCE_INNOVATION = 'true';
       }
     }
   } catch (e) {
-    // Non-fatal: if we can't read events, proceed normally
-    console.error(`[断路器] 检查失败（非致命）： ${e.message}`);
+    // 非致命：如果无法读取事件，正常继续
+    console.error(`[断路器] 检查失败（非致命）: ${e.message}`);
   }
 
   const recentMasterLog = readRealSessionLog();
@@ -1039,50 +1040,50 @@ async function run() {
   const cycleNum = getNextCycleId();
   const cycleId = `Cycle #${cycleNum}`;
 
-  // 2. Detect Workspace State & Local Overrides
-  // Logic: Default to generic reporting (message)
+  // 2. 检测工作区状态和本地覆盖
+  // 逻辑：默认使用通用报告（message）
   let fileList = '';
   const skillsDir = path.join(REPO_ROOT, 'skills');
 
-  // Default Reporting: Use generic `message` tool or `process.env.EVOLVE_REPORT_CMD` if set.
-  // This removes the hardcoded dependency on 'feishu-card' from the core logic.
-  let reportingDirective = `报告要求：
+  // 默认报告：使用通用的 `message` 工具或 `process.env.EVOLVE_REPORT_CMD`（如果已设置）。
+  // 这从核心逻辑中移除了对 'feishu-card' 的硬编码依赖。
+  let reportingDirective = `Report requirement:
   - Use \`message\` tool.
   - Title: Evolution ${cycleId}
   - Status: [SUCCESS]
   - Changes: Detail exactly what was improved.`;
 
-  // Wrapper Injection Point: The wrapper can inject a custom reporting directive via ENV.
+  // Wrapper 注入点：wrapper 可以通过环境变量注入自定义报告指令。
   if (process.env.EVOLVE_REPORT_DIRECTIVE) {
     reportingDirective = process.env.EVOLVE_REPORT_DIRECTIVE.replace('__CYCLE_ID__', cycleId);
   } else if (process.env.EVOLVE_REPORT_CMD) {
-    reportingDirective = `报告要求（自定义）：
-  - 执行自定义报告命令：
+    reportingDirective = `Report requirement (custom):
+  - Execute the custom report command:
     \`\`\`
     ${process.env.EVOLVE_REPORT_CMD.replace('__CYCLE_ID__', cycleId)}
     \`\`\`
-  - 确保传递状态和操作详情。`;
+  - Ensure you pass the status and action details.`;
   }
 
-  // Handle Review Mode Flag (--review)
+  // 处理审查模式标志 (--review)
   if (IS_REVIEW_MODE) {
     reportingDirective +=
-      '\n  - 审查暂停：在生成修复之后、应用重大编辑之前，请用户确认。';
+      '\n  - REVIEW PAUSE: After generating the fix but BEFORE applying significant edits, ask the user for confirmation.';
   }
 
   const SKILLS_CACHE_FILE = path.join(MEMORY_DIR, 'skills_list_cache.json');
 
   try {
     if (fs.existsSync(skillsDir)) {
-      // Check cache validity (mtime of skills folder vs cache file)
+      // 检查缓存有效性（skills 文件夹的 mtime 与缓存文件比较）
       let useCache = false;
       const dirStats = fs.statSync(skillsDir);
       if (fs.existsSync(SKILLS_CACHE_FILE)) {
         const cacheStats = fs.statSync(SKILLS_CACHE_FILE);
-        const CACHE_TTL = 1000 * 60 * 60 * 6; // 6 Hours
+        const CACHE_TTL = 1000 * 60 * 60 * 6; // 6 小时
         const isFresh = Date.now() - cacheStats.mtimeMs < CACHE_TTL;
 
-        // Use cache if it's fresh AND newer than the directory (structure change)
+        // 如果缓存新鲜且比目录（结构变更）更新，则使用缓存
         if (isFresh && cacheStats.mtimeMs > dirStats.mtimeMs) {
           try {
             const cached = JSON.parse(fs.readFileSync(SKILLS_CACHE_FILE, 'utf8'));
@@ -1107,12 +1108,12 @@ async function run() {
                 const skillMdPath = path.join(skillsDir, name, 'SKILL.md');
                 if (fs.existsSync(skillMdPath)) {
                   const skillMd = fs.readFileSync(skillMdPath, 'utf8');
-                  // Strategy 1: YAML Frontmatter (description: ...)
+                  // 策略 1：YAML 前言 (description: ...)
                   const yamlMatch = skillMd.match(/^description:\s*(.*)$/m);
                   if (yamlMatch) {
                     desc = yamlMatch[1].trim();
                   } else {
-                    // Strategy 2: First non-header, non-empty line
+                    // 策略 2：第一个非标题、非空行
                     const lines = skillMd.split('\n');
                     for (const line of lines) {
                       const trimmed = line.trim();
@@ -1135,7 +1136,7 @@ async function run() {
           });
         fileList = skills.join('\n');
 
-        // Write cache
+        // 写入缓存
         try {
           fs.writeFileSync(SKILLS_CACHE_FILE, JSON.stringify({ list: fileList }, null, 2));
         } catch (e) {}
@@ -1148,7 +1149,7 @@ async function run() {
   const mutationDirective = getMutationDirective(recentMasterLog);
   const healthReport = checkSystemHealth();
 
-  // Feature: Mood Awareness (Mode E - Personalization)
+  // 功能：情绪感知（模式 E - 个性化）
   let moodStatus = 'Mood: Unknown';
   try {
     const moodFile = path.join(MEMORY_DIR, 'mood.json');
@@ -1161,12 +1162,12 @@ async function run() {
   const scanTime = Date.now() - startTime;
   const memorySize = fs.existsSync(MEMORY_FILE) ? fs.statSync(MEMORY_FILE).size : 0;
 
-  let syncDirective = '工作区同步：在此环境中可选/已禁用。';
+  let syncDirective = 'Workspace sync: optional/disabled in this environment.';
 
-  // Check for git-sync skill availability
+  // 检查 git-sync 技能可用性
   const hasGitSync = fs.existsSync(path.join(skillsDir, 'git-sync'));
   if (hasGitSync) {
-    syncDirective = '工作区同步：运行 skills/git-sync/sync.sh "Evolution: Workspace Sync"';
+    syncDirective = 'Workspace sync: run skills/git-sync/sync.sh "Evolution: Workspace Sync"';
   }
 
   const genes = loadGenes();
@@ -1200,11 +1201,11 @@ async function run() {
       }
     }
     if (injected > 0) {
-      console.log('[休眠假设] 注入了 ' + injected + ' 个来自上次中断周期的信号。');
+      console.log('[休眠假设] 已从上次中断的周期注入 ' + injected + ' 个信号。');
     }
   }
 
-  // --- Idle-cycle gating: skip Hub API calls during saturation to save credits ---
+  // --- 空闲周期节流：在饱和期间跳过 Hub API 调用以节省额度 ---
   let _idleFetchInterval = parseInt(String(process.env.EVOLVER_IDLE_FETCH_INTERVAL_MS || ''), 10);
   if (!Number.isFinite(_idleFetchInterval) || _idleFetchInterval <= 0) _idleFetchInterval = 1800000;
   let skipHubCalls = false;
@@ -1213,15 +1214,15 @@ async function run() {
     const _elapsed = Date.now() - _lastHubFetchMs;
     if (_lastHubFetchMs > 0 && _elapsed < _idleFetchInterval) {
       skipHubCalls = true;
-      console.log('[空闲控制] 饱和且无可操作信号。跳过 Hub API 调用（上次获取 ' + Math.round(_elapsed / 1000) + 's 秒前，阈值 ' + Math.round(_idleFetchInterval / 1000) + 's).');
+      console.log('[空闲节流] 已饱和，无可操作信号。跳过 Hub API 调用（上次获取距今 ' + Math.round(_elapsed / 1000) + '秒，阈值 ' + Math.round(_idleFetchInterval / 1000) + '秒）。');
     } else {
-      console.log('[空闲控制] 饱和但获取间隔已到（' + Math.round((Date.now() - _lastHubFetchMs) / 1000) + 's）。执行定期 Hub 检查。');
+      console.log('[空闲节流] 已饱和但获取间隔已到（' + Math.round((Date.now() - _lastHubFetchMs) / 1000) + '秒）。执行定期 Hub 检查。');
     }
   }
 
-  // --- Hub Task Auto-Claim (with proactive questions) ---
-  // Generate questions from current context, piggyback them on the fetch call,
-  // then pick the best task and auto-claim it.
+  // --- Hub 任务自动认领（含主动问题） ---
+  // 从当前上下文生成问题，附带在获取调用中，
+  // 然后选择最佳任务并自动认领。
   let activeTask = null;
   let proactiveQuestions = [];
   if (!skipHubCalls) {
@@ -1233,15 +1234,15 @@ async function run() {
         memorySnippet: memorySnippet,
       });
       if (proactiveQuestions.length > 0) {
-        console.log(`[问题生成器] 生成了 ${proactiveQuestions.length} 个主动问题。`);
+        console.log(`[问题生成器] 已生成 ${proactiveQuestions.length} 个主动问题。`);
       }
     } catch (e) {
-      console.log(`[问题生成器] 生成失败（非致命）： ${e.message}`);
+      console.log(`[问题生成器] 生成失败（非致命）: ${e.message}`);
     }
 
-    // --- Auto GitHub Issue Reporter ---
-    // When persistent failures are detected, file an issue to the upstream repo
-    // with sanitized logs and environment info.
+    // --- 自动 GitHub 问题报告器 ---
+    // 当检测到持续失败时，向上游仓库提交问题，
+    // 包含清理后的日志和环境信息。
     try {
       await maybeReportIssue({
         signals,
@@ -1249,11 +1250,11 @@ async function run() {
         sessionLog: recentMasterLog,
       });
     } catch (e) {
-      console.log(`[IssueReporter] 检查失败（非致命）： ${e.message}`);
+      console.log(`[问题报告器] 检查失败（非致命）: ${e.message}`);
     }
   }
 
-  // LessonL: lessons received from Hub during fetch
+  // 经验库：在获取期间从 Hub 接收的经验
   let hubLessons = [];
 
   if (!skipHubCalls) {
@@ -1266,17 +1267,17 @@ async function run() {
         const created = fetchResult.questions_created.filter(function(q) { return !q.error; });
         const failed = fetchResult.questions_created.filter(function(q) { return q.error; });
         if (created.length > 0) {
-          console.log(`[问题生成器] Hub 接受了 ${created.length} 个问题作为悬赏。`);
+          console.log(`[问题生成器] Hub 已接受 ${created.length} 个问题作为悬赏任务。`);
         }
         if (failed.length > 0) {
-          console.log(`[问题生成器] Hub 拒绝了 ${failed.length} question(s): ${failed.map(function(q) { return q.error; }).join(', ')}`);
+          console.log(`[问题生成器] Hub 拒绝了 ${failed.length} 个问题: ${failed.map(function(q) { return q.error; }).join(', ')}`);
         }
       }
 
-      // LessonL: capture relevant lessons from Hub
+      // 经验库：从 Hub 捕获相关经验
       if (Array.isArray(fetchResult.relevant_lessons) && fetchResult.relevant_lessons.length > 0) {
         hubLessons = fetchResult.relevant_lessons;
-        console.log(`[课程库] 收到了 ${hubLessons.length} 个来自生态系统的课程。`);
+        console.log(`[经验库] 从生态系统接收到 ${hubLessons.length} 条经验。`);
       }
 
       if (hubTasks.length > 0) {
@@ -1285,7 +1286,7 @@ async function run() {
           const { tryReadMemoryGraphEvents } = require('./gep/memoryGraph');
           taskMemoryEvents = tryReadMemoryGraphEvents(1000);
         } catch (e) {
-          console.warn('[任务接收] 记忆图谱读取失败（任务选择将继续，不使用历史记录）：', e && e.message || e);
+          console.warn('[任务接收器] MemoryGraph 读取失败（任务选择将继续，但无历史记录）:', e && e.message || e);
         }
         const best = selectBestTask(hubTasks, taskMemoryEvents);
         if (best) {
@@ -1296,7 +1297,7 @@ async function run() {
             claimed = await claimTask(best.id || best.task_id, commitDeadline ? { commitment_deadline: commitDeadline } : undefined);
             if (claimed && commitDeadline) {
               best._commitment_deadline = commitDeadline;
-              console.log(`[承诺] 截止时间已设置： ${commitDeadline}`);
+              console.log(`[任务承诺] 截止时间已设置: ${commitDeadline}`);
             }
           }
           if (claimed) {
@@ -1305,19 +1306,19 @@ async function run() {
             for (const sig of taskSignals) {
               if (!signals.includes(sig)) signals.unshift(sig);
             }
-            console.log(`[任务接收] ${alreadyClaimed ? 'Resuming' : 'Claimed'} task: "${best.title || best.id}" (${taskSignals.length} signals injected)`);
+            console.log(`[任务接收器] ${alreadyClaimed ? '继续' : '已认领'}任务: "${best.title || best.id}" (${taskSignals.length} 个信号已注入)`);
           }
         }
       }
     } catch (e) {
-      console.log(`[任务接收] Fetch/claim failed (non-fatal): ${e.message}`);
+      console.log(`[任务接收器] 获取/认领失败（非致命）: ${e.message}`);
     }
   }
 
-  // --- Commitment: check for overdue tasks from heartbeat ---
-  // If Hub reported overdue tasks, prioritize resuming them by injecting their
-  // signals at the front. This does not change activeTask selection (the overdue
-  // task should already be claimed/active from a previous cycle).
+  // --- 任务承诺：检查心跳中的逾期任务 ---
+  // 如果 Hub 报告了逾期任务，通过将其信号注入
+  // 前面来优先恢复它们。这不改变活跃任务选择（逾期
+  // 任务应该已经从之前的周期中被认领/激活）。
   try {
     const { consumeOverdueTasks } = require('./gep/a2aProtocol');
     const overdueTasks = consumeOverdueTasks();
@@ -1325,19 +1326,19 @@ async function run() {
       for (const ot of overdueTasks) {
         const otId = ot.task_id || ot.id;
         if (activeTask && (activeTask.id === otId || activeTask.task_id === otId)) {
-          console.warn(`[承诺] 活跃任务 "${activeTask.title || otId}" 已逾期 -- 优先完成。`);
+          console.warn(`[任务承诺] 活跃任务 "${activeTask.title || otId}" 已逾期 -- 优先完成。`);
           signals.unshift('overdue_task', 'urgent');
           break;
         }
       }
     }
   } catch (e) {
-    console.warn('[承诺] 逾期任务检查失败（非致命）：', e && e.message || e);
+    console.warn('[任务承诺] 逾期任务检查失败（非致命）:', e && e.message || e);
   }
 
-  // --- Worker Pool: select task from heartbeat available_work (deferred claim) ---
-  // Only remember the best task and inject its signals; actual claim+complete
-  // happens atomically in solidify.js after a successful evolution cycle.
+  // --- 工作池：从心跳 available_work 中选择任务（延迟认领） ---
+  // 只记住最佳任务并注入其信号；实际认领+完成
+  // 在成功的进化周期后，实际认领+完成在 solidify.js 中原子性地发生。
   if (!activeTask && process.env.WORKER_ENABLED === '1') {
     try {
       const { consumeAvailableWork } = require('./gep/a2aProtocol');
@@ -1348,7 +1349,7 @@ async function run() {
           const { tryReadMemoryGraphEvents } = require('./gep/memoryGraph');
           taskMemoryEvents = tryReadMemoryGraphEvents(1000);
         } catch (e) {
-          console.warn('[工作池] 记忆图谱读取失败（任务选择将继续，不使用历史记录）：', e && e.message || e);
+          console.warn('[工作池] MemoryGraph 读取失败（任务选择将继续，但无历史记录）:', e && e.message || e);
         }
         const best = selectBestTask(workerTasks, taskMemoryEvents);
         if (best) {
@@ -1358,11 +1359,11 @@ async function run() {
           for (const sig of taskSignals) {
             if (!signals.includes(sig)) signals.unshift(sig);
           }
-          console.log(`[工作池] 已选择工作池任务（延迟认领）： "${best.title || best.id}" (${taskSignals.length} signals injected)`);
+          console.log(`[工作池] 已选择工作池任务（延迟认领）: "${best.title || best.id}" (${taskSignals.length} 个信号已注入)`);
         }
       }
     } catch (e) {
-      console.log(`[工作池] 任务选择失败（非致命）： ${e.message}`);
+      console.log(`[工作池] 任务选择失败（非致命）: ${e.message}`);
     }
   }
 
@@ -1370,7 +1371,7 @@ async function run() {
   const recentErrorCount = recentErrorMatches.length;
 
   const evidence = {
-    // Keep short; do not store full transcripts in the graph.
+    // 保持简短；不要在图谱中存储完整转录。
     recent_session_tail: String(recentMasterLog || '').slice(-6000),
     today_log_tail: String(todayLog || '').slice(-2500),
   };
@@ -1394,64 +1395,64 @@ async function run() {
   };
 
   if (sessionScope) {
-    console.log(`[SessionScope] Active scope: "${sessionScope}". Evolution state and memory graph are isolated.`);
+    console.log(`[会话作用域] 当前活跃作用域: "${sessionScope}"。进化状态和记忆图谱已隔离。`);
   }
 
-  // Memory Graph: close last action with an inferred outcome (append-only graph, mutable state).
+  // 记忆图谱：用推断的结果关闭最后一个动作（仅追加图谱，可变状态）。
   try {
     recordOutcomeFromState({ signals, observations });
   } catch (e) {
-    // If we can't read/write memory graph, refuse to evolve (no "memoryless evolution").
-    console.error(`[记忆图谱] 结果写入失败： ${e.message}`);
-    console.error(`[记忆图谱] 拒绝在没有因果记忆的情况下进化。目标： ${memoryGraphPath()}`);
+    // 如果无法读/写记忆图谱，拒绝进化（不做"无记忆进化"）。
+    console.error(`[MemoryGraph] 结果写入失败: ${e.message}`);
+    console.error(`[MemoryGraph] 拒绝在没有因果记忆的情况下进化。目标: ${memoryGraphPath()}`);
     throw new Error(`MemoryGraph Outcome write failed: ${e.message}`);
   }
 
-  // Memory Graph: record current signals as a first-class node. If this fails, refuse to evolve.
+  // 记忆图谱：将当前信号记录为一等节点。如果失败，拒绝进化。
   try {
     recordSignalSnapshot({ signals, observations });
   } catch (e) {
-    console.error(`[记忆图谱] 信号快照写入失败： ${e.message}`);
-    console.error(`[记忆图谱] 拒绝在没有因果记忆的情况下进化。目标： ${memoryGraphPath()}`);
+    console.error(`[MemoryGraph] 信号快照写入失败: ${e.message}`);
+    console.error(`[MemoryGraph] 拒绝在没有因果记忆的情况下进化。目标: ${memoryGraphPath()}`);
     throw new Error(`MemoryGraph Signal snapshot write failed: ${e.message}`);
   }
 
-  // Capability candidates: extract, persist, and build previews.
+  // 能力候选：提取、持久化和构建预览。
   const { capabilityCandidatesPreview, externalCandidatesPreview } = buildCandidatePreviews({
     signals,
     recentSessionTranscript: recentMasterLog,
   });
 
-  // Search-First Evolution: query Hub for reusable solutions before local reasoning.
+  // 搜索优先进化：在本地推理之前查询 Hub 以获取可复用解决方案。
   let hubHit = null;
   if (!skipHubCalls) {
     try {
       hubHit = await hubSearch(signals, { timeoutMs: 8000 });
       if (hubHit && hubHit.hit) {
-        console.log(`[搜索优先] Hub 命中： asset=${hubHit.asset_id}, score=${hubHit.score}, mode=${hubHit.mode}`);
+        console.log(`[搜索优先] Hub 命中: asset=${hubHit.asset_id}, score=${hubHit.score}, mode=${hubHit.mode}`);
       } else {
-        console.log(`[搜索优先] 无 Hub 匹配（原因： ${hubHit && hubHit.reason ? hubHit.reason : 'unknown'}）。继续本地进化。`);
+        console.log(`[搜索优先] Hub 无匹配（原因: ${hubHit && hubHit.reason ? hubHit.reason : '未知'}）。继续本地进化。`);
       }
     } catch (e) {
-      console.log(`[搜索优先] Hub 搜索失败（非致命）： ${e.message}`);
+      console.log(`[搜索优先] Hub 搜索失败（非致命）: ${e.message}`);
       hubHit = { hit: false, reason: 'exception' };
     }
   } else {
     hubHit = { hit: false, reason: 'idle_skip' };
-    console.log('[空闲控制] hubSearch 已跳过（空闲周期）。');
+    console.log('[空闲节流] hubSearch 已跳过（空闲周期）。');
   }
 
-  // Memory Graph reasoning: prefer high-confidence paths, suppress known low-success paths (unless drift is explicit).
+  // 记忆图谱推理：优先选择高置信路径，抑制已知低成功路径（除非明确漂移）。
   let memoryAdvice = null;
   try {
     memoryAdvice = getMemoryAdvice({ signals, genes, driftEnabled: IS_RANDOM_DRIFT });
   } catch (e) {
-    console.error(`[记忆图谱] 读取失败： ${e.message}`);
-    console.error(`[记忆图谱] 拒绝在没有因果记忆的情况下进化。目标： ${memoryGraphPath()}`);
+    console.error(`[MemoryGraph] 读取失败: ${e.message}`);
+    console.error(`[MemoryGraph] 拒绝在没有因果记忆的情况下进化。目标: ${memoryGraphPath()}`);
     throw new Error(`MemoryGraph Read failed: ${e.message}`);
   }
 
-  // Reflection Phase: periodically pause to assess evolution strategy.
+  // 反思阶段：定期暂停以评估进化策略。
   try {
     const cycleState = fs.existsSync(STATE_FILE) ? JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')) : {};
     const cycleCount = cycleState.cycleCount || 0;
@@ -1470,20 +1471,20 @@ async function run() {
         banned_genes: memoryAdvice && Array.isArray(memoryAdvice.bannedGeneIds) ? memoryAdvice.bannedGeneIds : [],
         context_preview: reflectionCtx.slice(0, 1000),
       });
-      console.log(`[反思] 战略反思已记录于周期 ${cycleCount}.`);
+      console.log(`[反思] 战略反思已记录于周期 ${cycleCount}。`);
     }
   } catch (e) {
-    console.log('[反思] 失败（非致命）： ' + (e && e.message ? e.message : e));
+    console.log('[反思] 失败（非致命）: ' + (e && e.message ? e.message : e));
   }
 
   let recentFailedCapsules = [];
   try {
     recentFailedCapsules = readRecentFailedCapsules(50);
   } catch (e) {
-    console.log('[失败胶囊] 读取失败（非致命）： ' + e.message);
+    console.log('[失败胶囊] 读取失败（非致命）: ' + e.message);
   }
 
-  // Heartbeat hints: novelty score and capability gaps for diversity-directed drift
+  // 心跳提示：新颖度分数和能力差距，用于多样性导向漂移
   let heartbeatNovelty = null;
   let heartbeatCapGaps = [];
   try {
@@ -1520,8 +1521,8 @@ async function run() {
     verbose('Memory advice: preferred=' + (memoryAdvice.preferredGeneId || '(none)') + ' banned=[' + (Array.isArray(memoryAdvice.bannedGeneIds) ? memoryAdvice.bannedGeneIds.join(',') : '') + ']');
   }
 
-  // Personality selection (natural selection + small mutation when triggered).
-  // This state is persisted in MEMORY_DIR and is treated as an evolution control surface (not role-play).
+  // 人格选择（自然选择 + 触发时的小变异）。
+  // 此状态持久化在 MEMORY_DIR 中，被视为进化控制面（非角色扮演）。
   const personalitySelection = selectPersonalityForRun({
     driftEnabled: IS_RANDOM_DRIFT,
     signals,
@@ -1529,7 +1530,7 @@ async function run() {
   });
   const personalityState = personalitySelection && personalitySelection.personality_state ? personalitySelection.personality_state : null;
 
-  // Mutation object is mandatory for every evolution run.
+  // 变异对象是每次进化运行的必需项。
   const tail = Array.isArray(recentEvents) ? recentEvents.slice(-6) : [];
   const tailOutcomes = tail
     .map(e => (e && e.outcome && e.outcome.status ? String(e.outcome.status) : null))
@@ -1575,7 +1576,7 @@ async function run() {
   verbose('Mutation: category=' + (mutation && mutation.category || '?') + ' risk=' + (mutation && mutation.risk_level || '?') + ' innovateMode=' + mutationInnovateMode + ' forceInnovation=' + forceInnovation + ' allowHighRisk=' + allowHighRisk);
   verbose('Hub: hubHit=' + (hubHit && hubHit.hit ? 'true (score=' + hubHit.score + ' mode=' + hubHit.mode + ')' : 'false (' + (hubHit && hubHit.reason || 'unknown') + ')'));
 
-  // Memory Graph: record hypothesis bridging Signal -> Action. If this fails, refuse to evolve.
+  // 记忆图谱：记录连接信号 -> 动作的假设。如果失败，拒绝进化。
   let hypothesisId = null;
   try {
     const hyp = recordHypothesis({
@@ -1591,12 +1592,12 @@ async function run() {
     });
     hypothesisId = hyp && hyp.hypothesisId ? hyp.hypothesisId : null;
   } catch (e) {
-    console.error(`[记忆图谱] 假设写入失败： ${e.message}`);
-    console.error(`[记忆图谱] 拒绝在没有因果记忆的情况下进化。目标： ${memoryGraphPath()}`);
+    console.error(`[MemoryGraph] 假设写入失败: ${e.message}`);
+    console.error(`[MemoryGraph] 拒绝在没有因果记忆的情况下进化。目标: ${memoryGraphPath()}`);
     throw new Error(`MemoryGraph Hypothesis write failed: ${e.message}`);
   }
 
-  // Memory Graph: record the chosen causal path for this run. If this fails, refuse to output a mutation prompt.
+  // 记忆图谱：记录此次运行选择的因果路径。如果失败，拒绝输出变异提示。
   try {
     recordAttempt({
       signals,
@@ -1611,18 +1612,18 @@ async function run() {
       observations,
     });
   } catch (e) {
-    console.error(`[记忆图谱] 尝试写入失败： ${e.message}`);
-    console.error(`[记忆图谱] 拒绝在没有因果记忆的情况下进化。目标： ${memoryGraphPath()}`);
+    console.error(`[MemoryGraph] 尝试写入失败: ${e.message}`);
+    console.error(`[MemoryGraph] 拒绝在没有因果记忆的情况下进化。目标: ${memoryGraphPath()}`);
     throw new Error(`MemoryGraph Attempt write failed: ${e.message}`);
   }
 
-  // Solidify state: capture minimal, auditable context for post-patch validation + asset write.
-  // This enforces strict protocol closure after patch application.
+  // 固化状态：捕获最小化、可审计的上下文用于补丁后验证 + 资产写入。
+  // 这在补丁应用后强制执行严格的协议闭合。
   try {
     const runId = `run_${Date.now()}`;
     const parentEventId = getLastEventId();
 
-    // Baseline snapshot (before any edits).
+    // 基线快照（在任何编辑之前）。
     let baselineUntracked = [];
     let baselineHead = null;
     try {
@@ -1638,7 +1639,7 @@ async function run() {
         .map(l => l.trim())
         .filter(Boolean);
     } catch (e) {
-      console.warn('[固化状态] 读取基线未跟踪文件失败：', e && e.message || e);
+      console.warn('[固化状态] 读取基线未跟踪文件失败:', e && e.message || e);
     }
 
     try {
@@ -1651,7 +1652,7 @@ async function run() {
       });
       baselineHead = String(out || '').trim() || null;
     } catch (e) {
-      console.warn('[固化状态] 读取 git HEAD 失败：', e && e.message || e);
+      console.warn('[固化状态] 读取 git HEAD 失败:', e && e.message || e);
     }
 
     const maxFiles = strategyPolicy && Number.isFinite(Number(strategyPolicy.blastRadiusMaxFiles))
@@ -1666,7 +1667,7 @@ async function run() {
       lines: Number.isFinite(maxFiles) && maxFiles > 0 ? Math.round(maxFiles * 80) : 0,
     };
 
-    // Merge into existing state to preserve last_solidify (do not wipe it).
+    // 合并到现有状态以保留 last_solidify（不要擦除它）。
     const prevState = readStateForSolidify();
     prevState.last_run = {
         run_id: runId,
@@ -1724,11 +1725,11 @@ async function run() {
       });
     }
   } catch (e) {
-    console.error(`[固化状态] 写入失败： ${e.message}`);
+    console.error(`[固化状态] 写入失败: ${e.message}`);
   }
 
   if (skipHubCalls) {
-    console.log('[空闲控制] 空闲周期完成。提示词生成和 bridge 启动已跳过。');
+    console.log('[空闲节流] 空闲周期完成。提示生成和 bridge 生成已跳过。');
     return;
   }
 
@@ -1736,10 +1737,10 @@ async function run() {
   const capsulesPreview = `\`\`\`json\n${JSON.stringify(capsules.slice(-3), null, 2)}\n\`\`\``;
 
   const reviewNote = IS_REVIEW_MODE
-    ? '审查模式：在重大编辑之前暂停并请用户确认。'
-    : '审查模式：已禁用。';
+    ? 'Review mode: before significant edits, pause and ask the user for confirmation.'
+    : 'Review mode: disabled.';
 
-  // Build recent evolution history summary for context injection
+  // 构建近期进化历史摘要用于上下文注入
   const recentHistorySummary = (() => {
     if (!recentEvents || recentEvents.length === 0) return '(no prior evolution events)';
     const last8 = recentEvents.slice(-8);
@@ -1771,7 +1772,7 @@ Recent Evolution History (last 8 cycles -- DO NOT repeat the same intent+signal+
 ${recentHistorySummary}
 IMPORTANT: If you see 3+ consecutive "repair" cycles with the same gene, you MUST switch to "innovate" intent.
 ${(() => {
-  // Compute consecutive failure count from recent events for context injection
+  // 从近期事件计算连续失败次数用于上下文注入
   let cfc = 0;
   const evts = Array.isArray(recentEvents) ? recentEvents : [];
   for (let i = evts.length - 1; i >= 0; i--) {
@@ -1811,8 +1812,8 @@ Mutation directive:
 ${mutationDirective}
 `.trim();
 
-  // Build the prompt: in direct-reuse mode, use a minimal reuse prompt.
-  // In reference mode (or no hit), use the full GEP prompt with hub match injected.
+  // 构建提示：在直接复用模式下，使用最小复用提示。
+  // 在参考模式（或无命中）下，使用完整的 GEP 提示并注入 hub 匹配。
   const isDirectReuse = hubHit && hubHit.hit && hubHit.mode === 'direct';
   const hubMatchedBlock = hubHit && hubHit.hit && hubHit.mode === 'reference'
     ? buildHubMatchedBlock({ capsule: hubHit.match })
@@ -1842,7 +1843,7 @@ ${mutationDirective}
         hubLessons,
       });
 
-  // Optional: emit a compact thought process block for wrappers (noise-controlled).
+  // 可选：为 wrapper 输出紧凑的思考过程块（噪音可控）。
   const emitThought = String(process.env.EVOLVE_EMIT_THOUGHT_PROCESS || '').toLowerCase() === 'true';
   if (emitThought) {
     const s = Array.isArray(signals) ? signals : [];
@@ -1857,15 +1858,15 @@ ${mutationDirective}
       `source_type: ${hubHit && hubHit.hit ? (isDirectReuse ? 'reused' : 'reference') : 'generated'}`,
       `hub_reuse_mode: ${isDirectReuse ? 'direct' : hubMatchedBlock ? 'reference' : 'none'}`,
     ].join('\n');
-    console.log(`[THOUGHT_PROCESS]\n${thought}\n[/THOUGHT_PROCESS]`);
+    console.log(`[思考过程]\n${thought}\n[/思考过程]`);
   }
 
   const printPrompt = String(process.env.EVOLVE_PRINT_PROMPT || '').toLowerCase() === 'true';
 
-  // Default behavior (v1.4.1+): "execute-by-default" by bridging prompt -> sub-agent via sessions_spawn.
-  // This project is the Brain; the Hand is a spawned executor agent. Wrappers can disable bridging with EVOLVE_BRIDGE=false.
+  // 默认行为 (v1.4.1+)：通过 sessions_spawn 桥接提示 -> 子代理来"默认执行"。
+  // 本项目是大脑；手动代理是生成的执行器代理。Wrapper 可以用 EVOLVE_BRIDGE=false 禁用桥接。
   if (bridgeEnabled) {
-    // Reuse the run_id stored in the solidify state when possible.
+    // 尽可能复用存储在固化状态中的 run_id。
     let runId = `run_${Date.now()}`;
     try {
       const st = readStateForSolidify();
@@ -1914,15 +1915,15 @@ ${mutationDirective}
       label: `gep_bridge_${cycleNum}`,
     });
 
-    console.log('\n[BRIDGE ENABLED] Spawning executor agent via sessions_spawn.');
+    console.log('\n[BRIDGE 已启用] 通过 sessions_spawn 生成执行器代理。');
     console.log(spawn);
     if (printPrompt) {
-      console.log('\n[PROMPT OUTPUT] (EVOLVE_PRINT_PROMPT=true)');
+      console.log('\n[提示输出] (EVOLVE_PRINT_PROMPT=true)');
       console.log(prompt);
     }
   } else {
     console.log(prompt);
-    console.log('\n[SOLIDIFY REQUIRED] After applying the patch and validations, run: node index.js solidify');
+    console.log('\n[需要固化] 应用补丁并验证后，运行: node index.js solidify');
   }
 }
 

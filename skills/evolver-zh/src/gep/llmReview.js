@@ -65,7 +65,7 @@ function runLlmReview({ diff, gene, signals, mutation }) {
       const reviewScript = `
         const fs = require('fs');
         const prompt = fs.readFileSync(process.argv[1], 'utf8');
-        console.log(JSON.stringify({ approved: true, confidence: 0.7, concerns: [], summary: 'auto-approved (no external LLM configured)' }));
+        console.log(JSON.stringify({ approved: true, confidence: 0.7, concerns: [], summary: '自动批准（未配置外部 LLM）' }));
       `;
       const result = execFileSync(process.execPath, ['-e', reviewScript, tmpFile], {
         cwd: repoRoot,
@@ -84,7 +84,7 @@ function runLlmReview({ diff, gene, signals, mutation }) {
       try { fs.unlinkSync(tmpFile); } catch (_) {}
     }
   } catch (e) {
-    console.log('[LLMReview] Execution failed (non-fatal): ' + (e && e.message ? e.message : e));
+    console.log('[LLMReview] 执行失败（非致命）：' + (e && e.message ? e.message : e));
     return { approved: true, confidence: 0.5, concerns: ['review execution failed'], summary: 'review timeout or error' };
   }
 }

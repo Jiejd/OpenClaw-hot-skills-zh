@@ -81,7 +81,7 @@ function generateQuestions(opts) {
     if (errSig) {
       var errDetail = errSig.replace(/^recurring_errsig\(\d+x\):/, '').trim().slice(0, 120);
       candidates.push({
-        question: '进化周期中反复出现的错误，自动修复无法解决：' + errDetail + ' -- 有哪些方法或补丁可以解决类似问题？',
+        question: 'Recurring error in evolution cycle that auto-repair cannot resolve: ' + errDetail + ' -- What approaches or patches have worked for similar issues?',
         amount: 0,
         signals: ['recurring_error', 'auto_repair_failed'],
         priority: 3,
@@ -101,7 +101,7 @@ function generateQuestions(opts) {
     }
     if (gapContext) {
       candidates.push({
-        question: '检测到智能体环境中的能力缺口：' + gapContext + ' -- 如何解决此问题或有哪些替代方案？',
+        question: 'Capability gap detected in agent environment: ' + gapContext + ' -- How can this be addressed or what alternative approaches exist?',
         amount: 0,
         signals: ['capability_gap'],
         priority: 2,
@@ -121,7 +121,7 @@ function generateQuestions(opts) {
     }
     var uniqueGenes = Array.from(new Set(recentGenes));
     candidates.push({
-      question: '智能体进化已达到饱和，已耗尽基因：[' + uniqueGenes.join(', ') + ']。哪些新的进化方向、自动化模式或能力基因最有价值？',
+      question: 'Agent evolution has reached saturation after exhausting genes: [' + uniqueGenes.join(', ') + ']. What new evolution directions, automation patterns, or capability genes would be most valuable?',
       amount: 0,
       signals: ['evolution_saturation', 'innovation_needed'],
       priority: 1,
@@ -136,7 +136,7 @@ function generateQuestions(opts) {
       var failGene = signals.find(function(s) { return s.startsWith('ban_gene:'); });
       var failGeneId = failGene ? failGene.replace('ban_gene:', '') : 'unknown';
       candidates.push({
-        question: '智能体已连续失败 ' + streakCount + ' 次进化周期（最后使用的基因：' + failGeneId + '）。当前方法已耗尽。应尝试哪些替代策略或环境修复？',
+        question: 'Agent has failed ' + streakCount + ' consecutive evolution cycles (last gene: ' + failGeneId + '). The current approach is exhausted. What alternative strategies or environmental fixes should be tried?',
         amount: 0,
         signals: ['failure_streak', 'external_help_needed'],
         priority: 3,
@@ -152,7 +152,7 @@ function generateQuestions(opts) {
     if (featureLines.length > 0) {
       var featureContext = featureLines[0].replace(/\s+/g, ' ').trim().slice(0, 150);
       candidates.push({
-        question: '用户请求的功能可能受益于社区解决方案：' + featureContext + ' -- 是否有现有实现或最佳实践？',
+        question: 'User requested a feature that may benefit from community solutions: ' + featureContext + ' -- Are there existing implementations or best practices for this?',
         amount: 0,
         signals: ['user_feature_request', 'community_solution_sought'],
         priority: 1,
@@ -168,7 +168,7 @@ function generateQuestions(opts) {
     if (perfLines.length > 0) {
       var perfContext = perfLines[0].replace(/\s+/g, ' ').trim().slice(0, 150);
       candidates.push({
-        question: '检测到性能瓶颈：' + perfContext + ' -- 有哪些优化策略或架构模式可以解决？',
+        question: 'Performance bottleneck detected: ' + perfContext + ' -- What optimization strategies or architectural patterns address this?',
         amount: 0,
         signals: ['perf_bottleneck', 'optimization_sought'],
         priority: 2,

@@ -230,7 +230,7 @@ async function maybeReportIssue(opts) {
 
   const token = getGithubToken();
   if (!token) {
-    console.log('[IssueReporter] No GitHub token available. Skipping auto-report.');
+    console.log('[IssueReporter] 无 GitHub Token 可用。跳过自动报告。');
     return;
   }
 
@@ -241,7 +241,7 @@ async function maybeReportIssue(opts) {
 
   try {
     const result = await createGithubIssue(config.repo, title, body, token);
-    console.log('[IssueReporter] Created GitHub issue #' + result.number + ': ' + result.url);
+    console.log('[IssueReporter] 已创建 GitHub Issue #' + result.number + '：' + result.url);
 
     const state = readState();
     const errorKey = computeErrorKey(signals);
@@ -255,7 +255,7 @@ async function maybeReportIssue(opts) {
       lastIssueNumber: result.number,
     });
   } catch (e) {
-    console.log('[IssueReporter] Failed to create issue (non-fatal): ' + (e && e.message ? e.message : String(e)));
+    console.log('[IssueReporter] 创建 Issue 失败（非致命）：' + (e && e.message ? e.message : String(e)));
   }
 }
 

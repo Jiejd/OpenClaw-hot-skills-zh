@@ -1,7 +1,7 @@
 // Hub Search-First Evolution: query evomap-hub for reusable solutions before local solve.
 //
 // Flow: extractSignals() -> hubSearch(signals) -> if hit: reuse; if miss: normal evolve
-// Two modes: direct (skip local reasoning) | reference (inject into prompt as strong hint)
+// 两种模式：direct（跳过本地推理）| reference（注入到 prompt 作为强提示）
 //
 // Two-phase search-then-fetch to minimize credit cost:
 //   Phase 1: POST /a2a/fetch with signals + search_only=true (free, metadata only)
@@ -155,12 +155,12 @@ function pickBestMatch(results, threshold) {
  */
 async function hubSearch(signals, opts) {
   const hubUrl = getHubUrl();
-  if (!hubUrl) return { hit: false, reason: 'no_hub_url' };
+  if (!hubUrl) return { hit: false, reason: '无 Hub URL' };
 
   const signalList = Array.isArray(signals)
     ? signals.map(s => typeof s === 'string' ? s.trim() : '').filter(Boolean)
     : [];
-  if (signalList.length === 0) return { hit: false, reason: 'no_signals' };
+  if (signalList.length === 0) return { hit: false, reason: '无信号' };
 
   const threshold = (opts && Number.isFinite(opts.threshold)) ? opts.threshold : getMinReuseScore();
   const timeoutMs = (opts && Number.isFinite(opts.timeoutMs)) ? opts.timeoutMs : 8000;
@@ -209,20 +209,20 @@ async function hubSearch(signals, opts) {
     if (results.length === 0) {
       logAssetCall({
         run_id: runId, action: 'hub_search_miss', signals: signalList,
-        reason: 'no_results', via: 'search_then_fetch',
+        reason: '无结果', via: 'search_then_fetch',
       });
-      return { hit: false, reason: 'no_results' };
+      return { hit: false, reason: '无结果' };
     }
 
     const pick = pickBestMatch(results, threshold);
     if (!pick) {
       logAssetCall({
         run_id: runId, action: 'hub_search_miss', signals: signalList,
-        reason: 'below_threshold',
+        reason: '低于阈值',
         extra: { candidates: results.length, threshold },
         via: 'search_then_fetch',
       });
-      return { hit: false, reason: 'below_threshold', candidates: results.length };
+      return { hit: false, reason: '低于阈值', candidates: results.length };
     }
 
     // --- Phase 2: fetch full payload (paid, but free if already purchased) ---
@@ -259,10 +259,10 @@ async function hubSearch(signals, opts) {
               }
             }
           } catch (fetchErr) {
-            console.log(`[HubSearch] Phase 2 fetch failed (non-fatal): ${fetchErr.message}`);
+            console.log(`[HubSearch] 阶段 2 获取失败（非致命）：${fetchErr.message}`);
           }
         } else {
-          console.log(`[HubSearch] Phase 2 skipped: ${remaining}ms remaining < ${MIN_PHASE2_MS}ms threshold`);
+          console.log(`[HubSearch] 阶段 2 跳过：剩余 ${remaining}ms < ${MIN_PHASE2_MS}ms 阈值`);
         }
       }
     }
@@ -292,8 +292,8 @@ async function hubSearch(signals, opts) {
       chain_id: pick.match.chain_id || null,
     };
   } catch (err) {
-    const reason = err.name === 'AbortError' ? 'timeout' : 'fetch_error';
-    console.log(`[HubSearch] Failed (non-fatal, ${reason}): ${err.message}`);
+    const reason = err.name === 'AbortError' ? '超时' : '网络错误';
+    console.log(`[HubSearch] 失败（非致命，${reason}）：${err.message}`);
     logAssetCall({
       run_id: runId,
       action: 'hub_search_miss',

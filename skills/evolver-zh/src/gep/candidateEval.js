@@ -20,7 +20,7 @@ function buildCandidatePreviews({ signals, recentSessionTranscript }) {
     try {
       appendCandidateJsonl(c);
     } catch (e) {
-      console.warn('[Candidates] Failed to persist candidate:', e && e.message || e);
+      console.warn('[Candidates] 持久化候选基因失败：', e && e.message || e);
     }
   }
   const recentCandidates = readRecentCandidates(20);
@@ -83,7 +83,7 @@ function buildCandidatePreviews({ signals, recentSessionTranscript }) {
       )}\n\`\`\``;
     }
   } catch (e) {
-    console.warn('[ExternalCandidates] Preview build failed (non-fatal):', e && e.message || e);
+    console.warn('[ExternalCandidates] 预览构建失败（非致命）：', e && e.message || e);
   }
 
   return { capabilityCandidatesPreview, externalCandidatesPreview, newCandidates };

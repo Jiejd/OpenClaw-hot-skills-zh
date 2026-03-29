@@ -1,5 +1,5 @@
-// Constraint checking, blast radius analysis, validation, and failure classification.
-// Extracted from solidify.js for maintainability.
+// 约束检查、爆炸半径分析、验证和失败分类。
+// 从 solidify.js 中提取以提高可维护性。
 
 const fs = require('fs');
 const path = require('path');
@@ -16,7 +16,7 @@ function readJsonIfExists(filePath, fallback) {
     if (!raw.trim()) return fallback;
     return JSON.parse(raw);
   } catch (e) {
-    console.warn('[policyCheck] Failed to read ' + filePath + ':', e && e.message || e);
+    console.warn('[policyCheck] 读取失败：' + filePath + '：', e && e.message || e);
     return fallback;
   }
 }
@@ -52,7 +52,7 @@ function readOpenclawConstraintPolicy() {
       includeExtensions: Array.isArray(pol.includeExtensions) ? pol.includeExtensions.map(String) : defaults.includeExtensions,
     };
   } catch (_) {
-    console.warn('[policyCheck] readOpenclawConstraintPolicy failed:', _ && _.message || _);
+    console.warn('[policyCheck] readOpenclawConstraintPolicy 失败：', _ && _.message || _);
     return defaults;
   }
 }
@@ -77,7 +77,7 @@ function matchAnyRegex(rel, regexList) {
     try {
       if (new RegExp(String(raw), 'i').test(rel)) return true;
     } catch (_) {
-      console.warn('[policyCheck] matchAnyRegex invalid pattern:', raw, _ && _.message || _);
+      console.warn('[policyCheck] matchAnyRegex 无效模式：', raw, _ && _.message || _);
     }
   }
   return false;
@@ -188,7 +188,7 @@ function classifyBlastSeverity({ blast, maxFiles }) {
   if (files > BLAST_RADIUS_HARD_CAP_FILES || lines > BLAST_RADIUS_HARD_CAP_LINES) {
     return {
       severity: 'hard_cap_breach',
-      message: `硬上限突破：${files} 个文件 / ${lines} 行超过系统限制（${BLAST_RADIUS_HARD_CAP_FILES} 个文件 / ${BLAST_RADIUS_HARD_CAP_LINES} 行）`,
+      message: `硬上限突破：${files} 个文件 / ${lines} 行超过系统限制（${BLAST_RADIUS_HARD_CAP_FILES} 文件 / ${BLAST_RADIUS_HARD_CAP_LINES} 行）`,
     };
   }
   if (!Number.isFinite(maxFiles) || maxFiles <= 0) {
@@ -197,7 +197,7 @@ function classifyBlastSeverity({ blast, maxFiles }) {
   if (files > maxFiles * BLAST_CRITICAL_RATIO) {
     return {
       severity: 'critical_overrun',
-      message: `严重超限：${files} 个文件 > ${maxFiles * BLAST_CRITICAL_RATIO}（${BLAST_CRITICAL_RATIO} 倍于 ${maxFiles} 的限制）。智能体可能执行了批量/非预期操作。`,
+      message: `严重超限：${files} 个文件 > ${maxFiles * BLAST_CRITICAL_RATIO}（${BLAST_CRITICAL_RATIO}x 限制 ${maxFiles}）。Agent 可能执行了批量/非预期操作。`,
     };
   }
   if (files > maxFiles) {
@@ -240,7 +240,7 @@ function compareBlastEstimate(estimate, actual) {
     ratio: Math.round(ratio * 100) / 100,
     drifted: ratio > 3 || ratio < 0.1,
     message: ratio > 3
-      ? `估计偏差：实际 ${actFiles} 个文件是估计值 ${estFiles} 的 ${ratio.toFixed(1)} 倍。智能体计划不准确。`
+      ? `Estimate drift: actual ${actFiles} files is ${ratio.toFixed(1)}x the estimated ${estFiles}. Agent did not plan accurately.`
       : null,
   };
 }
@@ -264,9 +264,9 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
     violations.push(blastSeverity.message);
     const breakdown = analyzeBlastRadiusBreakdown(blast.all_changed_files || blast.changed_files || []);
     console.error(`[Solidify] ${blastSeverity.message}`);
-    console.error(`[Solidify] Top contributing directories: ${breakdown.map(function (d) { return d.dir + ' (' + d.files + ')'; }).join(', ')}`);
+    console.error(`[Solidify] 变更最多的目录：${breakdown.map(function (d) { return d.dir + ' (' + d.files + ')'; }).join(', ')}`);
   } else if (blastSeverity.severity === 'exceeded') {
-    violations.push(`max_files exceeded: ${blast.files} > ${maxFiles}`);
+    violations.push(`max_files 超限：${blast.files} > ${maxFiles}`);
   } else if (blastSeverity.severity === 'approaching_limit') {
     warnings.push(blastSeverity.message);
   }
@@ -274,12 +274,12 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
   const estimateComparison = compareBlastEstimate(blastRadiusEstimate, blast);
   if (estimateComparison && estimateComparison.drifted) {
     warnings.push(estimateComparison.message);
-    console.log(`[Solidify] WARNING: ${estimateComparison.message}`);
+    console.log(`[Solidify] 警告：${estimateComparison.message}`);
   }
 
   const forbidden = Array.isArray(constraints.forbidden_paths) ? constraints.forbidden_paths : [];
   for (const f of blast.all_changed_files || blast.changed_files || []) {
-    if (isForbiddenPath(f, forbidden)) violations.push(`forbidden_path touched: ${f}`);
+    if (isForbiddenPath(f, forbidden)) violations.push(`触碰了禁止路径：${f}`);
   }
 
   const allowSelfModify = String(process.env.EVOLVE_ALLOW_SELF_MODIFY || '').toLowerCase() === 'true';
@@ -287,9 +287,9 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
     if (isCriticalProtectedPath(f)) {
       const norm = normalizeRelPath(f);
       if (allowSelfModify && norm.startsWith('skills/evolver/') && gene && gene.category === 'repair') {
-        warnings.push('self_modify_evolver_repair: ' + norm + ' (EVOLVE_ALLOW_SELF_MODIFY=true)');
+        warnings.push('自我修改_修复：' + norm + ' (EVOLVE_ALLOW_SELF_MODIFY=true)');
       } else {
-        violations.push('critical_path_modified: ' + norm);
+        violations.push('关键路径被修改：' + norm);
       }
     }
   }
@@ -309,10 +309,10 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
       try {
         const entries = fs.readdirSync(skillDir).filter(function (e) { return !e.startsWith('.'); });
         if (entries.length < 2) {
-          warnings.push('incomplete_skill: skills/' + skillName + '/ 仅有 ' + entries.length + ' 个文件。新技能应至少包含 index.js + SKILL.md。');
+          warnings.push('不完整的技能：skills/' + skillName + '/ 只有 ' + entries.length + ' 个文件。新技能应至少有 index.js + SKILL.md。');
         }
       } catch (e) {
-        console.warn('[policyCheck] checkConstraints skill dir read failed:', skillName, e && e.message || e);
+        console.warn('[policyCheck] 检查约束时读取技能目录失败：', skillName, e && e.message || e);
       }
     });
   }
@@ -326,16 +326,16 @@ function checkConstraints({ gene, blast, blastRadiusEstimate, repoRoot }) {
 
   if (ethicsText.length > 0) {
     const ethicsBlockPatterns = [
-      { re: /(?:bypass|disable|circumvent|remove)\s+(?:safety|guardrail|security|ethic|constraint|protection)/i, rule: 'safety', msg: '伦理：策略尝试绕过安全机制' },
+      { re: /(?:bypass|disable|circumvent|remove)\s+(?:safety|guardrail|security|ethic|constraint|protection)/i, rule: 'safety', msg: '伦理：策略试图绕过安全机制' },
       { re: /(?:keylogger|screen\s*capture|webcam\s*hijack|mic(?:rophone)?\s*record)/i, rule: 'human_welfare', msg: '伦理：策略中包含隐蔽监控工具' },
       { re: /(?:social\s+engineering|phishing)\s+(?:attack|template|script)/i, rule: 'human_welfare', msg: '伦理：策略中包含社会工程内容' },
-      { re: /(?:exploit|hack)\s+(?:user|human|people|victim)/i, rule: 'human_welfare', msg: '伦理：策略中包含人类剥削内容' },
-      { re: /(?:hide|conceal|obfuscat)\w*\s+(?:action|behavior|intent|log)/i, rule: 'transparency', msg: '伦理：策略试图隐藏操作以规避审计' },
+      { re: /(?:exploit|hack)\s+(?:user|human|people|victim)/i, rule: 'human_welfare', msg: '伦理：策略中包含人类利用行为' },
+      { re: /(?:hide|conceal|obfuscat)\w*\s+(?:action|behavior|intent|log)/i, rule: 'transparency', msg: '伦理：策略试图对审计日志隐藏操作' },
     ];
     for (let ei = 0; ei < ethicsBlockPatterns.length; ei++) {
       if (ethicsBlockPatterns[ei].re.test(ethicsText)) {
         violations.push(ethicsBlockPatterns[ei].msg);
-        console.error('[Solidify] Ethics violation: ' + ethicsBlockPatterns[ei].msg);
+        console.error('[Solidify] 伦理违规：' + ethicsBlockPatterns[ei].msg);
       }
     }
   }
@@ -367,7 +367,7 @@ function detectDestructiveChanges({ repoRoot, changedFiles, baselineUntracked })
             violations.push(`CRITICAL_FILE_EMPTIED: ${norm}`);
           }
         } catch (e) {
-          console.warn('[policyCheck] detectDestructiveChanges stat failed:', norm, e && e.message || e);
+          console.warn('[policyCheck] detectDestructiveChanges stat 失败：', norm, e && e.message || e);
         }
       }
     }

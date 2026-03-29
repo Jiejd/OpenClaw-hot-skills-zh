@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-// Innovation: Self-Correction Analyzer
-// Analyze past failures to suggest better future mutations
-// Pattern: Meta-learning
+// 创新：自我纠正分析器
+// 分析过去的失败以建议更好的未来变异
+// 模式：元学习
 
 function analyzeFailures() {
   const memoryPath = path.join(process.cwd(), 'MEMORY.md');
-  if (!fs.existsSync(memoryPath)) return { status: 'skipped', reason: 'no_memory' };
+  if (!fs.existsSync(memoryPath)) return { status: 'skipped', reason: '无记忆文件' };
   
   const content = fs.readFileSync(memoryPath, 'utf8');
   const failureRegex = /\|\s*\*\*F\d+\*\*\s*\|\s*Fix\s*\|\s*(.*?)\s*\|\s*\*\*(.*?)\*\*\s*\((.*?)\)\s*\|/g;
@@ -24,7 +24,7 @@ function analyzeFailures() {
   return {
     status: 'success',
     count: failures.length,
-    failures: failures.slice(0, 3) // Return top 3 for prompt context
+    failures: failures.slice(0, 3) // 返回前 3 条用于 prompt 上下文
   };
 }
 

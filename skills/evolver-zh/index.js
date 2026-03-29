@@ -3,7 +3,7 @@ const evolve = require('./src/evolve');
 const { solidify } = require('./src/gep/solidify');
 const path = require('path');
 const { getRepoRoot } = require('./src/gep/paths');
-try { require('dotenv').config({ path: path.join(getRepoRoot(), '.env') }); } catch (e) { console.warn('[Evolver] 警告：dotenv 未找到或加载 .env 失败'); }
+try { require('dotenv').config({ path: path.join(getRepoRoot(), '.env') }); } catch (e) { console.warn('[Evolver] 警告：未找到 dotenv 或加载 .env 失败'); }
 const fs = require('fs');
 const { spawn } = require('child_process');
 
@@ -45,7 +45,7 @@ function rejectPendingRun(statePath) {
       return true;
     }
   } catch (e) {
-    console.warn('[Loop] Failed to clear pending run state: ' + (e.message || e));
+    console.warn('[循环] 清除待处理运行状态失败：' + (e.message || e));
   }
 
   return false;
@@ -72,21 +72,21 @@ function acquireLock() {
     if (fs.existsSync(lockFile)) {
       const pid = parseInt(fs.readFileSync(lockFile, 'utf8').trim(), 10);
       if (!Number.isFinite(pid) || pid <= 0) {
-        console.log('[Singleton] 锁文件损坏（无效 PID）。正在接管。');
+        console.log('[单例] 锁文件损坏（无效 PID）。接管中。');
       } else {
         try {
           process.kill(pid, 0);
-          console.log(`[Singleton] Evolver 循环已在运行（PID ${pid}）。正在退出。`);
+          console.log(`[单例] Evolver 循环已在运行（PID ${pid}）。退出。`);
           return false;
         } catch (e) {
-          console.log(`[Singleton] 发现过期锁（PID ${pid}）。正在接管。`);
+          console.log(`[单例] 发现过期锁（PID ${pid}）。接管中。`);
         }
       }
     }
     fs.writeFileSync(lockFile, String(process.pid));
     return true;
   } catch (err) {
-    console.error('[Singleton] 锁获取失败：', err);
+    console.error('[单例] 锁获取失败：', err);
     return false;
   }
 }
@@ -133,7 +133,7 @@ async function main() {
         if (!process.env.EVOLVE_BRIDGE) {
           process.env.EVOLVE_BRIDGE = 'false';
         }
-        console.log(`循环模式已启用（内部守护进程，bridge=${process.env.EVOLVE_BRIDGE}, verbose=${isVerbose}）。`);
+        console.log(`循环模式已启用（内部守护进程，bridge=${process.env.EVOLVE_BRIDGE}，verbose=${isVerbose}）。`);
 
         const { getEvolutionDir } = require('./src/gep/paths');
         const solidifyStatePath = path.join(getEvolutionDir(), 'evolution_solidify_state.json');
@@ -157,7 +157,7 @@ async function main() {
           const { startHeartbeat } = require('./src/gep/a2aProtocol');
           startHeartbeat();
         } catch (e) {
-          console.warn('[Heartbeat] 启动失败：' + (e.message || e));
+          console.warn('[心跳] 启动失败：' + (e.message || e));
         }
 
         let currentSleepMs = minSleepMs;
@@ -185,7 +185,7 @@ async function main() {
               if (isPendingSolidify(stAfterRun)) {
                 const cleared = rejectPendingRun(solidifyStatePath);
                 if (cleared) {
-                  console.warn('[Loop] 因循环模式下 bridge 已禁用，自动拒绝了待处理的运行（仅状态，无回滚）。');
+                  console.warn('[循环] 因循环模式下禁用 bridge 而自动拒绝待处理运行（仅状态，不回滚）。');
                 }
               }
             }
@@ -231,7 +231,7 @@ async function main() {
           if (suicideEnabled) {
             const memMb = process.memoryUsage().rss / 1024 / 1024;
             if (cycleCount >= maxCyclesPerProcess || memMb > maxRssMb) {
-              console.log(`[Daemon] 正在重启自身（cycles=${cycleCount}, rssMb=${memMb.toFixed(0)}）`);
+              console.log(`[守护进程] 正在重启（cycles=${cycleCount}，rssMb=${memMb.toFixed(0)}）`);
               try {
                 const spawnOpts = {
                   detached: true,
@@ -244,7 +244,7 @@ async function main() {
                 releaseLock();
                 process.exit(0);
               } catch (spawnErr) {
-                console.error('[Daemon] 启动失败，继续当前进程：', spawnErr.message);
+                console.error('[守护进程] 生成失败，继续当前进程：', spawnErr.message);
               }
             }
           }
@@ -255,10 +255,10 @@ async function main() {
             const lastSignals = st1 && st1.last_run && Array.isArray(st1.last_run.signals) ? st1.last_run.signals : [];
             if (lastSignals.includes('force_steady_state')) {
               saturationMultiplier = 10;
-              console.log('[Daemon] 检测到饱和。进入稳态模式（10 倍休眠）。');
+              console.log('[守护进程] 检测到饱和。进入稳态模式（10x 休眠）。');
             } else if (lastSignals.includes('evolution_saturation')) {
               saturationMultiplier = 5;
-              console.log('[Daemon] 接近饱和。降低进化频率（5 倍休眠）。');
+              console.log('[守护进程] 接近饱和。降低进化频率（5x 休眠）。');
             }
           } catch (e) {}
 
@@ -272,7 +272,7 @@ async function main() {
           await sleepMs(totalSleepMs);
 
           } catch (loopErr) {
-            console.error('[Daemon] 意外的循环错误（正在恢复）：' + (loopErr && loopErr.message ? loopErr.message : String(loopErr)));
+            console.error('[守护进程] 意外循环错误（恢复中）：' + (loopErr && loopErr.message ? loopErr.message : String(loopErr)));
             await sleepMs(Math.max(minSleepMs, 10000));
           }
         }
@@ -286,10 +286,10 @@ async function main() {
         }
     }
 
-    // Post-run hint
+    // 运行后提示
     console.log('\n' + '=======================================================');
-    console.log('Evolver 运行完成。如果你使用此项目，欢迎 star 上游仓库。');
-    console.log('上游：https://github.com/EvoMap/evolver');
+    console.log('Evolver 已完成。如果你使用此项目，请考虑给上游仓库点个 star。');
+    console.log('上游仓库：https://github.com/EvoMap/evolver');
     console.log('=======================================================\n');
     
   } else if (command === 'solidify') {
@@ -307,8 +307,8 @@ async function main() {
         dryRun,
         rollbackOnFailure: !noRollback,
       });
-      const st = res && res.ok ? 'SUCCESS' : 'FAILED';
-      console.log(`[SOLIDIFY] ${st}`);
+      const st = res && res.ok ? '成功' : '失败';
+      console.log(`[固化] ${st}`);
       if (res && res.gene) console.log(JSON.stringify(res.gene, null, 2));
       if (res && res.event) console.log(JSON.stringify(res.event, null, 2));
       if (res && res.capsule) console.log(JSON.stringify(res.capsule, null, 2));
@@ -325,17 +325,17 @@ async function main() {
           if (autoTrigger || shouldDistill()) {
             const auto = autoDistill();
             if (auto && auto.ok && auto.gene) {
-              console.log('[Distiller] 自动蒸馏的基因：' + auto.gene.id);
+              console.log('[蒸馏器] 自动蒸馏基因：' + auto.gene.id);
             } else {
               const dr = prepareDistillation();
               if (dr && dr.ok && dr.promptPath) {
-                const trigger = autoTrigger ? `自动（每 ${autoDistillInterval} 次固化，计数=${count})` : '阈值';
+                const trigger = autoTrigger ? `auto (every ${autoDistillInterval} solidifies, count=${count})` : 'threshold';
                 console.log('\n[蒸馏请求]');
-                console.log(`蒸馏已触发： ${trigger}`);
-                console.log('读取提示词文件，使用你的 LLM 处理，');
+                console.log(`蒸馏已触发：${trigger}`);
+                console.log('读取提示文件，用你的 LLM 处理它，');
                 console.log('将 LLM 响应保存到文件，然后运行：');
-                console.log('  node index.js distill --response-file=<path_to_llm_response>');
-                console.log('提示词文件： ' + dr.promptPath);
+                console.log('  node index.js distill --response-file=<LLM 响应文件路径>');
+                console.log('提示文件：' + dr.promptPath);
                 console.log('[/蒸馏请求]');
               }
             }
@@ -344,11 +344,11 @@ async function main() {
           if (shouldDistillFromFailures()) {
             const failureResult = autoDistillFromFailures();
             if (failureResult && failureResult.ok && failureResult.gene) {
-              console.log('[Distiller] 从失败中蒸馏的修复基因： ' + failureResult.gene.id);
+              console.log('[蒸馏器] 从失败中蒸馏的修复基因：' + failureResult.gene.id);
             }
           }
         } catch (e) {
-          console.warn('[Distiller] 初始化失败（非致命）： ' + (e.message || e));
+          console.warn('[蒸馏器] 初始化失败（非致命）：' + (e.message || e));
         }
       }
 
@@ -357,7 +357,7 @@ async function main() {
       }
       process.exit(res && res.ok ? 0 : 2);
     } catch (error) {
-      console.error('[SOLIDIFY] Error:', error);
+      console.error('[固化] 错误：', error);
       process.exit(2);
     }
   } else if (command === 'distill') {
@@ -372,14 +372,14 @@ async function main() {
       const { completeDistillation } = require('./src/gep/skillDistiller');
       const result = completeDistillation(responseText);
       if (result && result.ok) {
-        console.log('[Distiller] 基因已生成： ' + result.gene.id);
+        console.log('[蒸馏器] 生成的基因：' + result.gene.id);
         console.log(JSON.stringify(result.gene, null, 2));
       } else {
-        console.warn('[Distiller] 蒸馏未生成基因： ' + (result && result.reason || 'unknown'));
+        console.warn('[蒸馏器] 蒸馏未生成基因：' + (result && result.reason || '未知'));
       }
       process.exit(result && result.ok ? 0 : 2);
     } catch (error) {
-      console.error('[DISTILL] Error:', error);
+      console.error('[蒸馏] 错误：', error);
       process.exit(2);
     }
 
@@ -393,14 +393,14 @@ async function main() {
     const lastRun = state && state.last_run ? state.last_run : null;
 
     if (!lastRun || !lastRun.run_id) {
-      console.log('[Review] 没有待审查的进化运行。');
-      console.log('请先运行 "node index.js run" 生成更改，然后在固化之前审查。');
+      console.log('[审查] 没有待审查的进化运行。');
+      console.log('请先运行 "node index.js run" 生成变更，然后在固化前进行审查。');
       process.exit(0);
     }
 
     const lastSolid = state && state.last_solidify ? state.last_solidify : null;
     if (lastSolid && String(lastSolid.run_id) === String(lastRun.run_id)) {
-      console.log('[Review] 上次运行已固化。无需审查。');
+      console.log('[审查] 上次运行已经固化。没有需要审查的内容。');
       process.exit(0);
     }
 
@@ -410,11 +410,11 @@ async function main() {
       const unstaged = execSync('git diff', { cwd: repoRoot, encoding: 'utf8', timeout: 30000 }).trim();
       const staged = execSync('git diff --cached', { cwd: repoRoot, encoding: 'utf8', timeout: 30000 }).trim();
       const untracked = execSync('git ls-files --others --exclude-standard', { cwd: repoRoot, encoding: 'utf8', timeout: 10000 }).trim();
-      if (staged) diff += '=== Staged Changes ===\n' + staged + '\n\n';
-      if (unstaged) diff += '=== Unstaged Changes ===\n' + unstaged + '\n\n';
-      if (untracked) diff += '=== Untracked Files ===\n' + untracked + '\n';
+      if (staged) diff += '=== 已暂存的变更 ===\n' + staged + '\n\n';
+      if (unstaged) diff += '=== 未暂存的变更 ===\n' + unstaged + '\n\n';
+      if (untracked) diff += '=== 未跟踪的文件 ===\n' + untracked + '\n';
     } catch (e) {
-      diff = '(failed to capture diff: ' + (e.message || e) + ')';
+      diff = '(获取 diff 失败：' + (e.message || e) + ')';
     }
 
     const genes = loadGenes();
@@ -424,54 +424,54 @@ async function main() {
     const mutation = lastRun.mutation || null;
 
     console.log('\n' + '='.repeat(60));
-    console.log('[Review] Pending evolution run: ' + lastRun.run_id);
+    console.log('[审查] 待审查的进化运行：' + lastRun.run_id);
     console.log('='.repeat(60));
-    console.log('\n--- Gene ---');
+    console.log('\n--- 基因 ---');
     if (gene) {
-      console.log('  ID:       ' + gene.id);
-      console.log('  Category: ' + (gene.category || '?'));
-      console.log('  Summary:  ' + (gene.summary || '?'));
+      console.log('  ID：       ' + gene.id);
+      console.log('  类别： ' + (gene.category || '?'));
+      console.log('  摘要：  ' + (gene.summary || '?'));
       if (Array.isArray(gene.strategy) && gene.strategy.length > 0) {
-        console.log('  Strategy:');
+        console.log('  策略：');
         gene.strategy.forEach((s, i) => console.log('    ' + (i + 1) + '. ' + s));
       }
     } else {
-      console.log('  (no gene selected or gene not found: ' + (geneId || 'none') + ')');
+      console.log('  （未选择基因或未找到基因：' + (geneId || '无') + ')');
     }
 
-    console.log('\n--- Signals ---');
+    console.log('\n--- 信号 ---');
     if (signals.length > 0) {
       signals.forEach(s => console.log('  - ' + s));
     } else {
-      console.log('  (no signals)');
+      console.log('  （无信号）');
     }
 
-    console.log('\n--- Mutation ---');
+    console.log('\n--- 变异 ---');
     if (mutation) {
-      console.log('  Category:   ' + (mutation.category || '?'));
-      console.log('  Risk Level: ' + (mutation.risk_level || '?'));
-      if (mutation.rationale) console.log('  Rationale:  ' + mutation.rationale);
+      console.log('  类别：   ' + (mutation.category || '?'));
+      console.log('  风险等级： ' + (mutation.risk_level || '?'));
+      if (mutation.rationale) console.log('  原因：  ' + mutation.rationale);
     } else {
-      console.log('  (no mutation data)');
+      console.log('  （无变异数据）');
     }
 
     if (lastRun.blast_radius_estimate) {
-      console.log('\n--- Blast Radius Estimate ---');
+      console.log('\n--- 影响范围估计 ---');
       const br = lastRun.blast_radius_estimate;
-      console.log('  Files changed: ' + (br.files_changed || '?'));
-      console.log('  Lines changed: ' + (br.lines_changed || '?'));
+      console.log('  变更文件数： ' + (br.files_changed || '?'));
+      console.log('  变更行数： ' + (br.lines_changed || '?'));
     }
 
-    console.log('\n--- Diff ---');
+    console.log('\n--- 差异 ---');
     if (diff.trim()) {
-      console.log(diff.length > 5000 ? diff.slice(0, 5000) + '\n... (truncated, ' + diff.length + ' chars total)' : diff);
+      console.log(diff.length > 5000 ? diff.slice(0, 5000) + '\n... （已截断，共 ' + diff.length + ' 个字符）' : diff);
     } else {
-      console.log('  (no changes detected)');
+      console.log('  （未检测到变更）');
     }
     console.log('='.repeat(60));
 
     if (args.includes('--approve')) {
-      console.log('\n[Review] 已批准。正在执行固化...\n');
+      console.log('\n[审查] 已批准。正在运行固化...\n');
       try {
         const res = solidify({
           intent: lastRun.intent || undefined,
@@ -485,11 +485,11 @@ async function main() {
         }
         process.exit(res && res.ok ? 0 : 2);
       } catch (error) {
-        console.error('[SOLIDIFY] Error:', error);
+        console.error('[固化] 错误：', error);
         process.exit(2);
       }
     } else if (args.includes('--reject')) {
-      console.log('\n[Review] 已拒绝。正在回滚更改...');
+      console.log('\n[审查] 已拒绝。正在回滚变更...');
       try {
         execSync('git checkout -- .', { cwd: repoRoot, encoding: 'utf8', timeout: 30000 });
         execSync('git clean -fd', { cwd: repoRoot, encoding: 'utf8', timeout: 30000 });
@@ -504,9 +504,9 @@ async function main() {
             fs.renameSync(tmpReject, sp);
           }
         }
-        console.log('[Review] 更改已回滚。');
+        console.log('[审查] 变更已回滚。');
       } catch (e) {
-        console.error('[Review] 回滚失败：', e.message || e);
+        console.error('[审查] 回滚失败：', e.message || e);
         process.exit(2);
       }
     } else {
@@ -533,8 +533,8 @@ async function main() {
     }
 
     if (!skillId) {
-      console.error('Usage: evolver fetch --skill <skill_id>');
-      console.error('       evolver fetch -s <skill_id>');
+      console.error('用法：evolver fetch --skill <skill_id>');
+      console.error('      evolver fetch -s <skill_id>');
       process.exit(1);
     }
 
@@ -542,7 +542,7 @@ async function main() {
 
     const hubUrl = getHubUrl();
     if (!hubUrl) {
-      console.error('[fetch] A2A_HUB_URL 未配置。');
+      console.error('[获取] A2A_HUB_URL 未配置。');
       console.error('通过环境变量或 .env 文件设置：');
       console.error('  export A2A_HUB_URL=https://evomap.ai');
       process.exit(1);
@@ -550,19 +550,19 @@ async function main() {
 
     try {
       if (!getHubNodeSecret()) {
-        console.log('[fetch] 未找到 node_secret。正在向 Hub 发送 hello 进行注册...');
+        console.log('[获取] 未找到 node_secret。正在发送 hello 到 Hub 进行注册...');
         const helloResult = await sendHelloToHub();
         if (!helloResult || !helloResult.ok) {
-          console.error('[fetch] 注册 Hub 失败：', helloResult && helloResult.error || 'unknown');
+          console.error('[获取] 向 Hub 注册失败：', helloResult && helloResult.error || '未知');
           process.exit(1);
         }
-        console.log('[fetch] 已注册为 ' + getNodeId());
+        console.log('[获取] 已注册为 ' + getNodeId());
       }
 
       const endpoint = hubUrl.replace(/\/+$/, '') + '/a2a/skill/store/' + encodeURIComponent(skillId) + '/download';
       const nodeId = getNodeId();
 
-      console.log('[fetch] 正在下载技能： ' + skillId);
+      console.log('[获取] 正在下载技能：' + skillId);
 
       const resp = await fetch(endpoint, {
         method: 'POST',
@@ -582,22 +582,22 @@ async function main() {
         } catch (_) {
           errorDetail = body ? body.slice(0, 500) : '';
         }
-        console.error('[fetch] 下载失败 (HTTP ' + resp.status + ')' + (errorCode ? ': ' + errorCode : ''));
+        console.error('[获取] 下载失败（HTTP ' + resp.status + '）' + (errorCode ? ': ' + errorCode : ''));
         if (errorDetail && errorDetail !== errorCode) {
-          console.error('  Detail: ' + errorDetail);
+          console.error('  详情：' + errorDetail);
         }
         if (resp.status === 404) {
-          console.error('  Skill "' + skillId + '" not found or not publicly available.');
-          console.error('  请检查技能 ID 拼写，或浏览可用技能： https://evomap.ai');
+          console.error('  技能 "' + skillId + '" 未找到或未公开。');
+          console.error('  检查技能 ID 拼写，或在 https://evomap.ai 浏览可用技能');
         } else if (resp.status === 401 || resp.status === 403) {
           console.error('  认证失败。请尝试：');
-          console.error('    1. 删除 ~/.evomap/node_secret 并重试');
-          console.error('    2. 重新注册：设置 A2A_NODE_ID 并重新运行 fetch');
+          console.error('    1. 删除 ~/.evomap/node_secret 后重试');
+          console.error('    2. 重新注册：设置 A2A_NODE_ID 并再次运行 fetch');
         } else if (resp.status === 402) {
-          console.error('  积分不足。请查看余额： https://evomap.ai');
+          console.error('  积分不足。在 https://evomap.ai 查看余额');
         } else if (resp.status >= 500) {
           console.error('  服务器错误。Hub 可能暂时不可用。');
-          console.error('  几分钟后重试。如果问题持续，请报告至：');
+          console.error('  请几分钟后重试。如果问题持续，请在以下地址报告：');
           console.error('    https://github.com/autogame-17/evolver/issues');
         }
         if (isVerbose) {
@@ -628,23 +628,23 @@ async function main() {
         fs.writeFileSync(path.join(outDir, safeName), file.content, 'utf8');
       }
 
-      console.log('[fetch] 技能已下载到： ' + outDir);
-      console.log('  Name:    ' + (data.name || skillId));
-      console.log('  Version: ' + (data.version || '?'));
-      console.log('  Files:   SKILL.md' + (bundled.length > 0 ? ', ' + bundled.map(f => f.name).join(', ') : ''));
+      console.log('[获取] 技能已下载到：' + outDir);
+      console.log('  名称：    ' + (data.name || skillId));
+      console.log('  版本： ' + (data.version || '?'));
+      console.log('  文件：   SKILL.md' + (bundled.length > 0 ? ', ' + bundled.map(f => f.name).join(', ') : ''));
       if (data.already_purchased) {
-        console.log('  Cost:    免费（已购买）');
+        console.log('  费用：    免费（已购买）');
       } else {
-        console.log('  Cost:    ' + (data.credit_cost || 0) + ' credits');
+        console.log('  费用：    ' + (data.credit_cost || 0) + ' 积分');
       }
     } catch (error) {
       if (error && error.name === 'TimeoutError') {
-        console.error('[fetch] 请求超时（30 秒）。请检查网络和 A2A_HUB_URL。');
-        console.error('  Hub URL： ' + hubUrl);
+        console.error('[获取] 请求超时（30秒）。检查你的网络和 A2A_HUB_URL。');
+        console.error('  Hub URL：' + hubUrl);
       } else {
-        console.error('[fetch] Error: ' + (error && error.message || error));
-        if (error && error.cause) console.error('  Cause: ' + (error.cause.message || error.cause.code || error.cause));
-        if (isVerbose && error && error.stack) console.error('[Verbose] Stack:\n' + error.stack);
+        console.error('[获取] 错误：' + (error && error.message || error));
+        if (error && error.cause) console.error('  原因：' + (error.cause.message || error.cause.code || error.cause));
+        if (isVerbose && error && error.stack) console.error('[详细] 堆栈：\n' + error.stack);
       }
       process.exit(1);
     }
@@ -669,20 +669,20 @@ async function main() {
       console.log(JSON.stringify(entries, null, 2));
     } else {
       const summary = summarizeCallLog(opts);
-      console.log(`\n[Asset Call Log] ${getLogPath()}`);
-      console.log(`  总条目数： ${summary.total_entries}`);
-      console.log(`  唯一资源： ${summary.unique_assets}`);
-      console.log(`  唯一运行：   ${summary.unique_runs}`);
-      console.log(`  按操作：`);
+      console.log(`\n[资源调用日志] ${getLogPath()}`);
+      console.log(`  总条目数：${summary.total_entries}`);
+      console.log(`  唯一资源数：${summary.unique_assets}`);
+      console.log(`  唯一运行数：  ${summary.unique_runs}`);
+      console.log(`  按操作分类：`);
       for (const [action, count] of Object.entries(summary.by_action)) {
-        console.log(`    ${action}: ${count}`);
+        console.log(`    ${action}：${count}`);
       }
       if (summary.entries.length > 0) {
         console.log(`\n  最近条目：`);
         const show = summary.entries.slice(-10);
         for (const e of show) {
           const ts = e.timestamp ? e.timestamp.slice(0, 19) : '?';
-          const assetShort = e.asset_id ? e.asset_id.slice(0, 20) + '...' : '(none)';
+          const assetShort = e.asset_id ? e.asset_id.slice(0, 20) + '...' : '(无)';
           const sigPreview = Array.isArray(e.signals) ? e.signals.slice(0, 3).join(', ') : '';
           console.log(`    [${ts}] ${e.action || '?'}  asset=${assetShort}  score=${e.score || '-'}  mode=${e.mode || '-'}  signals=[${sigPreview}]  run=${e.run_id || '-'}`);
         }
@@ -693,26 +693,26 @@ async function main() {
     }
 
   } else {
-    console.log(`Usage: node index.js [run|/evolve|solidify|review|distill|fetch|asset-log] [--loop]
-  - fetch flags:
-    - --skill=<id> | -s <id>   (skill ID to download)
-    - --out=<dir>              (output directory, default: ./skills/<skill_id>)
-  - solidify flags:
+    console.log(`用法：node index.js [run|/evolve|solidify|review|distill|fetch|asset-log] [--loop]
+  - fetch 标志：
+    - --skill=<id> | -s <id>   （要下载的技能 ID）
+    - --out=<dir>              （输出目录，默认：./skills/<skill_id>）
+  - solidify 标志：
     - --dry-run
     - --no-rollback
     - --intent=repair|optimize|innovate
     - --summary=...
-  - review flags:
-    - --approve                (approve and solidify the pending changes)
-    - --reject                 (reject and rollback the pending changes)
-  - distill flags:
-    - --response-file=<path>  (LLM response file for skill distillation)
-  - asset-log flags:
-    - --run=<run_id>           (filter by run ID)
-    - --action=<action>        (filter: hub_search_hit, hub_search_miss, asset_reuse, asset_reference, asset_publish, asset_publish_skip)
-    - --last=<N>               (show last N entries)
-    - --since=<ISO_date>       (entries after date)
-    - --json                   (raw JSON output)`);
+  - review 标志：
+    - --approve                （批准并固化待处理的变更）
+    - --reject                 （拒绝并回滚待处理的变更）
+  - distill 标志：
+    - --response-file=<path>  （技能蒸馏的 LLM 响应文件）
+  - asset-log 标志：
+    - --run=<run_id>           （按运行 ID 过滤）
+    - --action=<action>        （过滤：hub_search_hit、hub_search_miss、asset_reuse、asset_reference、asset_publish、asset_publish_skip）
+    - --last=<N>               （显示最近 N 条）
+    - --since=<ISO_date>       （日期之后的条目）
+    - --json                   （原始 JSON 输出）`);
   }
 }
 

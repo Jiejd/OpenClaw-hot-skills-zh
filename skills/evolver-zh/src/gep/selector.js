@@ -379,19 +379,20 @@ function selectGeneAndCapsule({ genes, capsules, signals, memoryAdvice, driftEna
 }
 
 function buildSelectorDecision({ gene, capsule, signals, alternatives, memoryAdvice, driftEnabled, driftIntensity }) {
-  if (gene) reason.push('信号匹配 gene.signals_match');
-  if (capsule) reason.push('胶囊触发器匹配信号');
-  if (!gene) reason.push('未找到匹配基因；可能需要新基因');
-  if (signals && signals.length) reason.push(`信号：${signals.join(', ')}`);
+  const reason = [];
+  if (gene) reason.push('signals match gene.signals_match');
+  if (capsule) reason.push('capsule trigger matches signals');
+  if (!gene) reason.push('no matching gene found; new gene may be required');
+  if (signals && signals.length) reason.push(`signals: ${signals.join(', ')}`);
 
   if (memoryAdvice && Array.isArray(memoryAdvice.explanation) && memoryAdvice.explanation.length) {
-    reason.push(`记忆图谱：${memoryAdvice.explanation.join(' | ')}`);
+    reason.push(`memory_graph: ${memoryAdvice.explanation.join(' | ')}`);
   }
   if (driftEnabled) {
-    reason.push('随机漂移覆盖：true');
+    reason.push('random_drift_override: true');
   }
   if (Number.isFinite(driftIntensity) && driftIntensity > 0) {
-    reason.push(`漂移强度：${driftIntensity.toFixed(3)}`);
+    reason.push(`drift_intensity: ${driftIntensity.toFixed(3)}`);
   }
 
   return {

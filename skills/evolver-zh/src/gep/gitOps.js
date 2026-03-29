@@ -129,7 +129,7 @@ function rollbackTracked(repoRoot) {
   const mode = String(process.env.EVOLVER_ROLLBACK_MODE || 'hard').toLowerCase();
 
   if (mode === 'none') {
-    console.log('[Rollback] EVOLVER_ROLLBACK_MODE=none, skipping rollback');
+    console.log('[Rollback] EVOLVER_ROLLBACK_MODE=none，跳过回滚');
     return;
   }
 
@@ -137,16 +137,16 @@ function rollbackTracked(repoRoot) {
     const stashRef = 'evolver-rollback-' + Date.now();
     const result = tryRunCmd('git stash push -m "' + stashRef + '" --include-untracked', { cwd: repoRoot, timeoutMs: 60000 });
     if (result.ok) {
-      console.log('[Rollback] Changes stashed with ref: ' + stashRef + '. Recover with "git stash list" and "git stash pop".');
+      console.log('[Rollback] 变更已暂存，ref：' + stashRef + '。可通过 "git stash list" 和 "git stash pop" 恢复。');
     } else {
-      console.log('[Rollback] Stash failed or no changes, using hard reset');
+      console.log('[Rollback] 暂存失败或无变更，使用硬重置');
       tryRunCmd('git restore --staged --worktree .', { cwd: repoRoot, timeoutMs: 60000 });
       tryRunCmd('git reset --hard', { cwd: repoRoot, timeoutMs: 60000 });
     }
     return;
   }
 
-  console.log('[Rollback] EVOLVER_ROLLBACK_MODE=hard, resetting tracked files in: ' + repoRoot);
+  console.log('[Rollback] EVOLVER_ROLLBACK_MODE=hard，正在重置跟踪文件：' + repoRoot);
   tryRunCmd('git restore --staged --worktree .', { cwd: repoRoot, timeoutMs: 60000 });
   tryRunCmd('git reset --hard', { cwd: repoRoot, timeoutMs: 60000 });
 }
@@ -174,11 +174,11 @@ function rollbackNewUntrackedFiles({ repoRoot, baselineUntracked }) {
         deleted.push(safeRel);
       }
     } catch (e) {
-      console.warn('[evolver] rollbackNewUntrackedFiles unlink failed:', safeRel, e && e.message || e);
+      console.warn('[evolver] 回滚未跟踪文件时删除失败：', safeRel, e && e.message || e);
     }
   }
   if (skipped.length > 0) {
-    console.log(`[Rollback] Skipped ${skipped.length} critical protected file(s): ${skipped.slice(0, 5).join(', ')}`);
+    console.log(`[Rollback] 已跳过 ${skipped.length} 个关键受保护文件：${skipped.slice(0, 5).join(', ')}`);
   }
   const dirsToCheck = new Set();
   for (let di = 0; di < deleted.length; di++) {
@@ -202,11 +202,11 @@ function rollbackNewUntrackedFiles({ repoRoot, baselineUntracked }) {
         removedDirs.push(sortedDirs[si]);
       }
     } catch (e) {
-      console.warn('[evolver] rollbackNewUntrackedFiles rmdir failed:', sortedDirs[si], e && e.message || e);
+      console.warn('[evolver] 回滚未跟踪文件时删除目录失败：', sortedDirs[si], e && e.message || e);
     }
   }
   if (removedDirs.length > 0) {
-    console.log('[Rollback] Removed ' + removedDirs.length + ' empty director' + (removedDirs.length === 1 ? 'y' : 'ies') + ': ' + removedDirs.slice(0, 5).join(', '));
+    console.log('[Rollback] 已删除 ' + removedDirs.length + ' 个空目录：' + removedDirs.slice(0, 5).join(', '));
   }
 
   return { deleted, skipped, removedDirs };

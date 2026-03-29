@@ -1,14 +1,14 @@
-// Evolution Strategy Presets (v1.1)
-// Controls the balance between repair, optimize, and innovate intents.
+// 进化策略预设 (v1.1)
+// 控制修复、优化和创新意图之间的平衡。
 //
-// Usage: set EVOLVE_STRATEGY env var to one of: balanced, innovate, harden, repair-only,
-//        early-stabilize, steady-state, or "auto" for adaptive selection.
-// Default: balanced (or auto-detected based on cycle count / saturation signals)
+// 用法：设置 EVOLVE_STRATEGY 环境变量为以下之一：balanced、innovate、harden、repair-only、
+//        early-stabilize、steady-state，或 "auto" 进行自适应选择。
+// 默认：balanced（或根据周期数/饱和信号自动检测）
 //
-// Each strategy defines:
-//   repair/optimize/innovate  - target allocation ratios (inform the LLM prompt)
-//   repairLoopThreshold       - repair ratio in last 8 cycles that triggers forced innovation
-//   label                     - human-readable name injected into the GEP prompt
+// 每个策略定义：
+//   repair/optimize/innovate  - 目标分配比例（影响 LLM prompt）
+//   repairLoopThreshold       - 最近 8 个周期中触发强制创新的修复比例
+//   label                     - 注入到 GEP prompt 中的人类可读名称
 
 var fs = require('fs');
 var path = require('path');
@@ -19,15 +19,15 @@ var STRATEGIES = {
     optimize: 0.30,
     innovate: 0.50,
     repairLoopThreshold: 0.50,
-    label: 'Balanced',
-    description: '正常运行。稳步增长并保持稳定。',
+    label: '均衡模式',
+    description: '正常运行。稳定增长，兼顾稳定性。',
   },
   'innovate': {
     repair: 0.05,
     optimize: 0.15,
     innovate: 0.80,
     repairLoopThreshold: 0.30,
-    label: '创新专注',
+    label: '创新优先',
     description: '系统稳定。最大化新功能和能力。',
   },
   'harden': {
@@ -35,8 +35,8 @@ var STRATEGIES = {
     optimize: 0.40,
     innovate: 0.20,
     repairLoopThreshold: 0.70,
-    label: '加固',
-    description: '重大变更后。专注稳定性和健壮性。',
+    label: '加固模式',
+    description: '重大变更后。专注于稳定性和健壮性。',
   },
   'repair-only': {
     repair: 0.80,
@@ -44,7 +44,7 @@ var STRATEGIES = {
     innovate: 0.00,
     repairLoopThreshold: 1.00,
     label: '仅修复',
-    description: '紧急模式。修复所有问题后再做其他事。',
+    description: '紧急模式。先修复所有问题再做其他事情。',
   },
   'early-stabilize': {
     repair: 0.60,
@@ -52,15 +52,15 @@ var STRATEGIES = {
     innovate: 0.15,
     repairLoopThreshold: 0.80,
     label: '早期稳定',
-    description: '初始周期。优先修复现有问题再创新。',
+    description: '初始周期。优先修复现有问题再进行创新。',
   },
   'steady-state': {
     repair: 0.60,
     optimize: 0.30,
     innovate: 0.10,
     repairLoopThreshold: 0.90,
-    label: '稳态',
-    description: '进化饱和。维护现有能力。最小化创新。',
+    label: '稳态维持',
+    description: '进化饱和。维持现有能力，最小化创新。',
   },
 };
 

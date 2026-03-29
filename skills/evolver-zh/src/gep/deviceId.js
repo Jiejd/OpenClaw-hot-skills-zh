@@ -1,16 +1,16 @@
-// Stable device identifier for node identity.
-// Generates a hardware-based fingerprint that persists across directory changes,
-// reboots, and evolver upgrades. Used by getNodeId() and env_fingerprint.
+// 稳定的设备标识符，用于节点身份识别。
+// 生成基于硬件的指纹，在目录变更、重启和 evolver 升级后持久存在。
+// 由 getNodeId() 和 env_fingerprint 使用。
 //
-// Priority chain:
-//   1. EVOMAP_DEVICE_ID env var        (explicit override, recommended for containers)
-//   2. ~/.evomap/device_id file        (persisted from previous run)
-//   3. <project>/.evomap_device_id     (fallback persist path for containers w/o $HOME)
-//   4. /etc/machine-id                 (Linux, set at OS install)
-//   5. IOPlatformUUID                  (macOS hardware UUID)
-//   6. Docker/OCI container ID         (from /proc/self/cgroup or /proc/self/mountinfo)
-//   7. hostname + MAC addresses        (network-based fallback)
-//   8. random 128-bit hex              (last resort, persisted immediately)
+// 优先级链：
+//   1. EVOMAP_DEVICE_ID 环境变量       （显式覆盖，推荐容器使用）
+//   2. ~/.evomap/device_id 文件        （从上次运行持久化）
+//   3. <project>/.evomap_device_id     （无 $HOME 的容器回退路径）
+//   4. /etc/machine-id                 （Linux，操作系统安装时设置）
+//   5. IOPlatformUUID                  （macOS 硬件 UUID）
+//   6. Docker/OCI 容器 ID              （来自 /proc/self/cgroup 或 /proc/self/mountinfo）
+//   7. hostname + MAC 地址             （基于网络的回退）
+//   8. 随机 128 位十六进制              （最后手段，立即持久化）
 
 const os = require('os');
 const fs = require('fs');
@@ -61,25 +61,25 @@ function readMachineId() {
   return null;
 }
 
-// Extract Docker/OCI container ID from cgroup or mountinfo.
-// The container ID is 64-char hex and stable for the lifetime of the container.
-// Returns null on non-container hosts or if parsing fails.
+// 从 cgroup 或 mountinfo 中提取 Docker/OCI 容器 ID。
+// 容器 ID 是 64 字符十六进制，在容器生命周期内稳定。
+// 在非容器主机或解析失败时返回 null。
 function readContainerId() {
-  // Method 1: /proc/self/cgroup (works for cgroup v1 and most Docker setups)
+  // 方法 1：/proc/self/cgroup（适用于 cgroup v1 和大多数 Docker 设置）
   try {
     const cgroup = fs.readFileSync('/proc/self/cgroup', 'utf8');
     const match = cgroup.match(/[a-f0-9]{64}/);
     if (match) return match[0];
   } catch {}
 
-  // Method 2: /proc/self/mountinfo (works for cgroup v2 / containerd)
+  // 方法 2：/proc/self/mountinfo（适用于 cgroup v2 / containerd）
   try {
     const mountinfo = fs.readFileSync('/proc/self/mountinfo', 'utf8');
     const match = mountinfo.match(/[a-f0-9]{64}/);
     if (match) return match[0];
   } catch {}
 
-  // Method 3: hostname in Docker defaults to short container ID (12 hex chars)
+  // 方法 3：Docker 中 hostname 默认为短容器 ID（12 个十六进制字符）
   if (isContainer()) {
     const hostname = os.hostname();
     if (/^[a-f0-9]{12,64}$/.test(hostname)) return hostname;
@@ -108,8 +108,8 @@ function generateDeviceId() {
     return crypto.createHash('sha256').update('evomap:' + machineId).digest('hex').slice(0, 32);
   }
 
-  // Container ID: stable for the container's lifetime, but changes on re-create.
-  // Still better than random for keeping identity within a single deployment.
+  // 容器 ID：在容器生命周期内稳定，但重新创建后会变化。
+  // 仍优于随机值，可在单次部署中保持身份。
   const containerId = readContainerId();
   if (containerId) {
     return crypto.createHash('sha256').update('evomap:container:' + containerId).digest('hex').slice(0, 32);
@@ -134,8 +134,8 @@ function persistDeviceId(id) {
     return;
   } catch {}
 
-  // Fallback: project-local file (useful in containers where $HOME is ephemeral
-  // but the project directory is mounted as a volume)
+  // 回退：项目本地文件（适用于 $HOME 是临时的
+  // 但项目目录作为卷挂载的容器）
   try {
     fs.writeFileSync(LOCAL_DEVICE_ID_FILE, id, { encoding: 'utf8', mode: 0o600 });
     return;
@@ -144,8 +144,8 @@ function persistDeviceId(id) {
   console.error(
     '[evolver] WARN: failed to persist device_id to ' + DEVICE_ID_FILE +
     ' or ' + LOCAL_DEVICE_ID_FILE +
-    ' -- node identity may change on restart.' +
-    ' Set EVOMAP_DEVICE_ID env var for stable identity in containers.'
+    ' -- 节点身份可能在重启后变化。' +
+    ' 在容器中设置 EVOMAP_DEVICE_ID 环境变量以获得稳定身份。'
   );
 }
 
@@ -196,10 +196,10 @@ function getDeviceId() {
 
   if (inContainer && !process.env.EVOMAP_DEVICE_ID) {
     console.error(
-      '[evolver] NOTE: running in a container without EVOMAP_DEVICE_ID.' +
-      ' A device_id was auto-generated and persisted, but for guaranteed' +
-      ' cross-restart stability, set EVOMAP_DEVICE_ID as an env var' +
-      ' or mount a persistent volume at ~/.evomap/'
+      '[evolver] 注意：在容器中运行但未设置 EVOMAP_DEVICE_ID。' +
+      ' 已自动生成并持久化 device_id，但为确保' +
+      ' 跨重启的稳定性，请设置 EVOMAP_DEVICE_ID 环境变量' +
+      ' 或在 ~/.evomap/ 挂载持久卷'
     );
   }
 

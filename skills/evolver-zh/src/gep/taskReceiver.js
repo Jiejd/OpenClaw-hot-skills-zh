@@ -87,7 +87,7 @@ async function fetchTasks(opts) {
 
     return result;
   } catch (err) {
-    console.warn("[TaskReceiver] fetchTasks failed:", err && err.message ? err.message : err);
+    console.warn("[TaskReceiver] 获取任务失败：", err && err.message ? err.message : err);
     return { tasks: [] };
   }
 }
@@ -201,7 +201,7 @@ const DIFFICULTY_DURATION_MAP = [
 ];
 
 /**
- * Estimate a reasonable commitment deadline for a task.
+ * 估算任务的合理承诺截止时间。
  * Returns an ISO-8601 date string or null if estimation fails.
  *
  * @param {object} task - task from Hub
@@ -506,7 +506,7 @@ async function claimAndCompleteWorkerTask(taskId, resultAssetId) {
 
   const completed = await completeWorkerTask(assignmentId, resultAssetId);
   if (!completed) {
-    console.warn(`[WorkerPool] Claimed assignment ${assignmentId} but complete failed -- will expire on Hub`);
+    console.warn(`[WorkerPool] 已认领任务 ${assignmentId} 但完成失败 -- 将在 Hub 上过期`);
     return { ok: false, error: 'complete_failed', assignment_id: assignmentId };
   }
 

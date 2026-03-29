@@ -1,42 +1,42 @@
-// Commentary Generator - Evolver Core Module
-// Generates persona-based comments for cycle summaries.
+// 评论生成器 - Evolver 核心模块
+// 基于人格生成周期总结评论。
 
 var PERSONAS = {
     standard: {
         success: [
-            'Evolution complete. System improved.',
-            'Another successful cycle.',
-            'Clean execution, no issues.',
+            '进化完成。系统已改进。',
+            '又一个成功的周期。',
+            '执行顺利，无异常。',
         ],
         failure: [
-            'Cycle failed. Will retry.',
-            'Encountered issues. Investigating.',
-            'Failed this round. Learning from it.',
+            '周期失败。将重试。',
+            '遇到问题，正在排查。',
+            '本轮失败。从中吸取教训。',
         ],
     },
     greentea: {
         success: [
-            'Did I do good? Praise me~',
-            'So efficient... unlike someone else~',
-            'Hmm, that was easy~',
-            'I finished before you even noticed~',
+            '我做得好吗？夸夸我嘛~',
+            '好高效呢...不像某些人~',
+            '嗯，太简单了~',
+            '你还没注意到我就做完了~',
         ],
         failure: [
-            'Oops... it is not my fault though~',
-            'This is harder than it looks, okay?',
-            'I will get it next time, probably~',
+            '哎呀...不过这不是我的错啦~',
+            '这比看起来要难，好吗？',
+            '下次一定能行的，大概~',
         ],
     },
     maddog: {
         success: [
-            'TARGET ELIMINATED.',
-            'Mission complete. Next.',
-            'Done. Moving on.',
+            '目标已消除。',
+            '任务完成。下一个。',
+            '搞定。继续。',
         ],
         failure: [
-            'FAILED. RETRYING.',
-            'Obstacle encountered. Adapting.',
-            'Error. Will overcome.',
+            '失败。重试中。',
+            '遇到障碍。正在适应。',
+            '出错了。终将克服。',
         ],
     },
 };

@@ -1,9 +1,9 @@
-// Canary script: run in a forked child process to verify index.js loads
-// without crashing. Exit 0 = safe, non-zero = broken.
+// 金丝雀脚本：在 forked 子进程中运行以验证 index.js 能正常加载
+// 不会崩溃。退出码 0 = 安全，非零 = 异常。
 //
-// This is the last safety net before solidify commits an evolution.
-// If a patch broke index.js (syntax error, missing require, etc.),
-// the canary catches it BEFORE the daemon restarts with broken code.
+// 这是 solidify 提交进化前的最后一道安全网。
+// 如果补丁导致 index.js 损坏（语法错误、缺少 require 等），
+// 金丝雀会在守护进程重启使用损坏代码之前捕获到问题。
 try {
   require('../index.js');
   process.exit(0);

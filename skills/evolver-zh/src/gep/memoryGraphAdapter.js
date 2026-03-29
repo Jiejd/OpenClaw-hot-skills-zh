@@ -79,7 +79,7 @@ function buildRemoteAdapter() {
   const timeoutMs = Number(process.env.MEMORY_GRAPH_REMOTE_TIMEOUT_MS) || 5000;
 
   async function remoteCall(endpoint, body) {
-    if (!remoteUrl) throw new Error('MEMORY_GRAPH_REMOTE_URL not configured');
+    if (!remoteUrl) throw new Error('MEMORY_GRAPH_REMOTE_URL 未配置');
     const url = `${remoteUrl.replace(/\/+$/, '')}${endpoint}`;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -94,7 +94,7 @@ function buildRemoteAdapter() {
         signal: controller.signal,
       });
       if (!res.ok) {
-        throw new Error(`remote_kg_error: ${res.status}`);
+        throw new Error(`远程知识图谱错误：${res.status}`);
       }
       return await res.json();
     } finally {

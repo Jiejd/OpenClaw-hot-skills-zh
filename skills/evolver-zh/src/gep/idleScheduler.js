@@ -1,9 +1,9 @@
 'use strict';
 
-// OMLS-inspired idle scheduler: detects user inactivity windows and recommends
-// evolution intensity levels. Monitors system idle time on supported platforms.
-// When idle, the evolver can run more aggressive operations (distillation,
-// reflection); when busy, it only collects signals.
+// OMLS 风格的空闲调度器：检测用户不活跃窗口并推荐
+// 进化强度级别。在支持的平台上监控系统空闲时间。
+// 空闲时，evolver 可以执行更激进的操作（蒸馏、
+// 反思）；忙碌时，只收集信号。
 
 const { execSync } = require('child_process');
 const path = require('path');
@@ -57,9 +57,9 @@ function getSystemIdleSeconds() {
   return -1;
 }
 
-// Intensity levels:
-//   'signal_only'  - only collect signals, minimal CPU
-//   'normal'       - standard evolution cycle
+// 强度级别：
+//   'signal_only'  - 仅收集信号，最低 CPU 占用
+//   'normal'       - 标准进化周期
 //   'aggressive'   - run distillation, reflection, deeper analysis
 //   'deep'         - extended operations (future: RL, fine-tuning triggers)
 function determineIntensity(idleSeconds) {

@@ -176,22 +176,22 @@ function proposeMutations({ baseState, reason, driftEnabled, signals }) {
   const r = String(reason || '');
   if (driftEnabled) {
     muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || '漂移已启用' });
-    // Keep risk bounded under drift by default.
-    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.05, reason: '漂移安全约束' });
+    // 漂移模式下默认限制风险。
+    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.05, reason: '漂移安全限制' });
   } else if (sig.includes('protocol_drift')) {
     muts.push({ type: 'PersonalityMutation', param: 'obedience', delta: +0.1, reason: r || '协议漂移' });
     muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: '加强协议合规性' });
   } else if (sig.includes('log_error') || sig.some(x => x.startsWith('errsig:') || x.startsWith('errsig_norm:'))) {
-    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.1, reason: r || '修复不稳定性' });
-    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.1, reason: '在错误状态下降低风险变更' });
+    muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.1, reason: r || '修复不稳定' });
+    muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: -0.1, reason: '错误状态下降低风险变更' });
   } else if (hasOpportunitySignal(sig)) {
-    // Opportunity detected: nudge towards creativity to enable innovation.
+    // 检测到机会：微调创造力以促进创新。
     muts.push({ type: 'PersonalityMutation', param: 'creativity', delta: +0.1, reason: r || '检测到机会信号' });
     muts.push({ type: 'PersonalityMutation', param: 'risk_tolerance', delta: +0.05, reason: '允许创新探索' });
   } else {
-    // Plateau-like generic: slightly increase rigor, slightly decrease verbosity (more concise execution).
+    // 平台期通用：略微提高严谨度，略微降低冗长度（更简洁的执行）。
     muts.push({ type: 'PersonalityMutation', param: 'rigor', delta: +0.05, reason: r || '稳定性偏好' });
-    muts.push({ type: 'PersonalityMutation', param: 'verbosity', delta: -0.05, reason: '减少噪音' });
+    muts.push({ type: 'PersonalityMutation', param: 'verbosity', delta: -0.05, reason: '降低噪音' });
   }
 
   // If already very high obedience, avoid pushing it further; swap second mutation to creativity.
@@ -211,7 +211,7 @@ function shouldTriggerPersonalityMutation({ driftEnabled, recentEvents }) {
     .filter(Boolean);
   if (outcomes.length >= 4) {
     const recentFailed = outcomes.slice(-4).filter(x => x === 'failed').length;
-    if (recentFailed >= 3) return { ok: true, reason: '长期失败连续' };
+    if (recentFailed >= 3) return { ok: true, reason: '连续失败次数过多' };
   }
   // Mutation consecutive failure proxy: last 3 events that have mutation_id.
   const withMut = tail.filter(e => e && typeof e.mutation_id === 'string' && e.mutation_id);

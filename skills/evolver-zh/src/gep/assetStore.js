@@ -14,7 +14,7 @@ function readJsonIfExists(filePath, fallback) {
     if (!raw.trim()) return fallback;
     return JSON.parse(raw);
   } catch (e) {
-    console.warn('[AssetStore] Failed to read ' + filePath + ':', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 ' + filePath + ':', e && e.message || e);
     return fallback;
   }
 }
@@ -105,7 +105,7 @@ function loadGenes() {
       });
     }
   } catch(e) {
-    console.warn('[AssetStore] Failed to read genes.jsonl:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 genes.jsonl:', e && e.message || e);
   }
 
   // Combine and deduplicate by ID (JSONL takes precedence if newer, but here we just merge)
@@ -131,7 +131,7 @@ function loadCapsules() {
       });
     }
   } catch(e) {
-    console.warn('[AssetStore] Failed to read capsules.jsonl:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 capsules.jsonl:', e && e.message || e);
   }
   
   // Combine and deduplicate by ID
@@ -153,7 +153,7 @@ function getLastEventId() {
     const last = JSON.parse(lines[lines.length - 1]);
     return last && typeof last.id === 'string' ? last.id : null;
   } catch (e) {
-    console.warn('[AssetStore] Failed to read last event ID:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 last event ID:', e && e.message || e);
     return null;
   }
 }
@@ -167,7 +167,7 @@ function readAllEvents() {
       try { return JSON.parse(l); } catch { return null; }
     }).filter(Boolean);
   } catch (e) {
-    console.warn('[AssetStore] Failed to read events.jsonl:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 events.jsonl:', e && e.message || e);
     return [];
   }
 }
@@ -213,7 +213,7 @@ function readRecentCandidates(limit = 20) {
       fs.closeSync(fd);
     }
   } catch (e) {
-    console.warn('[AssetStore] Failed to read candidates.jsonl:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 candidates.jsonl:', e && e.message || e);
     return [];
   }
 }
@@ -243,7 +243,7 @@ function readRecentExternalCandidates(limit = 50) {
       fs.closeSync(fd);
     }
   } catch (e) {
-    console.warn('[AssetStore] Failed to read external_candidates.jsonl:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 external_candidates.jsonl:', e && e.message || e);
     return [];
   }
 }
@@ -254,7 +254,7 @@ function ensureSchemaFields(obj) {
   if (!obj.schema_version) obj.schema_version = SCHEMA_VERSION;
   if (!obj.asset_id) {
     try { obj.asset_id = computeAssetId(obj); } catch (e) {
-      console.warn('[AssetStore] Failed to compute asset ID:', e && e.message || e);
+      console.warn('[AssetStore] 计算资产 ID 失败:', e && e.message || e);
     }
   }
   return obj;
@@ -311,7 +311,7 @@ function readRecentFailedCapsules(limit) {
     const list = Array.isArray(current.failed_capsules) ? current.failed_capsules : [];
     return list.slice(Math.max(0, list.length - n));
   } catch (e) {
-    console.warn('[AssetStore] Failed to read failed_capsules.json:', e && e.message || e);
+    console.warn('[AssetStore] 读取失败 failed_capsules.json:', e && e.message || e);
     return [];
   }
 }
@@ -336,7 +336,7 @@ function ensureAssetFiles() {
         fs.writeFileSync(f.path, f.defaultContent, 'utf8');
       } catch (e) {
         // Non-fatal: log but continue
-        console.error(`[AssetStore] Failed to create ${f.path}: ${e.message}`);
+        console.error(`[AssetStore] 创建失败 ${f.path}: ${e.message}`);
       }
     }
   }

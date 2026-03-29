@@ -1,12 +1,12 @@
-// GEP Artifact Cleanup - Evolver Core Module
-// Removes old gep_prompt_*.json/txt files from evolution dir.
-// Keeps at least 10 most recent files regardless of age.
+// GEP 制品清理 - Evolver 核心模块
+// 从 evolution 目录中删除旧的 gep_prompt_*.json/txt 文件。
+// 无论文件年龄，至少保留最近的 10 个文件。
 
 const fs = require('fs');
 const path = require('path');
 const { getEvolutionDir } = require('../gep/paths');
 
-var MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+var MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 小时
 var MIN_KEEP = 10;
 
 function safeBatchDelete(batch) {
@@ -28,12 +28,12 @@ function run() {
             var stat = fs.statSync(full);
             return { name: f, path: full, mtime: stat.mtimeMs };
         })
-        .sort(function(a, b) { return b.mtime - a.mtime; }); // newest first
+        .sort(function(a, b) { return b.mtime - a.mtime; }); // 最新的在前
 
     var now = Date.now();
     var deleted = 0;
 
-    // Phase 1: Age-based cleanup (keep at least MIN_KEEP)
+    // 阶段 1：基于年龄的清理（至少保留 MIN_KEEP 个）
     var filesToDelete = [];
     for (var i = MIN_KEEP; i < files.length; i++) {
         if (now - files[i].mtime > MAX_AGE_MS) {
@@ -45,7 +45,7 @@ function run() {
         deleted += safeBatchDelete(filesToDelete);
     }
 
-    // Phase 2: Size-based safety cap (keep max 10 files total)
+    // 阶段 2：基于大小的安全上限（最多保留 10 个文件）
     try {
         var remainingFiles = fs.readdirSync(evoDir)
             .filter(function(f) { return /^gep_prompt_.*\.(json|txt)$/.test(f); })
@@ -54,7 +54,7 @@ function run() {
                 var stat = fs.statSync(full);
                 return { name: f, path: full, mtime: stat.mtimeMs };
             })
-            .sort(function(a, b) { return b.mtime - a.mtime; }); // newest first
+            .sort(function(a, b) { return b.mtime - a.mtime; }); // 最新的在前
 
         var MAX_FILES = 10;
         if (remainingFiles.length > MAX_FILES) {
@@ -62,19 +62,19 @@ function run() {
             deleted += safeBatchDelete(toDelete);
         }
     } catch (e) {
-        console.warn('[Cleanup] Phase 2 failed:', e.message);
+        console.warn('[Cleanup] 第二阶段失败:', e.message);
     }
 
     if (deleted > 0) {
-        console.log('[Cleanup] Deleted ' + deleted + ' old GEP artifacts.');
+        console.log('[Cleanup] 已删除 ' + deleted + ' 个旧 GEP 制品。');
     }
     return deleted;
 }
 
 if (require.main === module) {
-    console.log('[Cleanup] Scanning for old artifacts...');
+    console.log('[Cleanup] 正在扫描旧制品...');
     var count = run();
-    console.log('[Cleanup] ' + (count > 0 ? 'Deleted ' + count + ' files.' : 'No files to delete.'));
+    console.log('[Cleanup] ' + (count > 0 ? '已删除 ' + count + ' 个文件。' : '没有需要删除的文件。'));
 }
 
 module.exports = { run };
