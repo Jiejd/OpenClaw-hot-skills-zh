@@ -7,7 +7,7 @@
 
 ## 📖 项目简介
 
-本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **82 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
+本项目为中文开发者提供 各个skills 平台上优质技能（Skills）的中文版本，共收录 **84 个**中文技能，覆盖搜索、Agent 增强、工具集成、设计、开发、文档处理、数据分析和安全防护等领域。
 
 **每个 skill 的完整文档在其子目录的 `SKILL.md` 中，本 README 仅提供速览。**
 
@@ -78,6 +78,7 @@
 | 技能 | 描述 | 标记 |
 |------|------|------|
 | [gog-zh](skills/gog-zh/SKILL.md) | Google Workspace 统一 CLI 工具，覆盖 Gmail 收发、日历事件查询、云盘搜索、联系人管理、表格读写与文档导出，需 OAuth 认证 | 📦 |
+| [gmail-zh](skills/gmail-zh/SKILL.md) | 通过官方 Gmail API 进行邮件收发与管理——邮件读取/发送（HTML+附件）、线程管理、标签管理、多条件搜索、多账户支持，通过 Maton.ai 网关自动注入 OAuth 令牌 | 💰📦 |
 | [notion-skill-zh](skills/notion-skill-zh/SKILL.md) | 通过官方 Notion API 读写页面、管理数据库、追加内容块，支持多配置文件和架构变更 | 💰📦 |
 | [slack-zh](skills/slack-zh/SKILL.md) | 通过 Bot Token 管理 Slack 工作区——频道与私信消息收发编辑、Emoji 反应互动、置顶管理、成员信息查询与自定义表情列表 | ✅ |
 | [trello-zh](skills/trello-zh/SKILL.md) | Trello 看板完整管理——通过 curl 调用 REST API 实现看板/列表/卡片的查询、创建、移动、评论与归档，需 API Key + Token 认证 | 📦 |
@@ -141,6 +142,7 @@
 | [openai-whisper-zh](skills/openai-whisper-zh/SKILL.md) | 本地运行 OpenAI Whisper 模型进行语音转录与翻译，支持多音频格式、多模型尺寸选择，数据不出本地 | 📦 |
 | [humanizer-zh](skills/humanizer-zh/SKILL.md) | 检测并移除 AI 写作痕迹，基于 Wikipedia 指南修复 24 种 AI 文本模式（过度夸大、促销语言、模糊归因等），让文本更自然 | ✅ |
 | [humanize-ai-text-zh](skills/humanize-ai-text-zh/SKILL.md) | AI 文本人性化——基于 Wikipedia 指南检测修复 24 种 AI 写作模式，三阶段工作流（草稿→反 AI 自检→最终修订），附"注入灵魂"个性写作指导 | ✅ |
+| [summarize-zh](skills/summarize-zh/SKILL.md) | 基于 summarize CLI 的多格式智能摘要工具——网页/PDF/Office 文档/图片/音频/YouTube 视频一键摘要，支持批量处理与自定义长度限制 | 📦 |
 
 ### 📊 数据分析
 
